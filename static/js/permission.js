@@ -35,7 +35,7 @@ $('#mainst').click(function(){
 	$('#sitestop').hide();
 	$('#mainadop').hide();
 });
-$('#sitead').click(function(){
+$('#siteadd').click(function(){
 	$('.uoperbtn').removeClass('btnclass');
 	$(this).addClass('btnclass');
 	$('#mainstop').hide();

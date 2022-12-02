@@ -31,6 +31,21 @@ $('.inputs').click(function(){
 	$(this).removeClass('errorcolor');
 });
 
+$('#payday').hide();
+$('#crcheck').click(function(){
+	$('#crejob').prop('checked', true);
+	$('#cajob').prop('checked', false);
+	$('#trans').val('credit');
+	$('#payday').show();
+});
+
+$('#cacheck').click(function(){
+	$('#crejob').prop('checked', false);
+	$('#cajob').prop('checked', true);
+	$('#trans').val('cash');
+	$('#payday').hide();
+});
+
 $('#quantity').on('keyup', function(){
 	var val = $(this).val();
 	if(val != ''){
@@ -254,6 +269,25 @@ $('#PurchaseBillAdd').on('submit', function(){
 	if(ponnum=='' && porder == 0){
 		error=1;
 		$('#purchase_number').addClass('errorcolor');
+	}
+
+	var supplier = $('#supplier option:selected').val();
+	if(supplier==''){
+		error = 1;
+		$('#supplier').addClass('errorcolor');
+	}
+
+	if($('#crejob').prop("checked") == false){
+		if($('#cajob').prop("checked") == false){
+			error = 1;
+			$('#tranblock').addClass('errorcolor');
+		}
+	}else{
+		var day = $('#day').val();
+		if(day==''){
+			error=1;
+			$('#day').addClass('errorcolor');
+		}
 	}
 
 	var qty = $('#quantity').val();

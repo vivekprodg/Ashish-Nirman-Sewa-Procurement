@@ -186,3 +186,77 @@ $('#VMForm').on('submit', function(){
 	document.VMForm.submit();
 	event.preventDefault();
 });
+
+$('#vehicle_typemove').on('change', function(){
+	var idstr = $('#vehicle_typemove option:selected').val();
+	var vname = $('#vtypenamemove'+idstr).val();
+	$('#vehicle_type_namemove').val(vname);
+	$('.vehicles').hide();
+	if($('#chasis_checkmove').prop("checked") == true){
+		$('#vehitypechasisidmove'+idstr).show();
+	}else if($('#engine_checkmove').prop("checked") == true){
+		$('#vehitypeengineidmove'+idstr).show();
+	}else{
+		$('#vehitypenumidmove'+idstr).show();
+	}
+});
+$('#chasis_checkmove').on('click', function(){
+	$('.vehicles').hide();
+	var idstr = $('#vehicle_typemove option:selected').val();
+	if($('#chasis_checkmove').prop("checked")==true){
+		$('#engine_checkmove').prop("checked",false);
+		if(idstr!=''){
+			var val = $('#vtypenamemove'+idstr).val();
+			$('#vehitypechasisidmove'+idstr).show();
+		}
+	}else{
+		if(idstr!=''){
+			var val = $('#vtypenamemove'+idstr).val();
+			$('#vehitypenumidmove'+idstr).show();
+		}
+	}
+	
+});
+$('#engine_checkmove').on('click', function(){
+	$('.vehicles').hide();
+	var idstr = $('#vehicle_typemove option:selected').val();
+	if($('#engine_checkmove').prop("checked")==true){
+		$('#chasis_checkmove').prop("checked",false);
+		if(idstr!=''){
+			var val = $('#vtypenamemove'+idstr).val();
+			$('#vehitypeengineidmove'+idstr).show();
+		}
+	}else{
+		if(idstr!=''){
+			var val = $('#vtypenamemove'+idstr).val();
+			$('#vehitypenumidfmove'+idstr).show();
+		}
+	}
+	
+});
+
+$('#MoveForm').on('submit', function(){
+	var idstr = $('#vehicle_typemove option:selected').val();
+	var vehicle = '';
+	if($('#chasis_checkmove').prop("checked") == true){
+		var vehicle = $('#vehi_chasismove'+idstr+' option:selected').val();
+		if(vehicle!=''){
+			$('#vehicle_confirmmove').val(vehicle);
+			$('#num_typemove').val('chasis');
+		}
+	}else if($('#engine_checkmove').prop("checked") == true){
+		var vehicle = $('#vehi_enginemove'+idstr+' option:selected').val();
+		if(vehicle!=''){
+			$('#vehicle_confirmmove').val(vehicle);
+			$('#num_typemove').val('engine');
+		}
+	}else{
+		var vehicle = $('#vehi_numbermove'+idstr+' option:selected').val();
+		if(vehicle!=''){
+			$('#vehicle_confirmmove').val(vehicle);
+			$('#num_typemove').val('vehicle');
+		}
+	}
+	document.MoveForm.submit();
+	event.preventDefault();
+});

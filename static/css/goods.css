@@ -536,4 +536,40 @@
   display: none;
 }
 
+.vehicle_view{
+  float:left;
+  width:100%;
+  height: auto;
+  text-align: center;
+  font-size: 16px;
+  color: green;
+  padding: 20px;
+}
+#vform{
+  margin: 0px auto;
+}
+.submit_btnv{
+  height: 40px;
+  width: auto;
+  border: none;
+  background: #1f7ba3;
+  color: #fff;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all .3s ease;
+  border-radius: 5px;
+  padding-left:30px;
+  padding-right: 30px;
+}
+.submit_btnv:hover{
+  background: #07597d;
+}
+.statuscheckv{
+  width: 100%;
+  float:left;
+  font-size: 22px;
+  padding: 10px 0px 20px 0px;
+  text-align: center;
+}
+
 /*====================*/

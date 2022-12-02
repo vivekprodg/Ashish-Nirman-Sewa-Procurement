@@ -85,6 +85,7 @@ $('.sup_edit').click(function(){
 	var role = $('#role'+idstr).val();
 	$('#suid').val(idstr);
 	$('#name').val(name);
+	$('#dname').val(name);
 	$('#url').val(url);
 	$('#address').val(address);
 	$('#pan').val(pan);
@@ -101,6 +102,7 @@ $('.sup_edit').click(function(){
 $('#close_edit').click(function(){
 	$('#suid').val('');
 	$('#name').val('');
+	$('#dname').val('');
 	$('#url').val('');
 	$('#address').val('');
 	$('#contact').val('');
@@ -120,6 +122,17 @@ $('#cancel_btn').on('click', function(){
 	$('#sid').val('');
 	$('#del_popup').css({"transform": "scale(.1)", "-webkit-transform": "scale(.1)", "-moz-transform": "scale(.1)"});
 	$('.del_popupbanner').fadeOut();
+});
+$('.usup_delete').click(function(){
+	$('.udel_popupbanner').fadeIn();
+	var idstr = $(this).attr("data");
+	$('#ssid').val(idstr);
+	$('#udel_popup').css({"transform": "scale(1)", "-webkit-transform": "scale(1)", "-moz-transform": "scale(1)"});
+});
+$('#ucancel_btn').on('click', function(){
+	$('#ssid').val('');
+	$('#udel_popup').css({"transform": "scale(.1)", "-webkit-transform": "scale(.1)", "-moz-transform": "scale(.1)"});
+	$('.udel_popupbanner').fadeOut();
 });
 
 $('#SiteEditForm').on('submit', function(){

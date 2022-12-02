@@ -355,3 +355,10 @@
   height: auto;
 
 }
+
+.subcatsearch{
+  display:none;
+}
+.subcatshow{
+  display:none;
+}

@@ -426,13 +426,35 @@
   margin-right: 8px;
   font-size: 18px;
 }
+.usup_delete{
+  border:none;
+  background:none;
+  float:left;
+  cursor: pointer;
+  margin-left: 8px;
+  font-size: 18px;
+}
+.uusup_delete{
+  border:none;
+  background:none;
+  float:left;
+  cursor: pointer;
+  margin-left: 8px;
+  font-size: 18px;
+}
 .sup_edit:focus,
-.sup_delete:focus{
+.sup_delete:focus,
+.usup_delete:focus,
+.uusup_delete:focus{
   background: none !important;
 }
 
-.sup_delete i{
+.sup_delete i,
+.usup_delete i{
   color: #fa4670;
+}
+.uusup_delete i{
+  color: #aaa;
 }
 .sup_edit i{
   color: #913cfa;
@@ -509,4 +531,46 @@
   -webkit-transition: all .3s ease;
   -moz-transition: all .3s ease;
   transition: all .3s ease;
+}
+
+.udel_popupbanner{
+  position: fixed;
+  top: 0px;
+  left:0px;
+  height: 100%;
+  width:100%;
+  z-index: 9;
+  background: rgba(0,0,0,.1);
+  overflow-y: scroll;
+  display: none;
+}
+#udel_popup{
+  margin-top: 150px;
+  margin-bottom: 50px;
+  box-shadow: none !important;
+  padding: 50px;
+  text-align:center;
+  color: #484f52;
+  font-size: 14px;
+  -webkit-transform: scale(.1);
+  -moz-transform: scale(.1);
+  transform: scale(.1);
+  -webkit-transition: all .3s ease;
+  -moz-transition: all .3s ease;
+  transition: all .3s ease;
+}
+#udel_popup form{
+  margin-top: 20px;
+}
+.del_btn{
+  height: 30px;
+  width: 120px;
+  border: none;
+  background: #1f7ba3;
+  color: #fff;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all .3s ease;
+  border-radius: 5px;
+  margin-top: 5px;
 }

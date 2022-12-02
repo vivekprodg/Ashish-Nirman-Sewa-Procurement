@@ -183,3 +183,15 @@ $('#cancel_btn').on('click', function(){
 	$('#del_popup').css({"transform": "scale(.1)", "-webkit-transform": "scale(.1)", "-moz-transform": "scale(.1)"});
 	$('.del_popupbanner').fadeOut();
 });
+
+$('.usup_delete').click(function(){
+	$('.udel_popupbanner').fadeIn();
+	var idstr = $(this).attr("data");
+	$('#ssid').val(idstr);
+	$('#udel_popup').css({"transform": "scale(1)", "-webkit-transform": "scale(1)", "-moz-transform": "scale(1)"});
+});
+$('#ucancel_btn').on('click', function(){
+	$('#ssid').val('');
+	$('#udel_popup').css({"transform": "scale(.1)", "-webkit-transform": "scale(.1)", "-moz-transform": "scale(.1)"});
+	$('.udel_popupbanner').fadeOut();
+});

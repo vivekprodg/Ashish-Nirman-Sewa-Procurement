@@ -41,10 +41,6 @@ $('#SupplierForm').on('submit', function(){
 		error = 1;
 		$('#address').addClass('errorcolor');
 	}
-	if(pan==''){
-		error = 1;
-		$('#pan').addClass('errorcolor');
-	}
 	if(landline==''){
 		error = 1;
 		$('#landline').addClass('errorcolor');
@@ -155,10 +151,6 @@ $('#SupplierEditForm').on('submit', function(){
 	if(address==''){
 		error = 1;
 		$('#address').addClass('errorcolor');
-	}
-	if(pan==''){
-		error = 1;
-		$('#pan').addClass('errorcolor');
 	}
 	if(landline==''){
 		error = 1;
