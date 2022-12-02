@@ -36,6 +36,12 @@ $('.inputs').click(function(){
 	$(this).removeClass('errorcolor');
 });
 
+function url(vehi_num){
+  var mat_url = vehi_num.toLowerCase();
+  var result = mat_url.replace(/[^a-z0-9\s]/gi, '').replace(/[_\s]/g, '');
+  return result;
+}
+
 var itemadd = [];
 var amount = [];
 var peiamount = [];
@@ -50,12 +56,9 @@ var diserror = 0;
 var pbill = 0;
 var porder = 0;
 var rec = 0;
-
-function url(vehi_num){
-  var mat_url = vehi_num.toLowerCase();
-  var result = mat_url.replace(/[^a-z0-9\s]/gi, '').replace(/[_\s]/g, '');
-  return result;
-}
+var gitemadd = [];
+var gadd = 0;
+var grec = 0;
 
 //default values=================================
 
@@ -85,10 +88,46 @@ var kilnum = $('#kilnum').val();
 var probnum = $('#probnum').val();
 var pcnum = $('#pcnum').val();
 var descnum = $('#descnum').val();
-// var vennum = $('#vennum').val();
-// var dbill = $('#defaultbill').val();
-// var dtran = $('#dtrans').val();
-// $('#bill_type').val(dbill);
+var djorder = $('#djorder').val();
+var dgjorder = $('#dgjorder').val();
+
+if(djorder=='yes'){
+	$('#yesjob').prop("checked", true);
+	$('#jorder').val('yes');
+	$('#jobnumber').show();
+	$('#njobcheck').hide();
+
+	ponum.push(jnum);
+	jnumu = jnum.toUpperCase();
+	jnuml = jnum.toLowerCase();
+	if($('#pvnselban'+jnumu).length>0){
+		$('#pvnselban'+jnumu).show();
+	}
+	if($('#pvnselban'+jnuml).length>0){
+		$('#pvnselban'+jnuml).show();
+	}
+}
+if(djorder=='no'){
+	$('#nojob').prop("checked", true);
+	$('#jorder').val('no');
+	$('#jobnumber').hide();
+}
+if(dgjorder=='yes'){
+	$('#gyesjob').prop("checked", true);
+	$('#gjorder').val('yes');
+	$('#gjdis').show();
+	$('#gnjobcheck').hide();
+}
+if(dgjorder=='no'){
+	$('#gnojob').prop("checked", true);
+	$('#gjorder').val('no');
+	$('#gjdis').val();
+}
+if(djorder == 'no' && dgjorder == 'yes'){
+	$('#vehicle_type').prop("disabled", false);
+	$('#chasis_check').prop("disabled", false);
+	$('#engine_check').prop("disabled", false);
+}
 $('.tfoot').show();
 $('.tfoot2').hide();
 $('#vehicle_type').val(vtypeid);
@@ -99,10 +138,9 @@ if(probnum!='' && probnum!='none'){
 		subproblemassign(probnum,pcnum);
 	}
 }
-// $('#supplier').val(vennum);
 $('.vehidet').show();
 if(dnumtype=='chasis'){
-    var vehi_num = url(vnum);
+	var vehi_num = url(vnum);
 	$('#vehitypechasisid'+vtypeid).show();
 	$('#vehi_chasis'+vtypeid).val(vnum);
 	$('#chasis_check').prop("checked", true);
@@ -112,9 +150,12 @@ if(dnumtype=='chasis'){
 	$('#vehidetnum').text(vh);
 	$('#vehidetchasis').text(vhc);
 	$('#vehidetengine').text(vhe);
+	if(djorder == 'no' && dgjorder == 'yes'){
+		$('#vehi_chasis'+vtypeid).prop("disabled", false);
+	}
 }
 if(dnumtype=='engine'){
-    var vehi_num = url(vnum);
+	var vehi_num = url(vnum);
 	$('#vehitypeengineid'+vtypeid).show();
 	$('#vehi_engine'+vtypeid).val(vnum);
 	$('#engine_check').prop("checked", true);
@@ -124,9 +165,12 @@ if(dnumtype=='engine'){
 	$('#vehidetnum').text(vh);
 	$('#vehidetchasis').text(vhc);
 	$('#vehidetengine').text(vhe);
+	if(djorder == 'no' && dgjorder == 'yes'){
+		$('#vehi_engine'+vtypeid).prop("disabled", false);
+	}
 }
 if(dnumtype=='vehicle'){
-    var vehi_num = url(vnum);
+	var vehi_num = url(vnum);
 	$('#vehitypenumid'+vtypeid).show();
 	$('#vehi_number'+vtypeid).val(vnum);
 	$('#chasis_check').prop("checked", false);
@@ -137,23 +181,11 @@ if(dnumtype=='vehicle'){
 	$('#vehidetnum').text(vh);
 	$('#vehidetchasis').text(vhc);
 	$('#vehidetengine').text(vhe);
+	if(djorder == 'no' && dgjorder == 'yes'){
+		$('#vehi_number'+vtypeid).prop("disabled", false);
+	}
 }
-if(jnum==''){
-	$('#nojob').prop("checked", true);
-	$('#jorder').val('no');
-}
-if(jnum!=''){
-	$('#yesjob').prop("checked", true);
-	$('#jorder').val('yes');
-}
-// if(dtran=='credit'){
-// 	$('#crejob').prop("checked", true);
-// 	$('#payday').show();
-// }
-// if(dtran=='cash'){
-// 	$('#cajob').prop("checked", true);
-// 	$('#payday').hide();
-// }
+
 $('.bill_count').each(function(){
 	var cha = $(this).val();
 	add = add+1;
@@ -172,15 +204,6 @@ $('.pvnamt').each(function(){
 	peiamount.push(cha);
 });
 
-jnumu = jnum.toUpperCase();
-jnuml = jnum.toLowerCase();
-if($('#pvnselban'+jnumu).length>0){
-	$('#pvnselban'+jnumu).show();
-}
-if($('#pvnselban'+jnuml).length>0){
-	$('#pvnselban'+jnuml).show();
-}
-
 if($('.pvntab').length>0){
 	$('.pvnshowtable').show();
 	$('.pvndet').hide();
@@ -191,42 +214,80 @@ if($('.pvntab').length>0){
 	});
 }
 
+$('.gbill_count').each(function(){
+	var cha = $(this).val();
+	gadd = gadd+1;
+	gitemadd.push(gadd);
+});
+$('.girecon').each(function(){
+	var cha = $(this).val();
+	grec = grec+1;
+});
+
 //============================================
 
 $('#yjobcheck').click(function(){
 	$('#yesjob').prop('checked', true);
 	$('#nojob').prop('checked', false);
 	$('#jorder').val('yes');
-	$('.jobnoentry').show();
+	$('#jobnumber').show();
+	$('#jobnumber').val('');
+	vehi_con();
 });
 
 $('#njobcheck').click(function(){
 	$('#yesjob').prop('checked', false);
 	$('#nojob').prop('checked', true);
 	$('#jorder').val('no');
-	$('.jobnoentry').hide();
-	porder = 0;
-	$('#jobnumber').removeClass('errorcolor');
 	$('#jobnumber').val('');
-	$('.porder_e').hide();
+	$('#jobnumber').hide();
 	$('.pvnselban').hide();
-	$('#subtotal').val(0);
-    $('#labour').val(0);
-    $('#total').val(0);
-    ponum = [];
-	peiamount = [];
-	amount = [];
-	itemadd = [];
-	add = 0;
-	rec = 0;
-	$('.pvndet').hide();
-	$('.pvnshowtable').hide();
-	$('.hidden_inputs').empty();
-	$("#MaintainanceTable tbody").empty();
-	$('.grncol').empty();
-    $('.tfoot').hide();
-    $('.tfoot2').show();
+	vehi_con();
+	if($('#gyesjob').prop("checked") == true){
+		$('#vehicle_type').prop("disabled", false);
+		$('#chasis_check').prop("disabled", false);
+		$('#engine_check').prop("disabled", false);
+	}
 });
+
+$('#gyjobcheck').click(function(){
+	$('#gyesjob').prop('checked', true);
+	$('#gnojob').prop('checked', false);
+	$('#gjorder').val('yes');
+	$('#gjdis').show();
+	$('#gjobnumber').val('');
+	if($('#nojob').prop("checked") == true){
+		$('#vehicle_type').prop("disabled", false);
+		$('#chasis_check').prop("disabled", false);
+		$('#engine_check').prop("disabled", false);
+	}
+});
+
+$('#gnjobcheck').click(function(){
+	$('#gyesjob').prop('checked', false);
+	$('#gnojob').prop('checked', true);
+	$('#gjorder').val('no');
+	$('#gjobnumber').val('');
+	$('#gjdis').hide();
+	vehi_con();
+});
+
+function vehi_con(){
+	$('#vehidetnum').text('');
+	$('#vehidetchasis').text('');
+	$('#vehidetengine').text('');
+	$('.vehidet').hide();
+	$('#vehicle_type').val('');
+	$('.vchoice').val('');
+	$('#chasis_check').prop("checked", false);
+	$('#engine_check').prop("checked", false);
+	$('#vehicle_type').prop("disabled", true);
+	$('#chasis_check').prop("disabled", true);
+	$('#engine_check').prop("disabled", true);
+	$('.vchoice').prop("disabled", true);
+	$('#vehicle_confirm').val('');
+	$('#num_type').val('');
+}
 
 $('#vehicle_type').on('change', function(){
 	var idstr = $('#vehicle_type option:selected').val();
@@ -234,10 +295,13 @@ $('#vehicle_type').on('change', function(){
 	$('.vehicles').hide();
 	if($('#chasis_check').prop("checked") == true){
 		$('#vehitypechasisid'+idstr).show();
+		$('#vehi_engine'+idstr).prop("disabled", false);
 	}else if($('#engine_check').prop("checked") == true){
 		$('#vehitypeengineid'+idstr).show();
+		$('#vehi_chasis'+idstr).prop("disabled", false);
 	}else{
 		$('#vehitypenumid'+idstr).show();
+		$('#vehi_number'+idstr).prop("disabled", false);
 	}
 });
 $('#chasis_check').on('click', function(){
@@ -248,11 +312,13 @@ $('#chasis_check').on('click', function(){
 		if(idstr!=''){
 			var val = $('#vtypename'+idstr).val();
 			$('#vehitypechasisid'+idstr).show();
+			$('#vehi_chasis'+idstr).prop("disabled", false);
 		}
 	}else{
 		if(idstr!=''){
 			var val = $('#vtypename'+idstr).val();
 			$('#vehitypenumid'+idstr).show();
+			$('#vehi_number'+idstr).prop("disabled", false);
 		}
 	}
 	
@@ -265,15 +331,48 @@ $('#engine_check').on('click', function(){
 		if(idstr!=''){
 			var val = $('#vtypename'+idstr).val();
 			$('#vehitypeengineid'+idstr).show();
+			$('#vehi_engine'+idstr).prop("disabled", false);
 		}
 	}else{
 		if(idstr!=''){
 			var val = $('#vtypename'+idstr).val();
 			$('#vehitypenumid'+idstr).show();
+			$('#vehi_number'+idstr).prop("disabled", false);
 		}
 	}
 	
 });
+$('.vchoice').on('change', function(){
+	var idstr = $(this).attr("id");
+	var val = $('#'+idstr+' option:selected').val();
+	$('.vehidet').show();
+	var vnum = url(val);
+	if($('#vh'+vnum).length>0){
+		var vh = $('#vh'+vnum).val();
+		var vhc = $('#vh'+vnum).attr("name");
+		var vhe = $('#vh'+vnum).attr("data");
+		$('#vehidetnum').text(vh);
+		$('#vehidetchasis').text(vhc);
+		$('#vehidetengine').text(vhe);
+	}
+	if($('#vhc'+vnum).length>0){
+		var vh = $('#vhc'+vnum).attr("name");
+		var vhc = $('#vhc'+vnum).val();
+		var vhe = $('#vhc'+vnum).attr("data");
+		$('#vehidetnum').text(vh);
+		$('#vehidetchasis').text(vhc);
+		$('#vehidetengine').text(vhe);
+	}
+	if($('#vhe'+vnum).length>0){
+		var vh = $('#vhe'+vnum).attr("data");
+		var vhc = $('#vhe'+vnum).attr("name");
+		var vhe = $('#vhe'+vnum).val();
+		$('#vehidetnum').text(vh);
+		$('#vehidetchasis').text(vhc);
+		$('#vehidetengine').text(vhe);
+	}
+});
+
 $('#invoice').blur(function(){
 	var val = $(this).val();
 	pbill = 0;
@@ -325,7 +424,7 @@ $('#jobnumber').on('keyup', function(){
 						$('#vehicle_confirm').val(vehi_num);
 						$('.vehidet').show();
 						if(num_type=='chasis'){
-						    var vnum = url(vehi_num);
+							var vnum = url(vehi_num);
 							$('#vehitypechasisid'+vehit_id).show();
 							$('#vehi_chasis'+vehit_id).val(vehi_num);
 							$('#chasis_check').prop("checked", true);
@@ -338,7 +437,7 @@ $('#jobnumber').on('keyup', function(){
 							$('#vehidetengine').text(vhe);
 						}
 						if(num_type=='engine'){
-						    var vnum = url(vehi_num);
+							var vnum = url(vehi_num);
 							$('#vehitypeengineid'+vehit_id).show();
 							$('#vehi_engine'+vehit_id).val(vehi_num);
 							$('#engine_check').prop("checked", true);
@@ -351,7 +450,7 @@ $('#jobnumber').on('keyup', function(){
 							$('#vehidetengine').text(vhe);
 						}
 						if(num_type=='vehicle'){
-						    var vnum = url(vehi_num);
+							var vnum = url(vehi_num);
 							$('#vehitypenumid'+vehit_id).show();
 							$('#vehi_number'+vehit_id).val(vehi_num);
 							$('#chasis_check').prop("checked", false);
@@ -380,7 +479,7 @@ $('#jobnumber').on('keyup', function(){
 					$('#vehicle_confirm').val(vehi_num);
 					$('.vehidet').show();
 					if(num_type=='chasis'){
-					    var vnum = url(vehi_num);
+						var vnum = url(vehi_num);
 						$('#vehitypechasisid'+vehit_id).show();
 						$('#vehi_chasis'+vehit_id).val(vehi_num);
 						$('#chasis_check').prop("checked", true);
@@ -393,7 +492,7 @@ $('#jobnumber').on('keyup', function(){
 						$('#vehidetengine').text(vhe);
 					}
 					if(num_type=='engine'){
-					    var vnum = url(vehi_num);
+						var vnum = url(vehi_num);
 						$('#vehitypeengineid'+vehit_id).show();
 						$('#vehi_engine'+vehit_id).val(vehi_num);
 						$('#engine_check').prop("checked", true);
@@ -406,7 +505,7 @@ $('#jobnumber').on('keyup', function(){
 						$('#vehidetengine').text(vhe);
 					}
 					if(num_type=='vehicle'){
-					    var vnum = url(vehi_num);
+						var vnum = url(vehi_num);
 						$('#vehitypenumid'+vehit_id).show();
 						$('#vehi_number'+vehit_id).val(vehi_num);
 						$('#chasis_check').prop("checked", false);
@@ -424,27 +523,6 @@ $('#jobnumber').on('keyup', function(){
 	}
 });
 
-// $('#jobnumber').on('keyup', function(){
-// 	var val = $(this).val();
-// 	val = val.toUpperCase();
-// 	$('.jobload').show();
-// 	$('.jobload').empty();
-// 	$('.jobdetailmodule').show();
-// 	$('.moduledetail').hide();
-// 	var mystr = 'Loading...';
-// 	$('.jobload').append(mystr);
-// 	if($('#jdet'+val).length > 0){
-// 		$('.jobload').hide();
-// 		$('#jdet'+val).show();
-// 		$('#jnumhide').val(val);
-// 	}else{
-// 		$('.jobload').empty();
-// 		var mystr = 'No match found';
-// 		$('.jobload').append(mystr);
-// 		$('#jnumhide').val('');
-// 	}
-
-// });
 
 $('#jobnumber').click(function(){
 	$('.porder_e').hide();
@@ -477,80 +555,6 @@ $('.problemsel').on('change', function(){
 	}
 });
 
-// var pnumber = 0;
-// $('#purchase_number').blur(function(){
-// 	var val = $(this).val();
-// 	var pnumber = 0;
-// 	$('.orderlist').each(function(){
-// 		var cha = $(this).val();
-// 		if(val == cha){
-// 			pnumber = 1;
-// 			$('#purchase_number').css({"border": "1px solid red"});
-// 			$('.coupon_error').show();
-// 		}
-// 	});
-// });
-
-// $('#driver_id').on('change', function(){
-// 	var val = $('#driver_id option:selected').val();
-// 	var name = $('#dri'+val).val();
-// 	$('#driver_name').val(name);
-// });
-
-// $('#additem').click(function(){
-// 	$('.edit_popupbanner').fadeIn();
-// 	$('#edit_popup').css({"transform": "scale(1)", "-webkit-transform": "scale(1)", "-moz-transform": "scale(1)"});	$('#itemname').focus();
-// 	$('#item').focus();
-// });
-
-// $('#additem').click(function(){
-// 	if($('#yesjob').prop("checked")==true){
-// 		var pon = $('#jobnumber').val();
-// 		if(pon!=''){
-// 			var val = $('#jobnumber').val();
-// 			val = val.toUpperCase();
-// 			if($('#po'+val).length>0){
-// 				$('.edit_popupbanner').fadeIn();
-// 				$('#edit_popup').css({"transform": "scale(1)", "-webkit-transform": "scale(1)", "-moz-transform": "scale(1)"});	$('#itemname').focus();
-// 				$('#item').focus();
-// 				$('.pitm'+val).each(function(){
-// 					var itm_id = $(this).val();
-// 					var itm = $(this).attr("data");
-// 					if($("#item option[value='"+itm_id+"']").length===0){
-// 						$('#item').append($('<option>', {
-// 						    value: itm_id,
-// 						    text: itm
-// 						}));
-// 					}
-					
-// 				});
-// 			}else{
-// 				$('#jobnumber').addClass('errorcolor');
-// 			}
-// 		}else{
-// 			$('#jobnumber').addClass('errorcolor');
-// 		}
-// 	}else if($('#nojob').prop("checked")==true){
-// 		$('.edit_popupbanner').fadeIn();
-// 		$('#edit_popup').css({"transform": "scale(1)", "-webkit-transform": "scale(1)", "-moz-transform": "scale(1)"});	$('#itemname').focus();
-// 		$('#item').focus();
-// 		$('.itemclass').each(function(){
-// 			var itm_id = $(this).val();
-// 			var itm = $(this).attr("data");
-// 			if($("#item option[value='"+itm_id+"']").length===0){
-// 				$('#item').append($('<option>', {
-// 				    value: itm_id,
-// 				    text: itm
-// 				}));
-// 			}
-			
-// 		});
-// 	}else{
-// 		$('#checkblock').addClass('errorcolor');
-// 	}
-
-// });
-
 $('#additem').click(function(){
 	$('.edit_popupbanner').fadeIn();
 	$('#edit_popup').css({"transform": "scale(1)", "-webkit-transform": "scale(1)", "-moz-transform": "scale(1)"});	$('#itemname').focus();
@@ -563,6 +567,8 @@ $('#close_edit').click(function(){
 	$('.edit_popupbanner').fadeOut();
 });
 $('#close_edit1').click(function(){
+	$('.editsubcatshow').hide();
+	$('.edititemshow').hide();
 	$('#edit_popup1').css({"transform": "scale(.1)", "-webkit-transform": "scale(.1)", "-moz-transform": "scale(.1)"});
 	$('.edit_popupbanner1').fadeOut();
 });
@@ -767,20 +773,78 @@ $('#itemrateedit').on('keyup', function(){
 	}
 });
 
-$('#item').on('change', function(){
-	var idstr = $('#item option:selected').val();
+function search_url(val){
+  var url = val.toLowerCase();
+  var result = url.replace(/[^a-z0-9\s]/gi, '').replace(/[_\s]/g, '');
+  return result;
+}
+$('#category').on('change', function(){
+	var val = $('#category option:selected').val();
+	var url = search_url(val);
+	$('.subcatshow').hide();
+	$('.subcategory').val('');
+	if($('#subcatshow'+url).length>0){
+		$('#subcatshow'+url).show();
+		var sval = $('#subcategory'+url+' option:selected').val();
+		$('#subcatval').val(sval);
+	}else{
+		$('#subcatval').val('');
+	}
+	$('.itemshow').hide();
+});
+$('.subcategory').on('change', function(){
+	var idstr = $(this).attr("id");
+	var val = $('#'+idstr+' option:selected').val();
+	var catval = $('#category option:selected').val();
+	var caturl = search_url(catval);
+	var surl = search_url(val);
+	var mainu = caturl+''+surl;
+	$('.itemshow').hide();
+	$('#itemshow'+mainu).show();
+});
+$('#editcategory').on('change', function(){
+	var val = $('#editcategory option:selected').val();
+	var url = search_url(val);
+	$('.editsubcatshow').hide();
+	$('.editsubcategory').val('');
+	if($('#editsubcatshow'+url).length>0){
+		$('#editsubcatshow'+url).show();
+		var sval = $('#editsubcategory'+url+' option:selected').val();
+		$('#editsubcatval').val(sval);
+	}else{
+		$('#editsubcatval').val('');
+	}
+	$('.edititemshow').hide();
+});
+$('.editsubcategory').on('change', function(){
+	var idstr = $(this).attr("id");
+	var val = $('#'+idstr+' option:selected').val();
+	var catval = $('#editcategory option:selected').val();
+	var caturl = search_url(catval);
+	var surl = search_url(val);
+	var mainu = caturl+''+surl;
+	$('.edititemshow').hide();
+	$('#edititemshow'+mainu).show();
+});
+
+$('.item').on('change', function(){
+	var vdstr = $(this).attr("id");
+	var idstr = $('#'+vdstr+' option:selected').val();
 	var name = $('#ini'+idstr).val();
 	var uom = $('#ini'+idstr).attr("data");
 	var alias = $('#ini'+idstr).attr("name");
+	$('#itemm').val(idstr);
 	$('#itemname').val(name);
 	$('#itemuom').val(uom);
 	$('#itemalias').val(alias);
 });
-$('#edititem').on('change', function(){
-	var idstr = $('#edititem option:selected').val();
+$('.edititemm').on('change', function(){
+	var vdstr = $(this).attr("id");
+	var idstr = $('#'+vdstr+' option:selected').val();
 	var name = $('#eini'+idstr).val();
 	var uom = $('#eini'+idstr).attr("data");
 	var alias = $('#eini'+idstr).attr("name");
+	$('#edititem').val(idstr);
 	$('#itemnameedit').val(name);
 	$('#itemuomedit').val(uom);
 	$('#edititemalias').val(alias);
@@ -791,36 +855,36 @@ $(document).on('click', '.edititem', function(){
 	$('.edit_popupbanner1').fadeIn();
 	$('#edit_popup1').css({"transform": "scale(1)", "-webkit-transform": "scale(1)", "-moz-transform": "scale(1)"});	$('#itemname').focus();
 	$('#edititem').focus();
-	if($('#yesjob').prop("checked")==true){
-		$('.epitm'+val).each(function(){
-			var itm_id = $(this).val();
-			var itm = $(this).attr("data");
-			if($("#edititem option[value='"+itm_id+"']").length===0){
-				$('#edititem').append($('<option>', {
-				    value: itm_id,
-				    text: itm
-				}));
-			}
+	// if($('#yesjob').prop("checked")==true){
+	// 	$('.epitm'+val).each(function(){
+	// 		var itm_id = $(this).val();
+	// 		var itm = $(this).attr("data");
+	// 		if($("#edititem option[value='"+itm_id+"']").length===0){
+	// 			$('#edititem').append($('<option>', {
+	// 			    value: itm_id,
+	// 			    text: itm
+	// 			}));
+	// 		}
 			
-		});
-	}else if($('#nojob').prop("checked")==true){
-		$('.edit_popupbanner').fadeIn();
-		$('#edit_popup').css({"transform": "scale(1)", "-webkit-transform": "scale(1)", "-moz-transform": "scale(1)"});	$('#itemname').focus();
-		$('#item').focus();
-		$('.eitemclass').each(function(){
-			var itm_id = $(this).val();
-			var itm = $(this).attr("data");
-			if($("#edititem option[value='"+itm_id+"']").length===0){
-				$('#edititem').append($('<option>', {
-				    value: itm_id,
-				    text: itm
-				}));
-			}
+	// 	});
+	// }else if($('#nojob').prop("checked")==true){
+	// 	$('.edit_popupbanner').fadeIn();
+	// 	$('#edit_popup').css({"transform": "scale(1)", "-webkit-transform": "scale(1)", "-moz-transform": "scale(1)"});	$('#itemname').focus();
+	// 	$('#item').focus();
+	// 	$('.eitemclass').each(function(){
+	// 		var itm_id = $(this).val();
+	// 		var itm = $(this).attr("data");
+	// 		if($("#edititem option[value='"+itm_id+"']").length===0){
+	// 			$('#edititem').append($('<option>', {
+	// 			    value: itm_id,
+	// 			    text: itm
+	// 			}));
+	// 		}
 			
-		});
-	}else{
-		$('#checkblock').addClass('errorcolor');
-	}
+	// 	});
+	// }else{
+	// 	$('#checkblock').addClass('errorcolor');
+	// }
 	var itemid = $('#iid'+idstr).val();
 	var name = $('#iname'+idstr).val();
 	var uom = $('#iuom'+idstr).val();
@@ -860,7 +924,7 @@ $('.pvnsel').on('change', function(){
 				var rus = val + rec;
 
 				var tamt = $('#puriamt'+val).val();
-				$(".hidden_inputs").append('<input type="hidden" class="pvnval" id="pval'+val+'" value="'+val+'">');
+				$(".hidden_inputs").append('<input type="hidden" name="pvnval" class="pvnval" id="pval'+val+'" value="'+val+'">');
 				$(".hidden_inputs").append('<input type="hidden" class="tamt" id="tamt'+val+'" value="'+tamt+'">');
 
 				$('.pvnshowtable').show();
@@ -911,6 +975,7 @@ $('.pvnsel').on('change', function(){
 					$('.tfoot').show();
 				});
 				$(".grncol").append('<div class="coldiv grd'+val+'" id="colrec'+rus+'"><span class="coldes">'+val+'</span><button type="button" class="colbtn" name="'+val+'" data="'+rus+'"><i class="fa fa-times"></i></button></div>');
+				$('#njobcheck').hide();
 				// amount.push(tamt);
 				peiamount.push(tamt);
 				// totaldper.push(tdisper);
@@ -952,7 +1017,7 @@ $('.pvnsel').on('change', function(){
 				// $('#vat').val(sumva);
 				var labour = $('#labour').val();
 				if(labour != ''){
-					if(labour>0){
+					if(labour>0 || labour==0){
 						labour = parseFloat(labour);
 						var grand = labour + parseFloat(sumpeiamoun);
 						grand = parseFloat(grand);
@@ -1013,17 +1078,23 @@ $(document).on('click', '.colbtn', function(e){
 	if($('.pvnval').length==0){
 		$('.pvndet').hide();
 		$('.pvnshowtable').hide();
+		$('#njobcheck').show();
 	}
 	if(itemadd.length === 0){
-		ponum = []
+		$('#subtotal').val(0);
+		$('#labour').val(0);
+	    $('#total').val(0);
+		ponum = [];
 		peiamount = [];
 		$('.pvndet').hide();
 		$('.pvnshowtable').hide();
-		// totaldper = [];
-		// totaldamt = [];
-		// totalvat = [];
-		$('.tfoot').hide();
-		$('.tfoot2').show();
+		if(gitemadd.length === 0){
+			// totaldper = [];
+			// totaldamt = [];
+			// totalvat = [];
+			$('.tfoot').hide();
+			$('.tfoot2').show();
+		}
 	}else{
 		peiamount = [];
 		// totaldper = [];
@@ -1084,7 +1155,7 @@ $(document).on('click', '.colbtn', function(e){
 
 		var labour = $('#labour').val();
 		if(labour != ''){
-			if(labour>0){
+			if(labour>0 || labour==0){
 				labour = parseFloat(labour);
 				var grand = labour + parseFloat(sumpeiamoun);
 				grand = parseFloat(grand);
@@ -1102,175 +1173,117 @@ $(document).on('click', '.colbtn', function(e){
 
 });
 
-// $('#additembtn').click(function(){
-// 	diserror = 0;
-// 	var error = 0;
-// 	$('#item').focus();
-// 	$('#itemerr').empty();
-// 	var itemid = $('#item option:selected').val();
-// 	var itemname = $('#itemname').val();
-// 	var alias = $('#itemalias').val();
-// 	var uom = $('#itemuom').val();
-// 	var itemqty = $('#itemqty').val();
-// 	var itemrate = $('#itemrate').val();
-// 	var itemamount = $('#itemamount').val();
-// 	var dis_per = $('#discount_per').val();
-// 	var dis_amt = $('#discount_amt').val();
-// 	var billty = $('#bill_type option:selected').val();
-// 	if(dis_per == ''){
-// 		dis_per = 0;
-// 	}
-// 	if(dis_amt == ''){
-// 		dis_amt = 0;
-// 	}
-// 	if(itemid == ''){
-// 		error = 1;
-// 		$('#item').addClass('errorcolor');
-// 	}
-// 	if(itemname == ''){
-// 		error = 1;
-// 		$('#itemname').addClass('errorcolor');
-// 	}
-// 	if(uom == ''){
-// 		error = 1;
-// 		$('#itemuom').addClass('errorcolor');
-// 	}
-// 	if(itemqty == ''){
-// 		error = 1;
-// 		$('#itemqty').addClass('errorcolor');
-// 	}
-// 	if(itemrate == ''){
-// 		error = 1;
-// 		$('#itemrate').addClass('errorcolor');
-// 	}
-// 	if(itemamount == ''){
-// 		error = 1;
-// 		$('#itemamount').addClass('errorcolor');
-// 	}
-// 	if(itemer == 0 && error==0){
-// 		add = add + 1;
-// 		itemadd.push(add);
-// 		amount.push(itemamount);
-// 		// console.log(amount);
-// 		// console.log(itemadd);
-// 		$(".hidden_inputs").append('<input type="hidden" name="itemadd" id="itemad'+add+'" value="'+add+'">');
-// 		$(".hidden_inputs").append('<input type="hidden" name="iid'+add+'" id="iid'+add+'" value="'+itemid+'">');
-// 		$(".hidden_inputs").append('<input type="hidden" name="iname'+add+'" id="iname'+add+'" value="'+itemname+'">');
-// 		$(".hidden_inputs").append('<input type="hidden" name="iuom'+add+'" id="iuom'+add+'" value="'+uom+'">');
-// 		$(".hidden_inputs").append('<input type="hidden" name="iqty'+add+'" id="iqty'+add+'" value="'+itemqty+'">');
-// 		$(".hidden_inputs").append('<input type="hidden" name="irate'+add+'" id="irate'+add+'" value="'+itemrate+'">');
-// 		$(".hidden_inputs").append('<input type="hidden" name="iamt'+add+'" id="iamt'+add+'" value="'+itemamount+'">');
-// 		$(".hidden_inputs").append('<input type="hidden" name="idisper'+add+'" id="idisper'+add+'" value="'+dis_per+'">');
-// 		$(".hidden_inputs").append('<input type="hidden" name="idisamt'+add+'" id="idisamt'+add+'" value="'+dis_amt+'">');
-// 		$(".hidden_inputs").append('<input type="hidden" name="ialias'+add+'" id="ialias'+add+'" value="'+alias+'">');
-// 		$('#itemname').val('');
-// 		$('#item').val('');
-// 		$('#uom').val('');
-// 		$('#itemqty').val('');
-// 		$('#itemrate').val(0);
-// 		$('#itemamount').val(0);
-// 		$('#discount_per').val(0);
-// 		$('#discount_amt').val(0);
-// 		$("#MaintainanceTable tbody").append('<tr id="itemrow'+add+'"><td><button type="button" class="edititem" id="eitem'+add+'" data="'+add+'"><i class="far fa-edit"></i></button><button type="button" class="delitem" id="ditem'+add+'" data="'+add+'"><i class="far fa-trash-alt"></i></button></td><td>'+itemname+'('+alias+')</td><td>'+uom+'</td><td>'+itemqty+'</td><td>'+itemrate+'</td><td>'+dis_amt+' ('+dis_per+'%)</td><td class="ltd">'+itemamount+'</td></tr>');
-// 		// $("#MaintainanceTable tbody").append('<tr id="itemrow'+add+'"><td><button type="button" class="edititem" id="eitem'+add+'" data="'+add+'"><i class="far fa-edit"></i></button><button type="button" class="delitem" id="ditem'+add+'" data="'+add+'"><i class="far fa-trash-alt"></i></button></td><td>'+itemname+'('+alias+')</td><td>'+uom+'</td><td>'+itemqty+'</td><td>'+itemrate+'</td><td class="ltd">'+itemamount+'</td></tr>');
-// 		$('.tfoot2').hide();
-// 		$('.tfoot').show();
-// 		var sumamount = 0;
-// 		sumamount = parseFloat(sumamount);
-// 		$.each(amount,function(){sumamount+=parseFloat(this) || 0;});
-// 		// console.log(sumamount);
-// 		// sumamount = parseFloat(sumamount);
-// 		var sumamoun = sumamount.toFixed(2);
-// 		$('#subtotal').val(sumamoun);
-// 		var labour = $('#labour').val();
-// 		var disp = $('#discount1').val();
-// 		if(disp != '' && disp > 0){
-// 			var dis = sumamount * disp/100;
-// 			var disv = dis.toFixed(2);
-// 			$('#discount2').val(disv);
-// 		}else{
-// 			var dis = $('#discount2').val();
-// 		}
-// 		if(dis != '' && dis > 0){
-// 			dis = parseFloat(dis);
-// 			if(dis < sumamount){
-// 				var total = sumamount - dis;
-// 				total = parseFloat(total);
-// 				if(labour != ''){
-// 					if(labour>0){
-// 						labour = parseFloat(labour);
-// 						total = labour + total;
-// 						if(billty == 'VAT Bill'){
-// 							var vat = total * 13/100;
-// 							vat = parseFloat(vat);
-// 							var grand = total + vat;
-// 							grand = parseFloat(grand);
-// 							grand = grand.toFixed(2);
-// 							vat = vat.toFixed(2);
-// 						}else{
-// 							var vat = 0;
-// 							var grand = total.toFixed(2);
-// 						}
-// 						$('#vat').val(vat);
-// 						$('#total').val(grand);
-// 						$('#labour').removeClass('errorcolor');
-// 					}else{
-// 						$('#labour').addClass('errorcolor');
-// 					}
-// 				}else{
-// 					$('#labour').addClass('errorcolor');
-// 				}
-// 				mystr = `<p style="color:green; font-size:13px;">New item added successfully</p>`
-// 				$('#itemerr').append(mystr);
-// 			}else{
-// 				diserror = 1;
-// 				$('#discount2').addClass('errorcolor');
-// 				$('#discount1').addClass('errorcolor');
-// 			}
-// 		}else{
-// 			if(labour != ''){
-// 				if(labour>0){
-// 					labour = parseFloat(labour);
-// 					var total = labour + sumamount;
-// 					total = parseFloat(total);
-// 					if(billty == 'VAT Bill'){
-// 						var vat = total * 13/100;
-// 						vat = parseFloat(vat);
-// 						var grand = total + vat;
-// 						grand = parseFloat(grand);
-// 						grand = grand.toFixed(2);
-// 						vat = vat.toFixed(2);
-// 					}else{
-// 						var vat = 0;
-// 						var grand = total.toFixed(2);
-// 					}
-// 					$('#vat').val(vat);
-// 					$('#total').val(grand);
-// 					$('#labour').removeClass('errorcolor');
-// 				}else{
-// 					$('#labour').addClass('errorcolor');
-// 				}
-// 			}else{
-// 				$('#labour').addClass('errorcolor');
-// 			}
-// 		}
-// 		$('#item').val('');
-// 		$('#itemname').val('');
-// 		$('#itemuom').val('');
-// 		$('#itemqty').val('');
-// 		$('#itemrate').val('');
-// 		$('#discount_per').val(0);
-// 		$('#discount_amt').val(0);
-// 		$('#itemamount').val('');
-// 	}
-// });
+//internal transfer number entry=====================================
+
+$('#gjobnumber').on('keypress',function(e){
+	if(e.which===13){
+		var idstr = $(this).val();
+		$('.loading').slideDown();
+		$('.goods').removeClass('errorcolor');
+		$(this).removeClass('errorcolor');
+		val = idstr.toUpperCase();
+		if($('.grd'+val).length == 0){
+			if($('.ggooid'+val).length > 0){
+				grec = grec + 100;
+				var rus = val + grec;
+				$(".hidden_inputs").append('<input type="hidden" name="gpvnval" class="gpvnval" id="gpval'+val+'" value="'+val+'">');
+
+				$('.ggooid'+val).each(function(){
+					var cha = $(this).val();
+					var item = $('#gitem'+cha).val();
+					var itemid = $('#gitemid'+cha).val();
+					var uom = $('#guom'+cha).val();
+					var qty = $('#gqty'+cha).val();
+					var alias = $('#galias'+cha).val();
+
+					gadd = gadd + 100;
+					gitemadd.push(gadd);
+					var us = val+gadd;
+					$(".hidden_inputs").append('<input type="hidden" class="girec'+rus+'" value="'+us+'" data="'+gadd+'">');
+					$(".hidden_inputs").append('<input type="hidden" name="gitemadd" id="gitemad'+us+'" value="'+gadd+'">');
+					$(".hidden_inputs").append('<input type="hidden" name="gipvn'+gadd+'" id="gipvn'+us+'" value="'+val+'">');
+					$(".hidden_inputs").append('<input type="hidden" name="ginameid'+gadd+'" id="ginameid'+us+'" value="'+itemid+'">');
+					$(".hidden_inputs").append('<input type="hidden" name="giname'+gadd+'" id="giname'+us+'" value="'+item+'">');
+					$(".hidden_inputs").append('<input type="hidden" name="giuom'+gadd+'" id="giuom'+us+'" value="'+uom+'">');
+					$(".hidden_inputs").append('<input type="hidden" name="giqty'+gadd+'" id="giqty'+us+'" value="'+qty+'">');
+					$(".hidden_inputs").append('<input type="hidden" name="gialias'+gadd+'" id="gialias'+us+'" value="'+alias+'">');
+					$('.tfoot2').hide();
+					$("#MaintainanceTable tbody").append('<tr id="gitemrow'+us+'"><td>'+val+'</td><td>'+item+'('+alias+')</td><td>'+uom+'</td><td>'+qty+'</td><td>0</td><td>0</td><td class="ltd">0</td></tr>');
+					$('.tfoot').show();
+				});
+				$(".grncol").append('<div class="coldiv grd'+val+'" id="colrec'+rus+'"><span class="coldes">'+val+'</span><button type="button" class="gcolbtn" name="'+val+'" data="'+rus+'"><i class="fa fa-times"></i></button></div>');
+				$('#gnjobcheck').hide();
+				
+			}else{
+				$(this).addClass('errorcolor');
+			}
+		}else{
+			$(this).addClass('errorcolor');
+		}
+		$('.loading').slideUp();
+		$(this).val('');
+		$(this).focus();
+	}
+});
+
+$(document).on('click', '.gcolbtn', function(e){
+	var idstr = $(this).attr("data");
+	var pval = $(this).attr("name");
+	$('.loading').slideDown();
+	$('.girec'+idstr).each(function(){
+		var cha = $(this).val();
+		var hac = $(this).attr("data");
+		$('#gitemad'+cha).remove();
+		$('#gipvn'+cha).remove();
+		$('#ginameid'+cha).remove();
+		$('#giname'+cha).remove();
+		$('#giuom'+cha).remove();
+		$('#giqty'+cha).remove();
+		$('#gialias'+cha).remove();
+
+		gitemadd = $.grep(gitemadd, function(value) {
+			return value != hac;
+		});
+		$('#gitemrow'+cha).remove();
+		$('#colrec'+idstr).remove();
+	});
+	$('.gpvnval').each(function(){
+		var val = $(this).val();
+		if(val==pval){
+			$('#gpval'+val).remove();
+		}
+	});
+	if($('.gpvnval').length==0){
+		$('#gnjobcheck').show();
+	}
+	if(gitemadd.length === 0){
+		if(itemadd.length === 0){
+			$('#subtotal').val(0);
+		    $('#labour').val(0);
+		    $('#total').val(0);
+			ponum = [];
+			peiamount = [];
+			$('.pvndet').hide();
+			$('.pvnshowtable').hide();
+			// totaldper = [];
+			// totaldamt = [];
+			// totalvat = [];
+			$('.tfoot').hide();
+			$('.tfoot2').show();
+		}
+	}
+	$('.loading').slideUp();
+
+});
+
+//======================================================================
 
 $('#additembtn').click(function(){
 	diserror = 0;
 	var error = 0;
 	$('#item').focus();
 	$('#itemerr').empty();
-	var itemid = $('#item option:selected').val();
+	var itemid = $('#itemm').val();
 	var itemname = $('#itemname').val();
 	var alias = $('#itemalias').val();
 	var uom = $('#itemuom').val();
@@ -1280,6 +1293,28 @@ $('#additembtn').click(function(){
 	var dis_per = $('#discount_per').val();
 	var dis_amt = $('#discount_amt').val();
 	var billty = $('#bill_type option:selected').val();
+	var cval = $('#category option:selected').val();
+	var curl = search_url(cval);
+	var sval = $('#subcategory'+curl+' option:selected').val();
+	var surl = search_url(sval);
+	var mainu = caturl+''+surl;
+	if($('#itemshow'+mainu).length>0){
+		var ival = $('#item'+mainu+' option:selected').val();
+		if(ival==''){
+			error = 1;
+			$('#item'+mainu).addClass('errorcolor');
+		}else{
+			if(itemid!=ival){
+				error = 1;
+				$('#item'+mainu).addClass('errorcolor');
+				$('#category').addClass('errorcolor');
+				$('#subcategory'+curl).addClass('errorcolor');
+			}
+		}
+	}else{
+		error = 1;
+		$('#category').addClass('errorcolor');
+	}
 	if(dis_per == ''){
 		dis_per = 0;
 	}
@@ -1288,7 +1323,7 @@ $('#additembtn').click(function(){
 	}
 	if(itemid == ''){
 		error = 1;
-		$('#item').addClass('errorcolor');
+		$('#itemm').addClass('errorcolor');
 	}
 	if(itemname == ''){
 		error = 1;
@@ -1328,7 +1363,7 @@ $('#additembtn').click(function(){
 		$(".hidden_inputs").append('<input type="hidden" name="idisamt'+add+'" id="idisamt'+add+'" value="'+dis_amt+'">');
 		$(".hidden_inputs").append('<input type="hidden" name="ialias'+add+'" id="ialias'+add+'" value="'+alias+'">');
 		$('#itemname').val('');
-		$('#item').val('');
+		$('#itemm').val('');
 		$('#uom').val('');
 		$('#itemqty').val('');
 		$('#itemalias').val('');
@@ -1336,6 +1371,10 @@ $('#additembtn').click(function(){
 		$('#itemamount').val(0);
 		$('#discount_per').val(0);
 		$('#discount_amt').val(0);
+		$('.item').val('');
+		$('#category').val('');
+		$('.subcatshow').hide();
+		$('.itemshow').hide();
 		$("#MaintainanceTable tbody").append('<tr id="itemrow'+add+'"><td><button type="button" class="edititem" id="eitem'+add+'" data="'+add+'"><i class="far fa-edit"></i></button><button type="button" class="delitem" id="ditem'+add+'" data="'+add+'"><i class="far fa-trash-alt"></i></button></td><td>'+itemname+'('+alias+')</td><td>'+uom+'</td><td>'+itemqty+'</td><td>'+itemrate+'</td><td>'+dis_amt+' ('+dis_per+'%)</td><td class="ltd">'+itemamount+'</td></tr>');
 		// $("#MaintainanceTable tbody").append('<tr id="itemrow'+add+'"><td><button type="button" class="edititem" id="eitem'+add+'" data="'+add+'"><i class="far fa-edit"></i></button><button type="button" class="delitem" id="ditem'+add+'" data="'+add+'"><i class="far fa-trash-alt"></i></button></td><td>'+itemname+'('+alias+')</td><td>'+uom+'</td><td>'+itemqty+'</td><td>'+itemrate+'</td><td class="ltd">'+itemamount+'</td></tr>');
 		$('.tfoot2').hide();
@@ -1355,7 +1394,7 @@ $('#additembtn').click(function(){
 		$('#subtotal').val(sumamoun);
 		var labour = $('#labour').val();
 		if(labour != ''){
-			if(labour>0){
+			if(labour>0 || labour==0){
 				labour = parseFloat(labour);
 				var grand = labour + parseFloat(sumamoun);
 				grand = parseFloat(grand);
@@ -1368,7 +1407,7 @@ $('#additembtn').click(function(){
 		}else{
 			$('#labour').addClass('errorcolor');
 		}
-		$('#item').val('');
+		$('#itemm').val('');
 		$('#itemname').val('');
 		$('#itemuom').val('');
 		$('#itemqty').val('');
@@ -1384,11 +1423,11 @@ $('#additemeditbtn').click(function(){
 	var error = 0;
 	$('#edititem').focus();
 	$('#itemerredit').empty();
-	var itemid = $('#edititem option:selected').val();
+	var itemid = $('#edititem').val();
 	var itemname = $('#itemnameedit').val();
 	var alias = $('#edititemalias').val();
 	var itemqty = $('#itemqtyedit').val();
-	var uom = $('#itemuom').val();
+	var uom = $('#itemuomedit').val();
 	var itemrate = $('#itemrateedit').val();
 	var itemamount = $('#itemamountedit').val();
 	var damount = $('#dfaultamount').val();
@@ -1396,6 +1435,30 @@ $('#additemeditbtn').click(function(){
 	var dis_amt = $('#editdiscount_amt').val();
 	var did = $('#dfaultid').val();
 	var billty = $('#bill_type option:selected').val();
+	var cval = $('#editcategory option:selected').val();
+	if(cval!=''){
+		var curl = search_url(cval);
+		var sval = $('#editsubcategory'+curl+' option:selected').val();
+		var surl = search_url(sval);
+		var mainu = caturl+''+surl;
+		if($('#edititemshow'+mainu).length>0){
+			var ival = $('#edititem'+mainu+' option:selected').val();
+			if(ival==''){
+				error = 1;
+				$('#edititem'+mainu).addClass('errorcolor');
+			}else{
+				if(itemid!=ival){
+					error = 1;
+					$('#edititem'+mainu).addClass('errorcolor');
+					$('#editcategory').addClass('errorcolor');
+					$('#editsubcategory'+curl).addClass('errorcolor');
+				}
+			}
+		}else{
+			error = 1;
+			$('#editcategory').addClass('errorcolor');
+		}
+	}
 	if(dis_per == ''){
 		dis_per = 0;
 	}
@@ -1451,6 +1514,10 @@ $('#additemeditbtn').click(function(){
 		$('#itemamountedit').val(0);
 		$('#editdiscount_per').val(0);
 		$('#editdiscount_amt').val(0);
+		$('.edititem').val('');
+		$('#editcategory').val('');
+		$('.editsubcatshow').hide();
+		$('.edititemshow').hide();
 		$('#itemrow'+did).remove();
 		$("#MaintainanceTable tbody").append('<tr id="itemrow'+did+'"><td><button type="button" class="edititem" id="eitem'+did+'" data="'+did+'"><i class="far fa-edit"></i></button><button type="button" class="delitem" id="ditem'+did+'" data="'+did+'"><i class="far fa-trash-alt"></i></button></td><td>'+itemname+'('+alias+')</td><td>'+uom+'</td><td>'+itemqty+'</td><td>'+itemrate+'</td><td>'+dis_amt+' ('+dis_per+'%)</td><td class="ltd">'+itemamount+'</td></tr>');
 		// $("#MaintainanceTable tbody").append('<tr id="itemrow'+did+'"><td><button type="button" class="edititem" id="eitem'+did+'" data="'+did+'"><i class="far fa-edit"></i></button><button type="button" class="delitem" id="ditem'+did+'" data="'+did+'"><i class="far fa-trash-alt"></i></button></td><td>'+itemname+'('+alias+')</td><td>'+uom+'</td><td>'+itemqty+'</td><td>'+itemrate+'</td><td class="ltd">'+itemamount+'</td></tr>');
@@ -1473,7 +1540,7 @@ $('#additemeditbtn').click(function(){
 		$('#subtotal').val(sumamoun);
 		var labour = $('#labour').val();
 		if(labour != ''){
-			if(labour>0){
+			if(labour>0 || labour==0){
 				labour = parseFloat(labour);
 				var grand = labour + parseFloat(sumamoun);
 				grand = parseFloat(grand);
@@ -1524,10 +1591,12 @@ $(document).on('click', '.delitem', function(){
 	    $('#labour').val(0);
 	    // $('#vat').val(0);
 	    $('#total').val(0);
-	    // $('#discount1').val(0);
-	    // $('#discount2').val(0);
-	    $('.tfoot').hide();
-	    $('.tfoot2').show();
+		if (gitemadd.length === 0) {
+		    // $('#discount1').val(0);
+		    // $('#discount2').val(0);
+		    $('.tfoot').hide();
+		    $('.tfoot2').show();
+	    }
 	    
 	}else{
 		$.each(itemadd , function(index, val) {
@@ -1560,7 +1629,7 @@ $(document).on('click', '.delitem', function(){
 		$('#subtotal').val(sumpeiamoun);
 		var labour = $('#labour').val();
 		if(labour != ''){
-			if(labour>0){
+			if(labour>0 || labour==0){
 				labour = parseFloat(labour);
 				var grand = labour + parseFloat(sumpeiamoun);
 				grand = parseFloat(grand);
@@ -1581,102 +1650,12 @@ $('#labour').click(function(){
 	$(this).removeClass('errorcolor');
 });
 
-// $('#labour').on('keyup', function(){
-// 	diserror = 0;
-// 	var val = $(this).val();
-// 	var suma = $('#subtotal').val();
-// 	var billty = $('#bill_type option:selected').val();
-// 	var disp = $('#discount1').val();
-// 	if(disp != '' && disp > 0){
-// 		var dis = parseFloat(suma) * disp/100;
-// 		var disv = dis.toFixed(2);
-// 		$('#discount2').val(disv);
-// 	}else{
-// 		var dis = $('#discount2').val();
-// 	}
-// 	if(dis != '' && dis > 0){
-// 		dis = parseFloat(dis);
-// 		if(dis < parseFloat(suma)){
-// 			suma = parseFloat(suma);
-// 			var total = suma - dis;
-// 			total = parseFloat(total);
-// 			if(val!=''){
-
-// 				if(val>0){
-// 					val = parseFloat(val);
-// 					var total = val + total;
-// 					if(billty != ''){
-// 						if(billty == 'VAT Bill'){
-// 							var vat = total * 13/100;
-// 							vat = parseFloat(vat);
-// 							var grand = total + vat;
-// 							grand = parseFloat(grand);
-// 							grand = grand.toFixed(2);
-// 							vat = vat.toFixed(2);
-// 						}else{
-// 							var vat = 0;
-// 							var grand = total.toFixed(2);
-// 						}
-// 						$('#vat').val(vat);
-// 						$('#total').val(grand);
-// 					}else{
-// 						$('#bill_type').addClass('errorcolor');
-// 					}
-
-// 					$(this).removeClass('errorcolor');
-// 				}else{
-// 					$(this).addClass('errorcolor');
-// 				}
-// 			}else{
-// 				$(this).addClass('errorcolor');
-// 			}
-// 		}else{
-// 			diserror = 1;
-// 			$('#discount2').addClass('errorcolor');
-// 			$('#discount1').addClass('errorcolor');
-// 		}
-// 	}else{
-// 		if(val!=''){
-
-// 			if(val>0){
-// 				suma = parseFloat(suma);
-// 				val = parseFloat(val);
-// 				var total = val + suma;
-// 				total = parseFloat(total);
-// 				if(billty != ''){
-// 					if(billty == 'VAT Bill'){
-// 						var vat = total * 13/100;
-// 						vat = parseFloat(vat);
-// 						var grand = total + vat;
-// 						grand = parseFloat(grand);
-// 						grand = grand.toFixed(2);
-// 						vat = vat.toFixed(2);
-// 					}else{
-// 						var vat = 0;
-// 						var grand = total.toFixed(2);
-// 					}
-// 					$('#vat').val(vat);
-// 					$('#total').val(grand);
-// 				}else{
-// 					$('#bill_type').addClass('errorcolor');
-// 				}
-
-// 				$(this).removeClass('errorcolor');
-// 			}else{
-// 				$(this).addClass('errorcolor');
-// 			}
-// 		}else{
-// 			$(this).addClass('errorcolor');
-// 		}
-// 	}
-// });
-
 $('#labour').on('keyup', function(){
 	diserror = 0;
 	var val = $(this).val();
 	var suma = $('#subtotal').val();
 	if(val!=''){
-		if(val>0){
+		if(val>0 || val==0){
 			suma = parseFloat(suma);
 			val = parseFloat(val);
 			var total = val + suma;
@@ -1712,7 +1691,7 @@ $('#bill_type').on('change', function(){
 			if(dis < subtotal){
 				var total = subtotal - dis;
 				total = parseFloat(total);
-				if(labour != '' && labour > 0){
+				if(labour != '' && (labour > 0 || labour==0)){
 					labour = parseFloat(labour);
 					total = labour + total;
 					total = parseFloat(total);
@@ -1739,7 +1718,7 @@ $('#bill_type').on('change', function(){
 				$('#discount1').addClass('errorcolor');
 			}
 		}else{
-			if(labour != '' && labour > 0){
+			if(labour != '' && (labour > 0 || labour==0)){
 				labour = parseFloat(labour);
 				total = labour + total;
 				total = parseFloat(total);
@@ -2051,6 +2030,11 @@ $('#editdiscount_amt').on('keyup', function(){
 
 $('#checkblock').click(function(){
 	$(this).removeClass('errorcolor');
+	$('#gcheckblock').removeClass('errorcolor');
+});
+$('#gcheckblock').click(function(){
+	$(this).removeClass('errorcolor');
+	$('#checkblock').removeClass('errorcolor');
 });
 $('#tranblock').click(function(){
 	$(this).removeClass('errorcolor');
@@ -2080,6 +2064,7 @@ $('#MaintainanceForm').on('submit', function(){
 	var jedate;
 	var japprove;
 	var jobnumber;
+	var gjobnumber;
 	var date = $('input[name=date]').val();
 	if(date==''){
 		error=1;
@@ -2119,7 +2104,7 @@ $('#MaintainanceForm').on('submit', function(){
 	// }
 
 	var lbour = $('#labour').val();
-	if(lbour=='' || lbour <= 0){
+	if(lbour=='' || lbour < 0){
 		error=1;
 		$('#labour').addClass('errorcolor');
 	}
@@ -2139,41 +2124,23 @@ $('#MaintainanceForm').on('submit', function(){
 	}else if($('#nojob').prop("checked") == true){
 		jobnumber = '';
 	}else{
+		error = 1;
 		$('#checkblock').addClass('errorcolor');
 	}
 
-	// var idstr = $('#vehicle_type option:selected').val();
-	// var val = $('#vtypename'+idstr).val();
-	// var vehicle = '';
-	// $('#vtype').val(val);
-	// if($('#chasis_check').prop("checked") == true){
-	// 	var vehicle = $('#vehi_chasis'+idstr+' option:selected').val();
-	// 	if(vehicle==''){
-	// 		error = 1;
-	// 		$('#vehi_chasis'+idstr).addClass('errorcolor');
-	// 	}else{
-	// 		$('#vehicle_confirm').val(vehicle);
-	// 	}
-	// 	$('#num_type').val('chasis');
-	// }else if($('#engine_check').prop("checked") == true){
-	// 	var vehicle = $('#vehi_engine'+idstr+' option:selected').val();
-	// 	if(vehicle==''){
-	// 		error = 1;
-	// 		$('#vehi_engine'+idstr).addClass('errorcolor');
-	// 	}else{
-	// 		$('#vehicle_confirm').val(vehicle);
-	// 	}
-	// 	$('#num_type').val('engine');
-	// }else{
-	// 	var vehicle = $('#vehi_number'+idstr+' option:selected').val();
-	// 	if(vehicle==''){
-	// 		error = 1;
-	// 		$('#vehi_number'+idstr).addClass('errorcolor');
-	// 	}else{
-	// 		$('#vehicle_confirm').val(vehicle);
-	// 	}
-	// 	$('#num_type').val('vehicle');
-	// }
+	if($('#gyesjob').prop("checked") == true){
+		if($('.gpvnval').length<0){
+			error = 1;
+			var val = gjobnumber.toUpperCase();
+			$('#gjobnumber').addClass('errorcolor');
+		}
+	}else if($('#gnojob').prop("checked") == true){
+		gjobnumber = '';
+	}else{
+		error = 1;
+		$('#gcheckblock').addClass('errorcolor');
+	}
+
 	var hour = $('#hour').val();
 	if(hour==''){
 		error=1;
@@ -2185,12 +2152,55 @@ $('#MaintainanceForm').on('submit', function(){
 		$('#kilometer').addClass('errorcolor');
 	}
 
+	if($('#nojob').prop("checked") == true){
+		if($('#gyesjob').prop("checked") == true){
+			var idstr = $('#vehicle_type option:selected').val();
+			var val = $('#vtypename'+idstr).val();
+			var vehicle = '';
+			$('#vtype').val(val);
+			if($('#chasis_check').prop("checked") == true){
+				var vehicle = $('#vehi_chasis'+idstr+' option:selected').val();
+				if(vehicle==''){
+					error = 1;
+					$('#vehi_chasis'+idstr).addClass('errorcolor');
+				}else{
+					$('#vehicle_confirm').val(vehicle);
+				}
+				$('#num_type').val('chasis');
+			}else if($('#engine_check').prop("checked") == true){
+				var vehicle = $('#vehi_engine'+idstr+' option:selected').val();
+				if(vehicle==''){
+					error = 1;
+					$('#vehi_engine'+idstr).addClass('errorcolor');
+				}else{
+					$('#vehicle_confirm').val(vehicle);
+				}
+				$('#num_type').val('engine');
+			}else{
+				var vehicle = $('#vehi_number'+idstr+' option:selected').val();
+				if(vehicle==''){
+					error = 1;
+					$('#vehi_number'+idstr).addClass('errorcolor');
+				}else{
+					$('#vehicle_confirm').val(vehicle);
+				}
+				$('#num_type').val('vehicle');
+			}
+		}
+	}
+
+	if($('#nojob').prop("checked") == true && $('#gnojob').prop("checked") == true){
+		error = 1;
+		$('#checkblock').addClass('errorcolor');
+		$('#gcheckblock').addClass('errorcolor');
+	}
+
 	if(porder==1){
 		error = 1;
 		$('#jobnumber').addClass('errorcolor');
 	}
 
-	if(itemadd.length===0){
+	if(itemadd.length===0 && gitemadd.length===0){
 		error = 1;
 		$('.goods').addClass('errorcolor');
 	}

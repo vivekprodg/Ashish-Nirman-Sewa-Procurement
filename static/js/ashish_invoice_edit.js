@@ -114,30 +114,30 @@ $('#cacheck').click(function(){
 
 var pch = 0;
 var pbill = 0
-$('#challan').blur(function(){
-	var val = $(this).val();
-	pch = 0;
-	$('.pchallan').each(function(){
-		var cha = $(this).val();
-		if(val == cha){
-			pch = 1;
-			$('#challan').addClass('errorcolor');
-			$('.challan_e').show();
-		}
-	});
-});
-$('#invoice').blur(function(){
-	var val = $(this).val();
-	pbill = 0;
-	$('.pvoice').each(function(){
-		var cha = $(this).val();
-		if(val == cha){
-			pbill = 1;
-			$('#invoice').addClass('errorcolor');
-			$('.bill_e').show();
-		}
-	});
-});
+// $('#challan').blur(function(){
+// 	var val = $(this).val();
+// 	pch = 0;
+// 	$('.pchallan').each(function(){
+// 		var cha = $(this).val();
+// 		if(val == cha){
+// 			pch = 1;
+// 			$('#challan').addClass('errorcolor');
+// 			$('.challan_e').show();
+// 		}
+// 	});
+// });
+// $('#invoice').blur(function(){
+// 	var val = $(this).val();
+// 	pbill = 0;
+// 	$('.pvoice').each(function(){
+// 		var cha = $(this).val();
+// 		if(val == cha){
+// 			pbill = 1;
+// 			$('#invoice').addClass('errorcolor');
+// 			$('.bill_e').show();
+// 		}
+// 	});
+// });
 $('#porder').blur(function(){
 	var val = $(this).val();
 	val = val.toUpperCase();
@@ -669,8 +669,8 @@ $('#additemeditbtn').click(function(){
 	$('#iname'+did).val(itemname);
 	$('#iuom'+did).val(uom);
 	$('#iqty'+did).val(qty);
-	$('#irate'+did).val(remark);
-	$('#iamt'+did).val(remark);
+	$('#irate'+did).val(rate);
+	$('#iamt'+did).val(amt);
 	$('#ialias'+did).val(alias);
 	$('#idisper'+did).val(dis_per);
 	$('#idisamt'+did).val(dis_amt);

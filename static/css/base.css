@@ -946,5 +946,23 @@ nav li:hover .tooltip{
   color:rgba(0,0,0,.7);
 }
 
+/*---------pagination--------------*/
+
+.page_numbers{
+    float:left;
+    width:100%;
+
+}
+.pagination{
+    float:right;
+}
+.pagination li{
+    float:left;
+    padding:0px 8px 0px 8px;
+    border: 1px solid #008ECC;
+}
+
+/*-------------------------------*/
+
 
 

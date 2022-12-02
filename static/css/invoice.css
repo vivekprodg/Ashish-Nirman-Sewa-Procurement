@@ -267,7 +267,8 @@
   line-height: 35px;
   padding: 0px 5px;
 }
-.colbtn{
+.colbtn,
+.gcolbtn{
   height: 35px;
   width:auto;
   float: left;
@@ -395,7 +396,9 @@
 #yjobcheck,
 #njobcheck,
 #crcheck,
-#cacheck{
+#cacheck,
+#gyjobcheck,
+#gnjobcheck{
   float:left;
   font-size: 14px;
   color: rgba(0,0,0,.8);
@@ -405,7 +408,9 @@
 #yesjob,
 #nojob,
 #crejob,
-#cajob{
+#cajob,
+#gyesjob,
+#gnojob{
   height: 18px;
   width: 18px;
   position: relative;
@@ -432,6 +437,18 @@
   display: none;
 }
 .pvndet{
+  display: none;
+}
+
+.help_text{
+  width:100%;
+  float:left;
+  font-size: 12px;
+  color: rgba(0,0,0,.7);
+  padding: 3px 0px;
+}
+.jnumber,
+#gjdis{
   display: none;
 }
 /*===================*/

@@ -86,6 +86,7 @@ $('.sup_edit').click(function(){
 	$('#suid').val(idstr);
 	$('#name').val(name);
 	$('#url').val(url);
+	$('#dname').val(name);
 	if(location!='' && location!='None'){
 		$('#location').val(location);
 	}
@@ -106,6 +107,7 @@ $('#close_edit').click(function(){
 	$('#opening').val('');
 	$('#capacity').val('');
 	$('#site').val('');
+	$('#dname').val('');
 	$('#edit_popup').css({"transform": "scale(.1)", "-webkit-transform": "scale(.1)", "-moz-transform": "scale(.1)"});
 	$('.edit_popupbanner').fadeOut();
 });

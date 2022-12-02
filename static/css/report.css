@@ -379,7 +379,13 @@
 #invoicereport,
 #materialreport,
 #internalreport,
-#transfergrn{
+#transfergrn,
+#fuelpurchase,
+#maintainlog,
+#vehiclemaintain,
+#vendormaintain,
+#vehiclemove,
+#vehiclefuel{
   margin-top: 110px;
   margin-bottom: 50px;
   box-shadow: none !important;
@@ -541,6 +547,9 @@ table thead th{
 #rbtn11{
   background: #ed4561;
 }
+#rbtn12{
+  background: #ed4561;
+}
 
 
 .report_head{
@@ -564,7 +573,7 @@ table thead th{
 .export_csv_btn{
   float:right;
   width:auto;
-  padding: 10px 20px;
+  padding: 0px 20px;
   border: none;
   background:#008ECC;
   color: #fff;
@@ -574,7 +583,7 @@ table thead th{
 .export_pdf_btn{
   float:right;
   width:auto;
-  padding: 10px 20px;
+  padding: 0px 20px;
   border: none;
   background:#ed4561;
   color: #fff;
@@ -812,7 +821,9 @@ table thead th{
 #chasis_checkfuel,
 #engine_checkfuel,
 #chasis_checkmain,
-#engine_checkmain{
+#engine_checkmain,
+#chasis_checkmove,
+#engine_checkmove{
   height: 18px;
   width:18px;
   position: relative;

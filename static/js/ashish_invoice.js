@@ -75,30 +75,30 @@ $('#cacheck').click(function(){
 var pch = 0;
 var pbill = 0;
 var porder = 0;
-$('#challan').blur(function(){
-	var val = $(this).val();
-	pch = 0;
-	$('.pchallan').each(function(){
-		var cha = $(this).val();
-		if(val == cha){
-			pch = 1;
-			$('#challan').addClass('errorcolor');
-			$('.challan_e').show();
-		}
-	});
-});
-$('#invoice').blur(function(){
-	var val = $(this).val();
-	pbill = 0;
-	$('.pvoice').each(function(){
-		var cha = $(this).val();
-		if(val == cha){
-			pbill = 1;
-			$('#invoice').addClass('errorcolor');
-			$('.bill_e').show();
-		}
-	});
-});
+// $('#challan').blur(function(){
+// 	var val = $(this).val();
+// 	pch = 0;
+// 	$('.pchallan').each(function(){
+// 		var cha = $(this).val();
+// 		if(val == cha){
+// 			pch = 1;
+// 			$('#challan').addClass('errorcolor');
+// 			$('.challan_e').show();
+// 		}
+// 	});
+// });
+// $('#invoice').blur(function(){
+// 	var val = $(this).val();
+// 	pbill = 0;
+// 	$('.pvoice').each(function(){
+// 		var cha = $(this).val();
+// 		if(val == cha){
+// 			pbill = 1;
+// 			$('#invoice').addClass('errorcolor');
+// 			$('.bill_e').show();
+// 		}
+// 	});
+// });
 $('#porder').blur(function(){
 	var val = $(this).val();
 	val = val.toUpperCase();

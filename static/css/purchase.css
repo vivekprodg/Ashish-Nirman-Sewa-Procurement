@@ -220,3 +220,11 @@
 }
 
 /* ======================= */
+.itemshow,
+.edititemshow{
+  display:none;
+}
+.subcatshow,
+.editsubcatshow{
+  display:none;
+}

@@ -38,6 +38,23 @@ var add = 0;
 var rec = 0;
 var itemadd = [];
 var diserror = 0;
+
+//edit part================================
+
+$('.inv_count').each(function(){
+	var cha = $(this).val();
+	itemadd.push(cha);
+});
+$('.rate_count').each(function(){
+	var cha = $(this).val();
+	add = add+1;
+});
+$('.rec_count').each(function(){
+	var cha = $(this).val();
+	rec = rec+1;
+});
+
+//=======================================
 $('#pvn').on('keypress',function(e){
 	if(e.which===13){
 		diserror = 0;

@@ -53,8 +53,64 @@ $('#close_edit').click(function(){
 	$('.edit_popupbanner').fadeOut();
 });
 $('#close_edit1').click(function(){
+	$('.editsubcatshow').hide();
+	$('.edititemshow').hide();
 	$('#edit_popup1').css({"transform": "scale(.1)", "-webkit-transform": "scale(.1)", "-moz-transform": "scale(.1)"});
 	$('.edit_popupbanner1').fadeOut();
+});
+
+function search_url(val){
+  var url = val.toLowerCase();
+  var result = url.replace(/[^a-z0-9\s]/gi, '').replace(/[_\s]/g, '');
+  return result;
+}
+$('#category').on('change', function(){
+	var val = $('#category option:selected').val();
+	var url = search_url(val);
+	$('.subcatshow').hide();
+	$('.subcategory').val('');
+	if($('#subcatshow'+url).length>0){
+		$('#subcatshow'+url).show();
+		var sval = $('#subcategory'+url+' option:selected').val();
+		$('#subcatval').val(sval);
+	}else{
+		$('#subcatval').val('');
+	}
+	$('.itemshow').hide();
+});
+$('.subcategory').on('change', function(){
+	var idstr = $(this).attr("id");
+	var val = $('#'+idstr+' option:selected').val();
+	var catval = $('#category option:selected').val();
+	var caturl = search_url(catval);
+	var surl = search_url(val);
+	var mainu = caturl+''+surl;
+	$('.itemshow').hide();
+	$('#itemshow'+mainu).show();
+});
+$('#editcategory').on('change', function(){
+	var val = $('#editcategory option:selected').val();
+	var url = search_url(val);
+	$('.editsubcatshow').hide();
+	$('.editsubcategory').val('');
+	if($('#editsubcatshow'+url).length>0){
+		$('#editsubcatshow'+url).show();
+		var sval = $('#editsubcategory'+url+' option:selected').val();
+		$('#editsubcatval').val(sval);
+	}else{
+		$('#editsubcatval').val('');
+	}
+	$('.edititemshow').hide();
+});
+$('.editsubcategory').on('change', function(){
+	var idstr = $(this).attr("id");
+	var val = $('#'+idstr+' option:selected').val();
+	var catval = $('#editcategory option:selected').val();
+	var caturl = search_url(catval);
+	var surl = search_url(val);
+	var mainu = caturl+''+surl;
+	$('.edititemshow').hide();
+	$('#edititemshow'+mainu).show();
 });
 
 
@@ -119,20 +175,61 @@ $('#engine_check').on('click', function(){
 	
 });
 
-$('#item').on('change', function(){
-	var idstr = $('#item option:selected').val();
+function url(vehi_num){
+  var mat_url = vehi_num.toLowerCase();
+  var result = mat_url.replace(/[^a-z0-9\s]/gi, '').replace(/[_\s]/g, '');
+  return result;
+}
+
+$('.vchoice').on('change', function(){
+	var idstr = $(this).attr("id");
+	var val = $('#'+idstr+' option:selected').val();
+	$('.vehidet').show();
+	var vnum = url(val);
+	if($('#vh'+vnum).length>0){
+		var vh = $('#vh'+vnum).val();
+		var vhc = $('#vh'+vnum).attr("name");
+		var vhe = $('#vh'+vnum).attr("data");
+		$('#vehidetnum').text(vh);
+		$('#vehidetchasis').text(vhc);
+		$('#vehidetengine').text(vhe);
+	}
+	if($('#vhc'+vnum).length>0){
+		var vh = $('#vhc'+vnum).attr("name");
+		var vhc = $('#vhc'+vnum).val();
+		var vhe = $('#vhc'+vnum).attr("data");
+		$('#vehidetnum').text(vh);
+		$('#vehidetchasis').text(vhc);
+		$('#vehidetengine').text(vhe);
+	}
+	if($('#vhe'+vnum).length>0){
+		var vh = $('#vhe'+vnum).attr("data");
+		var vhc = $('#vhe'+vnum).attr("name");
+		var vhe = $('#vhe'+vnum).val();
+		$('#vehidetnum').text(vh);
+		$('#vehidetchasis').text(vhc);
+		$('#vehidetengine').text(vhe);
+	}
+});
+
+$('.item').on('change', function(){
+	var vdstr = $(this).attr("id");
+	var idstr = $('#'+vdstr+' option:selected').val();
 	var name = $('#ini'+idstr).val();
 	var uom = $('#ini'+idstr).attr("data");
 	var alias = $('#ini'+idstr).attr("name");
+	$('#itemm').val(idstr);
 	$('#itemname').val(name);
 	$('#uom').val(uom);
 	$('#itemalias').val(alias);
 });
-$('#edititem').on('change', function(){
-	var idstr = $('#edititem option:selected').val();
+$('.edititemm').on('change', function(){
+	var vdstr = $(this).attr("id");
+	var idstr = $('#'+vdstr+' option:selected').val();
 	var name = $('#eini'+idstr).val();
 	var uom = $('#eini'+idstr).attr("data");
 	var alias = $('#eini'+idstr).attr("name");
+	$('#edititem').val(idstr);
 	$('#edititemname').val(name);
 	$('#edituom').val(uom);
 	$('#edititemalias').val(alias);
@@ -143,12 +240,110 @@ var itemadd = [];
 $('#additembtn').click(function(){
 	var error = 0;
 	$('#item').focus();
-	var item = $('#item option:selected').val();
+	var item = $('#itemm').val();
 	var itemname = $('#itemname').val();
 	var alias = $('#itemalias').val();
 	var uom = $('#uom').val();
 	var qty = $('#qty').val();
 	var desc = $('#desc').val();
+	var cval = $('#category option:selected').val();
+	var curl = search_url(cval);
+	var sval = $('#subcategory'+curl+' option:selected').val();
+	var surl = search_url(sval);
+	var mainu = curl+''+surl;
+	if($('#itemshow'+mainu).length>0){
+		var ival = $('#item'+mainu+' option:selected').val();
+		if(ival==''){
+			error = 1;
+			$('#item'+mainu).addClass('errorcolor');
+		}else{
+			if(item!=ival){
+				error = 1;
+				$('#item'+mainu).addClass('errorcolor');
+				$('#category').addClass('errorcolor');
+				$('#subcategory'+curl).addClass('errorcolor');
+			}
+		}
+	}else{
+		error = 1;
+		$('#category').addClass('errorcolor');
+	}
+	if(itemname == '' || item == '' ){
+		error = 1;
+		$('#itemm').addClass('errorcolor');
+	}
+	if(uom == ''){
+		error = 1;
+		$('#uom').addClass('errorcolor');
+	}
+	if(qty=='' || qty < 0){
+		error = 1;
+		$('#qty').addClass('errorcolor');	
+	}
+	if($('.itamval'+item).length==0){
+		if(error == 0){
+			add = add + 1;
+			itemadd.push(add);
+			// console.log(amount);
+			// console.log(itemadd);
+			$(".hidden_inputs").append('<input type="hidden" name="itemadd" id="itemad'+add+'" value="'+add+'">');
+			$(".hidden_inputs").append('<input type="hidden" name="inameid'+add+'" id="inameid'+add+'" value="'+item+'">');
+			$(".hidden_inputs").append('<input type="hidden" name="iname'+add+'" id="iname'+add+'" value="'+itemname+'">');
+			$(".hidden_inputs").append('<input type="hidden" name="iuom'+add+'" id="iuom'+add+'" value="'+uom+'">');
+			$(".hidden_inputs").append('<input type="hidden" name="iqty'+add+'" id="iqty'+add+'" value="'+qty+'">');
+			$(".hidden_inputs").append('<input type="hidden" name="idesc'+add+'" id="idesc'+add+'" value="'+desc+'">');
+			$(".hidden_inputs").append('<input type="hidden" name="ialias'+add+'" id="ialias'+add+'" value="'+alias+'">');
+			$('#itemm').val('');
+			$('#itemname').val('');
+			$('#uom').val('');
+			$('#itemalias').val('');
+			$('#qty').val('');
+			$('#desc').val('');
+			$('.item').val('');
+			$('#category').val('');
+			$('.subcatshow').hide();
+			$('.itemshow').hide();
+			$("#ItemTable tbody").append('<tr id="itemrow'+add+'" class="itamval'+item+'"><td><button type="button" class="edititem" id="eitem'+add+'" data="'+add+'"><i class="far fa-edit"></i></button><button type="button" class="delitem" id="ditem'+add+'" data="'+add+'"><i class="far fa-trash-alt"></i></button></td><td>'+itemname+'('+alias+')</td><td>'+uom+'</td><td>'+qty+'</td><td>'+desc+'</td></tr>');
+			$('.tfoot2').hide();
+			// $('.tfoot').show();
+		}
+	}
+});
+
+$('#additemeditbtn').click(function(){
+	$('#item').focus();
+	var error = 0;
+	var itemname = $('#edititemname').val();
+	var item = $('#edititemon').val();
+	var qty = $('#editqty').val();
+	var desc = $('#editdesc').val();
+	var uom = $('#edituom').val();
+	var alias = $('#edititemalias').val();
+	var did = $('#dfaultid').val();
+	var cval = $('#editcategory option:selected').val();
+	if(cval!=''){
+		var curl = search_url(cval);
+		var sval = $('#editsubcategory'+curl+' option:selected').val();
+		var surl = search_url(sval);
+		var mainu = curl+''+surl;
+		if($('#edititemshow'+mainu).length>0){
+			var ival = $('#edititem'+mainu+' option:selected').val();
+			if(ival==''){
+				error = 1;
+				$('#edititem'+mainu).addClass('errorcolor');
+			}else{
+				if(item!=ival){
+					error = 1;
+					$('#edititem'+mainu).addClass('errorcolor');
+					$('#editcategory').addClass('errorcolor');
+					$('#editsubcategory'+curl).addClass('errorcolor');
+				}
+			}
+		}else{
+			error = 1;
+			$('#editcategory').addClass('errorcolor');
+		}
+	}
 	if(itemname == '' || item == '' ){
 		error = 1;
 		$('#item').addClass('errorcolor');
@@ -162,66 +357,27 @@ $('#additembtn').click(function(){
 		$('#qty').addClass('errorcolor');	
 	}
 	if(error == 0){
-		add = add + 1;
-		itemadd.push(add);
-		// console.log(amount);
-		// console.log(itemadd);
-		$(".hidden_inputs").append('<input type="hidden" name="itemadd" id="itemad'+add+'" value="'+add+'">');
-		$(".hidden_inputs").append('<input type="hidden" name="inameid'+add+'" id="inameid'+add+'" value="'+item+'">');
-		$(".hidden_inputs").append('<input type="hidden" name="iname'+add+'" id="iname'+add+'" value="'+itemname+'">');
-		$(".hidden_inputs").append('<input type="hidden" name="iuom'+add+'" id="iuom'+add+'" value="'+uom+'">');
-		$(".hidden_inputs").append('<input type="hidden" name="iqty'+add+'" id="iqty'+add+'" value="'+qty+'">');
-		$(".hidden_inputs").append('<input type="hidden" name="idesc'+add+'" id="idesc'+add+'" value="'+desc+'">');
-		$(".hidden_inputs").append('<input type="hidden" name="ialias'+add+'" id="ialias'+add+'" value="'+alias+'">');
-		$('#item').val('');
-		$('#itemname').val('');
-		$('#uom').val('');
-		$('#itemalias').val('');
-		$('#qty').val('');
-		$('#desc').val('');
-		$("#ItemTable tbody").append('<tr id="itemrow'+add+'"><td><button type="button" class="edititem" id="eitem'+add+'" data="'+add+'"><i class="far fa-edit"></i></button><button type="button" class="delitem" id="ditem'+add+'" data="'+add+'"><i class="far fa-trash-alt"></i></button></td><td>'+itemname+'('+alias+')</td><td>'+uom+'</td><td>'+qty+'</td><td>'+desc+'</td></tr>');
-		$('.tfoot2').hide();
-		// $('.tfoot').show();
+		$('#inameid'+did).val(item);
+		$('#iname'+did).val(itemname);
+		$('#iuom'+did).val(uom);
+		$('#iqty'+did).val(qty);
+		$('#idesc'+did).val(desc);
+		$('#ialias'+did).val(alias);
+		$('#edititemname').val('');
+		$('#edititemon').val('');
+		$('#editqty').val('');
+		$('#editdesc').val('');
+		$('#edituom').val('');
+		$('#edititemalias').val('');
+		$('.edititem').val('');
+		$('#editcategory').val('');
+		$('.editsubcatshow').hide();
+		$('.edititemshow').hide();
+		$('#itemrow'+did).remove();
+		$("#ItemTable tbody").append('<tr id="itemrow'+did+'" class="itamval'+item+'"><td><button type="button" class="edititem" id="eitem'+did+'" data="'+did+'"><i class="far fa-edit"></i></button><button type="button" class="delitem" id="ditem'+did+'" data="'+did+'"><i class="far fa-trash-alt"></i></button></td><td>'+itemname+'('+alias+')</td><td>'+uom+'</td><td>'+qty+'</td><td>'+desc+'</td></tr>');
+		$('#edit_popup1').css({"transform": "scale(.1)", "-webkit-transform": "scale(.1)", "-moz-transform": "scale(.1)"});
+		$('.edit_popupbanner1').fadeOut();
 	}
-});
-
-$('#additemeditbtn').click(function(){
-	$('#item').focus();
-	var itemname = $('#edititemname').val();
-	var item = $('#edititem option:selected').val();
-	var qty = $('#editqty').val();
-	var desc = $('#editdesc').val();
-	var uom = $('#edituom').val();
-	var alias = $('#edititemalias').val();
-	var did = $('#dfaultid').val();
-	if(itemname == '' || item == '' ){
-		error = 1;
-		$('#item').addClass('errorcolor');
-	}
-	if(uom == ''){
-		error = 1;
-		$('#uom').addClass('errorcolor');
-	}
-	if(qty=='' || qty < 0){
-		error = 1;
-		$('#qty').addClass('errorcolor');	
-	}
-	$('#inameid'+did).val(item);
-	$('#iname'+did).val(itemname);
-	$('#iuom'+did).val(uom);
-	$('#iqty'+did).val(qty);
-	$('#idesc'+did).val(desc);
-	$('#ialias'+did).val(alias);
-	$('#edititemname').val('');
-	$('#edititem').val('');
-	$('#editqty').val('');
-	$('#editdesc').val('');
-	$('#edituom').val('');
-	$('#edititemalias').val('');
-	$('#itemrow'+did).remove();
-	$("#ItemTable tbody").append('<tr id="itemrow'+did+'"><td><button type="button" class="edititem" id="eitem'+did+'" data="'+did+'"><i class="far fa-edit"></i></button><button type="button" class="delitem" id="ditem'+did+'" data="'+did+'"><i class="far fa-trash-alt"></i></button></td><td>'+itemname+'('+alias+')</td><td>'+uom+'</td><td>'+qty+'</td><td>'+desc+'</td></tr>');
-	$('#edit_popup1').css({"transform": "scale(.1)", "-webkit-transform": "scale(.1)", "-moz-transform": "scale(.1)"});
-	$('.edit_popupbanner1').fadeOut();
 
 });
 
@@ -229,14 +385,13 @@ $(document).on('click', '.edititem', function(){
 	var idstr = $(this).attr("data");
 	$('.edit_popupbanner1').fadeIn();
 	$('#edit_popup1').css({"transform": "scale(1)", "-webkit-transform": "scale(1)", "-moz-transform": "scale(1)"});	$('#itemname').focus();
-	$('#edititem').focus();
 	var itemid = $('#inameid'+idstr).val();
 	var name = $('#iname'+idstr).val();
 	var uom = $('#iuom'+idstr).val();
 	var qty = $('#iqty'+idstr).val();
 	var desc = $('#idesc'+idstr).val();
 	var alias = $('#ialias'+idstr).val();
-	$('#edititem').val(itemid);
+	$('#edititemon').val(itemid);
 	$('#edititemname').val(name);
 	$('#edituom').val(uom);
 	$('#editqty').val(qty);

@@ -27,8 +27,40 @@ $(window).on('load', function(){
 	}
 });
 
+//edit part============
+
+var sup = $('#dsup').val();
+var trans = $('#dtrans').val();
+$('#supplier').val(sup);
+if(trans=='credit'){
+	$('#cajob').prop("checked", false);
+	$('#crejob').prop("checked", true);
+	$('#payday').show();
+}
+if(trans=='cash'){
+	$('#cajob').prop("checked", true);
+	$('#crejob').prop("checked", false);
+	$('#payday').hide();
+}
+
+//==========================
+
 $('.inputs').click(function(){
 	$(this).removeClass('errorcolor');
+});
+
+$('#crcheck').click(function(){
+	$('#crejob').prop('checked', true);
+	$('#cajob').prop('checked', false);
+	$('#trans').val('credit');
+	$('#payday').show();
+});
+
+$('#cacheck').click(function(){
+	$('#crejob').prop('checked', false);
+	$('#cajob').prop('checked', true);
+	$('#trans').val('cash');
+	$('#payday').hide();
 });
 
 var pur_on = $('#purchase_number').val();
@@ -265,6 +297,25 @@ $('#PurchaseBillAdd').on('submit', function(){
 	if(ponnum=='' && porder == 0){
 		error=1;
 		$('#purchase_number').addClass('errorcolor');
+	}
+
+	var supplier = $('#supplier option:selected').val();
+	if(supplier==''){
+		error = 1;
+		$('#supplier').addClass('errorcolor');
+	}
+
+	if($('#crejob').prop("checked") == false){
+		if($('#cajob').prop("checked") == false){
+			error = 1;
+			$('#tranblock').addClass('errorcolor');
+		}
+	}else{
+		var day = $('#day').val();
+		if(day==''){
+			error=1;
+			$('#day').addClass('errorcolor');
+		}
 	}
 
 	var qty = $('#quantity').val();

@@ -114,6 +114,7 @@ var add = 0;
 var rec = 0;
 var itemadd = [];
 var diserror = 0;
+var ponum = [];
 $('#pvn').on('keyup', function(){
 	$(this).removeClass('errorcolor');
 });
@@ -132,34 +133,41 @@ $('#pvn').on('keypress',function(e){
 			if($('#pinv'+pou+'pvn'+val).length > 0 || $('#pinv'+pol+'pvn'+val).length > 0){
 				if($('.grd'+val).length == 0){
 					if($('.gooid'+val).length > 0){
-						rec = rec + 1;
-						var rus = val+rec;
-						$('.gooid'+val).each(function(){
-							var cha = $(this).val();
-							var item = $('#item'+cha).val();
-							var itemid = $('#itemid'+cha). val();
-							var uom = $('#uom'+cha). val();
-							var qty = $('#qty'+cha). val();
-							var alias = $('#alias'+cha). val();
+						if(ponum.length===0){
+							ponum.push(po);
+						}
+						if($.inArray(po, ponum)!=-1){
+							rec = rec + 1;
+							var rus = val+rec;
+							$('.gooid'+val).each(function(){
+								var cha = $(this).val();
+								var item = $('#item'+cha).val();
+								var itemid = $('#itemid'+cha). val();
+								var uom = $('#uom'+cha). val();
+								var qty = $('#qty'+cha). val();
+								var alias = $('#alias'+cha). val();
 
-							add = add + 1;
-							itemadd.push(add);
-							var us = val+add;
-							$(".hidden_inputs").append('<input type="hidden" class="irec'+rus+'" value="'+us+'" data="'+add+'">');
-							$(".hidden_inputs").append('<input type="hidden" name="itemadd" id="itemad'+us+'" value="'+add+'">');
-							$(".hidden_inputs").append('<input type="hidden" name="ipvn'+add+'" id="ipvn'+us+'" value="'+val+'">');
-							$(".hidden_inputs").append('<input type="hidden" name="inameid'+add+'" id="inameid'+us+'" value="'+itemid+'">');
-							$(".hidden_inputs").append('<input type="hidden" name="iname'+add+'" id="iname'+us+'" value="'+item+'">');
-							$(".hidden_inputs").append('<input type="hidden" name="iuom'+add+'" id="iuom'+us+'" value="'+uom+'">');
-							$(".hidden_inputs").append('<input type="hidden" name="iqty'+add+'" id="iqty'+us+'" value="'+qty+'">');
-							$(".hidden_inputs").append('<input type="hidden" name="ialias'+add+'" id="ialias'+us+'" value="'+alias+'">');
-							$('.tfoot2').hide();
-							$("#ItemTable tbody").append('<tr id="itemrow'+us+'"><td>'+item+'('+alias+')</td><td>'+uom+'</td><td>'+qty+'</td></tr>');
-							$('.tfoot').show();
-							$('#pvn').val('');
-							$('#pvn').focus();
-						});
-						$(".grncol").append('<div class="coldiv grd'+val+'" id="colrec'+rus+'"><span class="coldes">'+val+'</span><button type="button" class="colbtn" data="'+rus+'"><i class="fa fa-times"></i></button></div>');
+								add = add + 1;
+								itemadd.push(add);
+								var us = val+add;
+								$(".hidden_inputs").append('<input type="hidden" class="irec'+rus+'" value="'+us+'" data="'+add+'">');
+								$(".hidden_inputs").append('<input type="hidden" name="itemadd" id="itemad'+us+'" value="'+add+'">');
+								$(".hidden_inputs").append('<input type="hidden" name="ipvn'+add+'" id="ipvn'+us+'" value="'+val+'">');
+								$(".hidden_inputs").append('<input type="hidden" name="inameid'+add+'" id="inameid'+us+'" value="'+itemid+'">');
+								$(".hidden_inputs").append('<input type="hidden" name="iname'+add+'" id="iname'+us+'" value="'+item+'">');
+								$(".hidden_inputs").append('<input type="hidden" name="iuom'+add+'" id="iuom'+us+'" value="'+uom+'">');
+								$(".hidden_inputs").append('<input type="hidden" name="iqty'+add+'" id="iqty'+us+'" value="'+qty+'">');
+								$(".hidden_inputs").append('<input type="hidden" name="ialias'+add+'" id="ialias'+us+'" value="'+alias+'">');
+								$('.tfoot2').hide();
+								$("#ItemTable tbody").append('<tr id="itemrow'+us+'"><td>'+item+'('+alias+')</td><td>'+uom+'</td><td>'+qty+'</td></tr>');
+								$('.tfoot').show();
+								$('#pvn').val('');
+								$('#pvn').focus();
+							});
+							$(".grncol").append('<div class="coldiv grd'+val+'" id="colrec'+rus+'"><span class="coldes">'+val+'</span><button type="button" class="colbtn" data="'+rus+'"><i class="fa fa-times"></i></button></div>');
+						}else{
+							$('#porder').addClass('errorcolor');
+						}
 
 					}else{
 						$('#pvn').addClass('errorcolor');
@@ -198,6 +206,7 @@ $(document).on('click', '.colbtn', function(e){
 		$('#itemrow'+cha).remove();
 	});
 	if(itemadd.length === 0){
+		ponum = [];
 		$('tfoot').hide();
 		$('.tfoot2').show();
 	}

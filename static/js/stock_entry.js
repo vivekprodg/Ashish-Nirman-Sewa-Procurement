@@ -1,4 +1,4 @@
-$('form input').on('keypress', function(e) {
+$('#StockEditForm input').on('keypress', function(e) {
     return e.which !== 13;
 });
 $(window).on('load', function(){
@@ -20,6 +20,82 @@ $(window).on('load', function(){
 });
 $('.inputs').click(function(){
 	$(this).removeClass('errorcolor');
+});
+
+// search edit=============================
+if($('#scat').length>0){
+	var scat = $('#scat').val();
+	var sscat = $('#sscat').val();
+	var ssite = $('#ssite').val();
+	if(scat!='' && scat!='None'){
+		var scaturl = search_url(scat);
+		$('#searchcategory').val(scat);
+		if(sscat!='' && sscat!='None'){
+			$('.subcatsearch').hide();
+			$('#subcatsearch'+scaturl).show();
+			$('#subcatsearch'+scaturl).val(sscat);
+		}
+	}
+	if(ssite!='' && ssite!='None'){
+		$('#searchsite').val(ssite);
+	}
+}
+
+//======================================
+function search_url(val){
+  var url = val.toLowerCase();
+  var result = url.replace(/[^a-z0-9\s]/gi, '').replace(/[_\s]/g, '');
+  return result;
+}
+$('#searchcategory').on('change', function(){
+	var val = $('#searchcategory option:selected').val();
+	var url = search_url(val);
+	$('.subcatsearch').hide();
+	if($('#subcatsearch'+url).length>0){
+		$('#subcatsearch'+url).show();
+		var sval = $('#subcatsearch'+url+' option:selected').val();
+		$('#subcsearch').val(sval);
+	}else{
+		$('#subcsearch').val('');
+	}
+});
+$('.subcatsearch').on('change', function(){
+	var idstr = $(this).attr("id");
+	var val = $('#'+idstr+' option:selected').val();
+	$('#subcsearch').val(val);
+});
+
+$('#stock_category').on('change', function(){
+	var val = $('#stock_category option:selected').val();
+	var url = search_url(val);
+	$('#categoryurl').val(url);
+	$('.subcategory').val('');
+	$('.subcatshow').hide();
+	if($('#subcatshow'+url).length>0){
+		$('#subcatshow'+url).show();
+		var sval = $('#subcategory'+url+' option:selected').val();
+		if(sval!=''){
+			$('#subcatval').val(sval);
+			var surl = search_url(sval);
+			$('#subcatvalurl').val(surl);
+		}else{
+			$('#subcatval').val('');
+			$('#subcatvalurl').val('');
+		}
+	}else{
+		$('#subcatval').val('');
+		$('#subcatvalurl').val('');
+	}
+});
+$('.subcategory').on('change', function(){
+	var idstr = $(this).attr("id");
+	var val = $('#'+idstr+' option:selected').val();
+	$('#subcatval').val(val);
+	var surl = search_url(val);
+	$('#subcatvalurl').val(surl);
+	var mcat = $('#categoryurl').val();
+	var murl = mcat+''+surl;
+	$('#mainurl').val(murl);
 });
 
 var sitec = 0;
@@ -124,13 +200,45 @@ $('#StockForm').on('submit', function(){
 	var url = $('input[name=url]').val();
 	var alias = $('input[name=alias]').val();
 	var stock_cat = $('#stock_category option:selected').val();
+	var surl = $('#categoryurl').val();
+	var mainurl = $('#mainurl').val();
 	var uom = $('#uom option:selected').val();
 	var stock_type = $('#stock_type option:selected').val();
+	if(stock_cat==''){
+		error = 1;
+		$('#stock_category').addClass('errorcolor');
+	}
+	if(surl==''){
+		error = 1;
+		$('#stock_category').addClass('errorcolor');
+	}
+	if($('#subcatshow'+surl).length>0){
+		var sval = $('#subcategory'+surl).val();
+		if(sval==''){
+			error = 1;
+			$('#subcategory'+surl).addClass('errorcolor');
+		}else{
+			var ssval = $('#subcatval').val();
+			var ssurl = search_url(sval);
+			var sssurl = $('#subcatvalurl').val();
+			if(ssval!=sval){
+				error = 1;
+				$('#subcategory'+surl).addClass('errorcolor');
+			}
+			if(ssurl!=sssurl){
+				error = 1;
+				$('#subcategory'+surl).addClass('errorcolor');
+			}
+		}
+	}else{
+		error= 1;
+		$('#stock_category').addClass('errorcolor');
+	}
 	if(name==''){
 		error = 1;
 		$('#name').addClass('errorcolor');
 	}
-	if(stock_cat==''){
+	if(mainurl==''){
 		error = 1;
 		$('#stock_category').addClass('errorcolor');
 	}
@@ -142,10 +250,7 @@ $('#StockForm').on('submit', function(){
 		error = 1;
 		$('#stock_type').addClass('errorcolor');
 	}
-	if(sitec==0){
-		error = 1;
-		$('#site').addClass('errorcolor');
-	}else{
+	if(sitec!=0){
 		$('.sites').each(function(){
 			var val = $(this).val();
 			var qty = $('#qty'+val).val();
@@ -182,6 +287,7 @@ $('.sup_edit').click(function(){
 	var alias = $('#ali'+idstr).val();
 	var url = $('#url'+idstr).val();
 	var cat = $('#cat'+idstr).val();
+	var scat = $('#subcat'+idstr).val();
 	var uom = $('#uom'+idstr).val();
 	var opening = $('#opening'+idstr).val();
 	var qty = $('#qty'+idstr).val();
@@ -195,14 +301,19 @@ $('.sup_edit').click(function(){
 	$('#url').val(url);
 	$('#alias').val(alias);
 	$('#category').val(cat);
+	$('#subcategory').val(scat);
+	$('#catinp').val(cat);
 	$('#uom').val(uom);
+	$('#uominp').val(uom);
 	$('#type').val(type);
+	$('#typeinp').val(type);
 	$('#opening').val(opening);
 	$('#dopen').val(opening);
 	$('#quantity').val(qty);
 	$('#rate').val(rate);
 	$('#amount').val(amt);
 	$('#editsite').val(s_site);
+	$('#siteinp').val(s_site);
 	$('.edit_popupbanner').fadeIn();
 	$('#edit_popup').css({"transform": "scale(1)", "-webkit-transform": "scale(1)", "-moz-transform": "scale(1)"});
 });
@@ -211,6 +322,7 @@ $('#close_edit').click(function(){
 	$('#url').val('');
 	$('#alias').val('');
 	$('#category').val('');
+	$('#subcategory').val('');
 	$('#uom').val('');
 	$('#type').val('');
 	$('#opening').val('');
@@ -233,9 +345,71 @@ $('#cancel_btn').on('click', function(){
 	$('.del_popupbanner').fadeOut();
 });
 
+
+$('#quantity').on('keyup', function(){
+	var val = $(this).val();
+	$(this).removeClass('errorcolor');
+	$('#quantity').removeClass('errorcolor');
+	$('#amount').removeClass('errorcolor');
+	if(val != ''){
+		val =parseFloat(val);
+		if(val>0 || val == 0){
+			var rt = $('#rate').val();
+			if(rt!=''){
+				if(rt>0 || rt == 0){
+					rt = parseFloat(rt);
+					var amt = val * rt;
+					amt = parseFloat(amt);
+					amt = amt.toFixed(2);
+					$('#amount').val(amt);
+				}else{
+					$('#rate').addClass('errorcolor');
+				}
+			}else{
+				$('#rate').addClass('errorcolor');
+			}
+		}else{
+			$(this).addClass('errorcolor');
+		}
+	}else{
+		$(this).addClass('errorcolor');
+	}
+});
+$('#rate').on('keyup', function(){
+	var val = $(this).val();
+	$(this).removeClass('errorcolor');
+	$('#quantity').removeClass('errorcolor');
+	$('#amount').removeClass('errorcolor');
+	if(val != ''){
+		val =parseFloat(val);
+		if(val>0 || val == 0){
+			var rt = $('#quantity').val();
+			if(rt!=''){
+				if(rt>0 || rt == 0){
+					rt = parseFloat(rt);
+					var amt = val * rt;
+					amt = parseFloat(amt);
+					amt = amt.toFixed(2);
+					$('#amount').val(amt);
+				}else{
+					$('#quantity').addClass('errorcolor');
+				}
+			}else{
+				$('#quantity').addClass('errorcolor');
+			}
+		}else{
+			$(this).addClass('errorcolor');
+		}
+	}else{
+		$(this).addClass('errorcolor');
+	}
+});
+
 $('#opening').on('keyup', function(){
 	var val = $(this).val();
 	$(this).removeClass('errorcolor');
+	$('#quantity').removeClass('errorcolor');
+	$('#amount').removeClass('errorcolor');
 	if(val!=''){
 		val =parseFloat(val);
 		if(val>0 || val == 0){
@@ -254,13 +428,12 @@ $('#opening').on('keyup', function(){
 						rate = parseFloat(rate);
 						if(rate>0){
 							amt = rate * qty;
-						}else{
-							$('#rate').addClass('errorcolor');
-						}	
+						}
 					}else{
 						$('#rate').addClass('errorcolor');
 					}
 					amt = parseFloat(amt);
+					amt = amt.toFixed(2);
 					qty = qty.toFixed(2);
 					$('#quantity').val(qty);
 					$('#amount').val(amt);
@@ -276,13 +449,12 @@ $('#opening').on('keyup', function(){
 						rate = parseFloat(rate);
 						if(rate>0){
 							amt = rate * qty;
-						}else{
-							$('#rate').addClass('errorcolor');
-						}	
+						}
 					}else{
 						$('#rate').addClass('errorcolor');
 					}
 					amt = parseFloat(amt);
+					amt = amt.toFixed(2);
 					qty = qty.toFixed(2);
 					$('#quantity').val(qty);
 					$('#amount').val(amt);
@@ -295,17 +467,35 @@ $('#opening').on('keyup', function(){
 						rate = parseFloat(rate);
 						if(rate>0){
 							amt = rate * qty;
-						}else{
-							$('#rate').addClass('errorcolor');
-						}	
+						}
 					}else{
 						$('#rate').addClass('errorcolor');
 					}
 					amt = parseFloat(amt);
+					amt = amt.toFixed(2);
 					qty = qty.toFixed(2);
 					$('#quantity').val(qty);
 					$('#amount').val(amt);
 				}
+			}
+			if(qty==0){
+				qty = val;
+				qty = parseFloat(qty);
+				var rate = $('#rate').val();
+				var amt = 0;
+				if(rate!=''){
+					rate = parseFloat(rate);
+					if(rate>0){
+						amt = rate * qty;
+					}
+				}else{
+					$('#rate').addClass('errorcolor');
+				}
+				amt = parseFloat(amt);
+				amt = amt.toFixed(2);
+				qty = qty.toFixed(2);
+				$('#quantity').val(qty);
+				$('#amount').val(amt);
 			}
 		}else{
 			$(this).addClass('errorcolor');
@@ -361,10 +551,29 @@ $('#StockEditForm').on('submit', function(){
 		$('#rate').val(0);
 		$('#amount').val(0);
 	}
+	if(quantity<0 || amount<0){
+		error = 1;
+		$('#quantity').addClass('errorcolor');
+		$('#amount').addClass('errorcolor');
+	}
 	if(error==0){
 		document.StockEditForm.submit();
 	}else{
 		$('#spinner1').hide();
+	}
+	event.preventDefault();
+});
+
+$('#StockSearch').on('submit', function(){
+	var error = 0;
+	var scat = $('#searchcategory option:selected').val();
+	var ssite = $('#searchsite option:selected').val();
+	var search = $('#ssearch').val();
+	if(scat=='' && ssite=='' && search==''){
+		error = 1;
+	}
+	if(error==0){
+		document.StockSearch.submit();
 	}
 	event.preventDefault();
 });

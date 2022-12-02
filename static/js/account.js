@@ -129,11 +129,25 @@ $('.sup_delete').click(function(){
 	$('#user_id2').val(user_id);
 	$('#del_popup').css({"transform": "scale(1)", "-webkit-transform": "scale(1)", "-moz-transform": "scale(1)"});
 });
+$('.usup_delete').click(function(){
+	$('.udel_popupbanner').fadeIn();
+	var idstr = $(this).attr("data");
+	$('#uuid2').val(idstr);
+	var user_id = $('#userid'+idstr).val();
+	$('#uuser_id2').val(user_id);
+	$('#udel_popup').css({"transform": "scale(1)", "-webkit-transform": "scale(1)", "-moz-transform": "scale(1)"});
+});
 $('#cancel_btn').on('click', function(){
 	$('#uid2').val('');
 	$('#user_id2').val('');
 	$('#del_popup').css({"transform": "scale(.1)", "-webkit-transform": "scale(.1)", "-moz-transform": "scale(.1)"});
 	$('.del_popupbanner').fadeOut();
+});
+$('#ucancel_btn').on('click', function(){
+	$('#uuid2').val('');
+	$('#uuser_id2').val('');
+	$('#udel_popup').css({"transform": "scale(.1)", "-webkit-transform": "scale(.1)", "-moz-transform": "scale(.1)"});
+	$('.udel_popupbanner').fadeOut();
 });
 
 $('#chng_pass').click(function(){
