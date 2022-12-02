@@ -1,0 +1,583 @@
+<span class="noti1">
+	<span class="sub_noti1">
+		NOTIFICATIONS
+	</span>
+	<span class="sub_noti2">
+		{{len1}} NEW
+	</span>
+</span>
+<hr style="float:left; width:100%; margin-bottom:4px;">
+<div class="noti_area">
+	{% for n in notify %}
+	{% if n.content == 'gnoti_add' %}
+	<a href="/notify-check/{{n.id}}/{{n.notify_topic}}/{{n.content_id}}/">
+		<span class="noti2">
+			<span class="sub_noti3">
+				<i class="fas fa-file-signature noti_cart_icon"></i>
+			</span>
+			<span class="sub_noti4">
+				<span class="sub_sub_noti1">Pending GRN entry for purchase invoice "{{n.content_val}}" of PO "{{n.content_val1}}" for 15 days. Click to check details of invoice.</span>
+				<span class="sub_sub_noti2">
+					<i class="fas fa-check-circle"></i>{{n.status}}<br><i class="far fa-clock"></i>{{n.datetime}}
+				</span>
+			</span>
+		</span>
+	</a>
+	{% endif %}
+	{% if n.content == 'crnoti_add' %}
+	<a href="/notify-check/{{n.id}}/{{n.notify_topic}}/{{n.content_id}}/">
+		<span class="noti2">
+			<span class="sub_noti3">
+				<i class="fas fa-file-signature noti_cart_icon"></i>
+			</span>
+			<span class="sub_noti4">
+				<span class="sub_sub_noti1">Payment days for puchase invoice "{{n.content_val}}" of PO "{{n.content_val1}}" is exceeded or is close. Click to view invoice.</span>
+				<span class="sub_sub_noti2">
+					<i class="fas fa-check-circle"></i>{{n.status}}<br><i class="far fa-clock"></i>{{n.datetime}}
+				</span>
+			</span>
+		</span>
+	</a>
+	{% endif %}
+	{% if n.content == 'move_add' %}
+	<a href="/notify-check/{{n.id}}/{{n.notify_topic}}/{{n.content_id}}/">
+		<span class="noti2">
+			<span class="sub_noti3">
+				<i class="fas fa-truck-moving noti_cart_icon"></i>
+			</span>
+			<span class="sub_noti4">
+				<span class="sub_sub_noti1">Vehicle movement "{{n.content_val1}}" from "{{n.from_site}}" to "{{n.content_val2}}". Click to update status</span>
+				<span class="sub_sub_noti2">
+					<i class="fas fa-check-circle"></i>{{n.status}}<br><i class="far fa-clock"></i>{{n.datetime}}
+				</span>
+			</span>
+		</span>
+	</a>
+	{% endif %}
+	{% if n.content == 'purchase_order_add' %}
+	<a href="/notify-check/{{n.id}}/{{n.notify_topic}}/{{n.content_id}}/">
+		<span class="noti2">
+			<span class="sub_noti3
+			">
+				<i class="fas fa-file-signature noti_cart_icon"></i>
+			</span>
+			<span class="sub_noti4
+		">
+				<span class="sub_sub_noti1">New purchase order issued with id {{n.content_val}} from {{n.from_site}} by {{n.from_user}}. Click to view</span>
+				<span class="sub_sub_noti2">
+					<i class="fas fa-pause-circle"></i>{{n.status}}<br><i class="far fa-clock"></i>{{n.datetime}}
+				</span>
+			</span>
+		</span>
+	</a>
+	{% endif %}
+	{% if n.content == 'purchase_order_approve' %}
+	<a href="/notify-check/{{n.id}}/{{n.notify_topic}}/{{n.content_id}}/">
+		<span class="noti2">
+			<span class="sub_noti3">
+				<i class="fas fa-check-circle noti_cart_icon"></i>
+			</span>
+			<span class="sub_noti4">
+				<span class="sub_sub_noti1">Purchase order with order number "{{n.content_val}}" has been approved from {{n.from_site}} by {{n.from_user}}. Click to view</span>
+				<span class="sub_sub_noti2">
+					<i class="fas fa-check-circle"></i>{{n.status}}<br><i class="far fa-clock"></i>{{n.datetime}}
+				</span>
+			</span>
+		</span>
+	</a>
+	{% endif %}
+	{% if n.content == 'purchase_order_approve_location' %}
+	<a href="/notify-check/{{n.id}}/{{n.notify_topic}}/{{n.content_id}}/">
+		<span class="noti2">
+			<span class="sub_noti3">
+				<i class="fas fa-check-circle noti_cart_icon"></i>
+			</span>
+			<span class="sub_noti4">
+				<span class="sub_sub_noti1">Purchase order with order number "{{n.content_val}}" has been approved to buy "{{n.content_val1}}"" from your location "{{n.content_val2}}". Click to view</span>
+				<span class="sub_sub_noti2">
+					<i class="fas fa-check-circle"></i>{{n.status}}<br><i class="far fa-clock"></i>{{n.datetime}}
+				</span>
+			</span>
+		</span>
+	</a>
+	{% endif %}
+	{% if n.content == 'purchase_order_cancel' %}
+	<a href="/notify-check/{{n.id}}/{{n.notify_topic}}/{{n.content_id}}/">
+		<span class="noti2">
+			<span class="sub_noti3">
+				<i class="fas fa-times-circle noti_cart_icon"></i>
+			</span>
+			<span class="sub_noti4">
+				<span class="sub_sub_noti1">Purchase order with order number "{{n.content_val}}" has been cancelled from {{n.from_site}} by {{n.from_user}}. Click to view</span>
+				<span class="sub_sub_noti2">
+					<i class="fas fa-check-circle"></i>{{n.status}}<br><i class="far fa-clock"></i>{{n.datetime}}
+				</span>
+			</span>
+		</span>
+	</a>
+	{% endif %}
+	{% if n.content == 'damage_add' %}
+	<a href="/notify-check/{{n.id}}/{{n.notify_topic}}/{{n.content_id}}/">
+		<span class="noti2">
+			<span class="sub_noti3
+			">
+				<i class="fas fa-file-signature noti_cart_icon"></i>
+			</span>
+			<span class="sub_noti4
+		">
+				<span class="sub_sub_noti1">New damage stock entry issued with id {{n.content_val}} from {{n.from_site}} by {{n.from_user}}. Click to view</span>
+				<span class="sub_sub_noti2">
+					<i class="fas fa-pause-circle"></i>{{n.status}}<br><i class="far fa-clock"></i>{{n.datetime}}
+				</span>
+			</span>
+		</span>
+	</a>
+	{% endif %}
+	{% if n.content == 'return_add' %}
+	<a href="/notify-check/{{n.id}}/{{n.notify_topic}}/{{n.content_id}}/">
+		<span class="noti2">
+			<span class="sub_noti3
+			">
+				<i class="fas fa-file-signature noti_cart_icon"></i>
+			</span>
+			<span class="sub_noti4
+		">
+				<span class="sub_sub_noti1">New return stock entry issued with id {{n.content_val}} from {{n.from_site}} by {{n.from_user}}. Click to view</span>
+				<span class="sub_sub_noti2">
+					<i class="fas fa-pause-circle"></i>{{n.status}}<br><i class="far fa-clock"></i>{{n.datetime}}
+				</span>
+			</span>
+		</span>
+	</a>
+	{% endif %}
+	{% if n.content == 'internal_damage_add' %}
+	<a href="/notify-check/{{n.id}}/{{n.notify_topic}}/{{n.content_id}}/">
+		<span class="noti2">
+			<span class="sub_noti3
+			">
+				<i class="fas fa-file-signature noti_cart_icon"></i>
+			</span>
+			<span class="sub_noti4
+		">
+				<span class="sub_sub_noti1">New transfer damage stock entry issued with id {{n.content_val}} from {{n.from_site}} by {{n.from_user}}. Click to view</span>
+				<span class="sub_sub_noti2">
+					<i class="fas fa-pause-circle"></i>{{n.status}}<br><i class="far fa-clock"></i>{{n.datetime}}
+				</span>
+			</span>
+		</span>
+	</a>
+	{% endif %}
+	{% if n.content == 'fuel_purchase_order_add' %}
+	<a href="/notify-check/{{n.id}}/{{n.notify_topic}}/{{n.content_id}}/">
+		<span class="noti2">
+			<span class="sub_noti3
+			">
+				<i class="fas fa-file-signature noti_cart_icon"></i>
+			</span>
+			<span class="sub_noti4
+		">
+				<span class="sub_sub_noti1">Newwww fuel purchase order issued with id {{n.content_val}} from {{n.from_site}} by {{n.from_user}}. Click to view</span>
+				<span class="sub_sub_noti2">
+					<i class="fas fa-pause-circle"></i>{{n.status}}<br><i class="far fa-clock"></i>{{n.datetime}}
+				</span>
+			</span>
+		</span>
+	</a>
+	{% endif %}
+	{% if n.content == 'fuel_purchase_order_approve' %}
+	<a href="/notify-check/{{n.id}}/{{n.notify_topic}}/{{n.content_id}}/">
+		<span class="noti2">
+			<span class="sub_noti3">
+				<i class="fas fa-check-circle noti_cart_icon"></i>
+			</span>
+			<span class="sub_noti4">
+				<span class="sub_sub_noti1">Fuel Purchase order with order number "{{n.content_val}}" has been approved from {{n.from_site}} by {{n.from_user}}. Click to view</span>
+				<span class="sub_sub_noti2">
+					<i class="fas fa-check-circle"></i>{{n.status}}<br><i class="far fa-clock"></i>{{n.datetime}}
+				</span>
+			</span>
+		</span>
+	</a>
+	{% endif %}
+	{% if n.content == 'fuel_purchase_order_approve_location' %}
+	<a href="/notify-check/{{n.id}}/{{n.notify_topic}}/{{n.content_id}}/">
+		<span class="noti2">
+			<span class="sub_noti3">
+				<i class="fas fa-check-circle noti_cart_icon"></i>
+			</span>
+			<span class="sub_noti4">
+				<span class="sub_sub_noti1">Fuel Purchase order with order number "{{n.content_val}}" has been approved to buy from your location "{{n.content_val2}}". Click to view</span>
+				<span class="sub_sub_noti2">
+					<i class="fas fa-check-circle"></i>{{n.status}}<br><i class="far fa-clock"></i>{{n.datetime}}
+				</span>
+			</span>
+		</span>
+	</a>
+	{% endif %}
+	{% if n.content == 'fuel_purchase_order_cancel' %}
+	<a href="/notify-check/{{n.id}}/{{n.notify_topic}}/{{n.content_id}}/">
+		<span class="noti2">
+			<span class="sub_noti3">
+				<i class="fas fa-times-circle noti_cart_icon"></i>
+			</span>
+			<span class="sub_noti4">
+				<span class="sub_sub_noti1">Fuel Purchase order with order number "{{n.content_val}}" has been cancelled from {{n.from_site}} by {{n.from_user}}. Click to view</span>
+				<span class="sub_sub_noti2">
+					<i class="fas fa-check-circle"></i>{{n.status}}<br><i class="far fa-clock"></i>{{n.datetime}}
+				</span>
+			</span>
+		</span>
+	</a>
+	{% endif %}
+	{% if n.content == 'grn_add' %}
+	<a href="/notify-check/{{n.id}}/{{n.notify_topic}}/{{n.content_id}}/">
+		<span class="noti2">
+			<span class="sub_noti3">
+				<i class="fas fa-file-signature noti_cart_icon"></i>
+			</span>
+			<span class="sub_noti4">
+				<span class="sub_sub_noti1">New Goods Recevive Note Entry of id "{{n.content_val}}" from {{n.from_site}} by {{n.from_user}}. Click to view</span>
+				<span class="sub_sub_noti2">
+					<i class="fas fa-check-circle"></i>{{n.status}}<br><i class="far fa-clock"></i>{{n.datetime}}
+				</span>
+			</span>
+		</span>
+	</a>
+	{% endif %}
+	{% if n.content == 'invoice_add' %}
+	<a href="/notify-check/{{n.id}}/{{n.notify_topic}}/{{n.content_id}}/">
+		<span class="noti2">
+			<span class="sub_noti3">
+				<i class="fas fa-file-signature noti_cart_icon"></i>
+			</span>
+			<span class="sub_noti4">
+				<span class="sub_sub_noti1">New Purchase Invoice Entry of voucher "{{n.content_val}}" from {{n.from_site}} by {{n.from_user}}. Click to view</span>
+				<span class="sub_sub_noti2">
+					<i class="fas fa-check-circle"></i>{{n.status}}<br><i class="far fa-clock"></i>{{n.datetime}}
+				</span>
+			</span>
+		</span>
+	</a>
+	{% endif %}
+	{% if n.content == 'invoice_arrival' %}
+	<a href="/notify-check/{{n.id}}/{{n.notify_topic}}/{{n.content_id}}/">
+		<span class="noti2">
+			<span class="sub_noti3
+			">
+				<i class="fas fa-file-signature noti_cart_icon"></i>
+			</span>
+			<span class="sub_noti4
+		">
+				<span class="sub_sub_noti1">Purchase order with order number "{{n.content_val1}}" having voucher number "{{n.content_val}}" is arriving to your location "{{n.content_val2}}". Click to view</span>
+				<span class="sub_sub_noti2">
+					<i class="fas fa-pause-circle"></i>{{n.status}}<br><i class="far fa-clock"></i>{{n.datetime}}
+				</span>
+			</span>
+		</span>
+	</a>
+	{% endif %}
+	{% if n.content == 'material_add' %}
+	<a href="/notify-check/{{n.id}}/{{n.notify_topic}}/{{n.content_id}}/">
+		<span class="noti2">
+			<span class="sub_noti3">
+				<i class="fas fa-file-signature noti_cart_icon"></i>
+			</span>
+			<span class="sub_noti4">
+				<span class="sub_sub_noti1">Material Issue Entry with issuing location "{{n.content_val}}". Entry from {{n.from_site}} by {{n.from_user}}. Click to view</span>
+				<span class="sub_sub_noti2">
+					<i class="fas fa-check-circle"></i>{{n.status}}<br><i class="far fa-clock"></i>{{n.datetime}}
+				</span>
+			</span>
+		</span>
+	</a>
+	{% endif %}
+	{% if n.content == 'transfer_add' %}
+	<a href="/notify-check/{{n.id}}/{{n.notify_topic}}/{{n.content_id}}/">
+		<span class="noti2">
+			<span class="sub_noti3">
+				<i class="fas fa-file-signature noti_cart_icon"></i>
+			</span>
+			<span class="sub_noti4">
+				<span class="sub_sub_noti1">Internal Transfer Entry with issuing location "{{n.content_val}}" and receiving_location "{{n.content_val1}}". Entry from {{n.from_site}} by {{n.from_user}}. Click to view</span>
+				<span class="sub_sub_noti2">
+					<i class="fas fa-check-circle"></i>{{n.status}}<br><i class="far fa-clock"></i>{{n.datetime}}
+				</span>
+			</span>
+		</span>
+	</a>
+	{% endif %}
+	{% if n.content == 'transfer_grn' %}
+	<a href="/notify-check/{{n.id}}/{{n.content}}/{{n.content_id}}/">
+		<span class="noti2">
+			<span class="sub_noti3">
+				<i class="fas fa-file-signature noti_cart_icon"></i>
+			</span>
+			<span class="sub_noti4">
+				<span class="sub_sub_noti1">
+				Internal Transfer GRN Entry with number "content_val". Entry from {{n.from_site}} by {{n.from_user}}. Click to view</span>
+				<span class="sub_sub_noti2">
+					<i class="fas fa-check-circle"></i>{{n.status}}<br><i class="far fa-clock"></i>{{n.datetime}}
+				</span>
+			</span>
+		</span>
+	</a>
+	{% endif %}
+	{% if n.content == 'sales_add' %}
+	<a href="/notify-check/{{n.id}}/{{n.notify_topic}}/{{n.content_id}}/">
+		<span class="noti2">
+			<span class="sub_noti3">
+				<i class="fas fa-file-signature noti_cart_icon"></i>
+			</span>
+			<span class="sub_noti4">
+				<span class="sub_sub_noti1"> New out sales entry with issuing location "{{n.content_val}}" to buyer "{{n.content_val1}}". Entry from {{n.from_site}} by {{n.from_user}}. Click to view</span>
+				<span class="sub_sub_noti2">
+					<i class="fas fa-check-circle"></i>{{n.status}}<br><i class="far fa-clock"></i>{{n.datetime}}
+				</span>
+			</span>
+		</span>
+	</a>
+	{% endif %}
+	{% endfor %}
+
+	{% for n in checked %}
+	{% if n.content == 'purchase_order_add' %}
+	<a href="/purchase-order-detail/{{n.content_id}}/">
+		<span class="noti2_check">
+			<span class="sub_noti3
+			">
+				<i class="fas fa-file-signature noti_cart_icon"></i>
+			</span>
+			<span class="sub_noti4
+		">
+				<span class="sub_sub_noti1">New purchase order issued with id {{n.content_val}} from {{n.from_site}} by {{n.from_user}}. Click to view</span>
+				<span class="sub_sub_noti2">
+					<i class="fas fa-pause-circle"></i>{{n.status}}<br><i class="far fa-clock"></i>{{n.datetime}}
+				</span>
+			</span>
+		</span>
+	</a>
+	{% endif %}
+	{% if n.content == 'purchase_order_approve' %}
+	<a href="/purchase-order-detail/{{n.content_id}}/">
+		<span class="noti2_check">
+			<span class="sub_noti3">
+				<i class="fas fa-check-circle noti_cart_icon"></i>
+			</span>
+			<span class="sub_noti4">
+				<span class="sub_sub_noti1">Purchase order with order number "{{n.content_val}}" has been approved from {{n.from_site}} by {{n.from_user}}. Click to view</span>
+				<span class="sub_sub_noti2">
+					<i class="fas fa-check-circle"></i>{{n.status}}<br><i class="far fa-clock"></i>{{n.datetime}}
+				</span>
+			</span>
+		</span>
+	</a>
+	{% endif %}
+	{% if n.content == 'purchase_order_approve_location' %}
+	<a href="/purchase-order-detail/{{n.content_id}}/">
+		<span class="noti2_check">
+			<span class="sub_noti3">
+				<i class="fas fa-check-circle noti_cart_icon"></i>
+			</span>
+			<span class="sub_noti4">
+				<span class="sub_sub_noti1">Purchase order with order number "{{n.content_val}}" has been approved to buy "{{n.content_val1}}"" from your location "{{n.content_val2}}". Click to view</span>
+				<span class="sub_sub_noti2">
+					<i class="fas fa-check-circle"></i>{{n.status}}<br><i class="far fa-clock"></i>{{n.datetime}}
+				</span>
+			</span>
+		</span>
+	</a>
+	{% endif %}
+	{% if n.content == 'purchase_order_cancel' %}
+	<a href="/purchase-order-detail/{{n.content_id}}/">
+		<span class="noti2_check">
+			<span class="sub_noti3">
+				<i class="fas fa-times-circle noti_cart_icon"></i>
+			</span>
+			<span class="sub_noti4">
+				<span class="sub_sub_noti1">Purchase order with order number "{{n.content_val}}" has been cancelled from {{n.from_site}} by {{n.from_user}}. Click to view</span>
+				<span class="sub_sub_noti2">
+					<i class="fas fa-check-circle"></i>{{n.status}}<br><i class="far fa-clock"></i>{{n.datetime}}
+				</span>
+			</span>
+		</span>
+	</a>
+	{% endif %}
+	{% if n.content == 'fuel_purchase_order_add' %}
+	<a href="/fuel-purchase-order-detail/{{n.content_id}}/">
+		<span class="noti2_check">
+			<span class="sub_noti3
+			">
+				<i class="fas fa-file-signature noti_cart_icon"></i>
+			</span>
+			<span class="sub_noti4
+		">
+				<span class="sub_sub_noti1">Newwww fuel purchase order issued with id {{n.content_val}} from {{n.from_site}} by {{n.from_user}}. Click to view</span>
+				<span class="sub_sub_noti2">
+					<i class="fas fa-pause-circle"></i>{{n.status}}<br><i class="far fa-clock"></i>{{n.datetime}}
+				</span>
+			</span>
+		</span>
+	</a>
+	{% endif %}
+	{% if n.content == 'fuel_purchase_order_approve' %}
+	<a href="/fuel-purchase-order-detail/{{n.content_id}}/">
+		<span class="noti2_check">
+			<span class="sub_noti3">
+				<i class="fas fa-check-circle noti_cart_icon"></i>
+			</span>
+			<span class="sub_noti4">
+				<span class="sub_sub_noti1">Fuel Purchase order with order number "{{n.content_val}}" has been approved from {{n.from_site}} by {{n.from_user}}. Click to view</span>
+				<span class="sub_sub_noti2">
+					<i class="fas fa-check-circle"></i>{{n.status}}<br><i class="far fa-clock"></i>{{n.datetime}}
+				</span>
+			</span>
+		</span>
+	</a>
+	{% endif %}
+	{% if n.content == 'fuel_purchase_order_approve_location' %}
+	<a href="/fuel-purchase-order-detail/{{n.content_id}}/">
+		<span class="noti2_check">
+			<span class="sub_noti3">
+				<i class="fas fa-check-circle noti_cart_icon"></i>
+			</span>
+			<span class="sub_noti4">
+				<span class="sub_sub_noti1">Fuel Purchase order with order number "{{n.content_val}}" has been approved to buy from your location "{{n.content_val2}}". Click to view</span>
+				<span class="sub_sub_noti2">
+					<i class="fas fa-check-circle"></i>{{n.status}}<br><i class="far fa-clock"></i>{{n.datetime}}
+				</span>
+			</span>
+		</span>
+	</a>
+	{% endif %}
+	{% if n.content == 'fuel_purchase_order_cancel' %}
+	<a href="/fuel-purchase-order-detail/{{n.content_id}}/">
+		<span class="noti2_check">
+			<span class="sub_noti3">
+				<i class="fas fa-times-circle noti_cart_icon"></i>
+			</span>
+			<span class="sub_noti4">
+				<span class="sub_sub_noti1">Fuel Purchase order with order number "{{n.content_val}}" has been cancelled from {{n.from_site}} by {{n.from_user}}. Click to view</span>
+				<span class="sub_sub_noti2">
+					<i class="fas fa-check-circle"></i>{{n.status}}<br><i class="far fa-clock"></i>{{n.datetime}}
+				</span>
+			</span>
+		</span>
+	</a>
+	{% endif %}
+	{% if n.content == 'grn_add' %}
+	<a href="/goods-detail/{{n.content_id}}/">
+		<span class="noti2_check">
+			<span class="sub_noti3">
+				<i class="fas fa-file-signature noti_cart_icon"></i>
+			</span>
+			<span class="sub_noti4">
+				<span class="sub_sub_noti1">New Goods Recevive Note Entry of id "{{n.content_val}}" from {{n.from_site}} by {{n.from_user}}. Click to view</span>
+				<span class="sub_sub_noti2">
+					<i class="fas fa-check-circle"></i>{{n.status}}<br><i class="far fa-clock"></i>{{n.datetime}}
+				</span>
+			</span>
+		</span>
+	</a>
+	{% endif %}
+	{% if n.content == 'invoice_add' %}
+	<a href="/invoice-detail/{{n.content_id}}/">
+		<span class="noti2_check">
+			<span class="sub_noti3">
+				<i class="fas fa-file-signature noti_cart_icon"></i>
+			</span>
+			<span class="sub_noti4">
+				<span class="sub_sub_noti1">New Purchase Invoice Entry of voucher "{{n.content_val}}" from {{n.from_site}} by {{n.from_user}}. Click to view</span>
+				<span class="sub_sub_noti2">
+					<i class="fas fa-check-circle"></i>{{n.status}}<br><i class="far fa-clock"></i>{{n.datetime}}
+				</span>
+			</span>
+		</span>
+	</a>
+	{% endif %}
+	{% if n.content == 'invoice_arrival' %}
+	<a href="/invoice-detail/{{n.content_id}}/">
+		<span class="noti2_check">
+			<span class="sub_noti3
+			">
+				<i class="fas fa-file-signature noti_cart_icon"></i>
+			</span>
+			<span class="sub_noti4
+		">
+				<span class="sub_sub_noti1">Purchase order with order number "{{n.content_val1}}" having invoice number "{{n.content_val}}" is arriving to your location "{{n.content_val2}}". Click to view</span>
+				<span class="sub_sub_noti2">
+					<i class="fas fa-pause-circle"></i>{{n.status}}<br><i class="far fa-clock"></i>{{n.datetime}}
+				</span>
+			</span>
+		</span>
+	</a>
+	{% endif %}
+	{% if n.content == 'material_add' %}
+	<a href="/material-issue-detail/{{n.content_id}}/">
+		<span class="noti2_check">
+			<span class="sub_noti3">
+				<i class="fas fa-file-signature noti_cart_icon"></i>
+			</span>
+			<span class="sub_noti4">
+				<span class="sub_sub_noti1">Material Issue Entry with issuing location "{{n.content_val}}" and receiving_location "{{n.content_val1}}". Entry from {{n.from_site}} by {{n.from_user}}. Click to view</span>
+				<span class="sub_sub_noti2">
+					<i class="fas fa-check-circle"></i>{{n.status}}<br><i class="far fa-clock"></i>{{n.datetime}}
+				</span>
+			</span>
+		</span>
+	</a>
+	{% endif %}
+	{% if n.content == 'transfer_add' %}
+	<a href="/internal-transfer-detail/{{n.content_id}}/">
+		<span class="noti2_check">
+			<span class="sub_noti3">
+				<i class="fas fa-file-signature noti_cart_icon"></i>
+			</span>
+			<span class="sub_noti4">
+				<span class="sub_sub_noti1">Internal Transfer Entry with issuing location "{{n.content_val}}" and receiving_location "{{n.content_val1}}". Entry from {{n.from_site}} by {{n.from_user}}. Click to view</span>
+				<span class="sub_sub_noti2">
+					<i class="fas fa-check-circle"></i>{{n.status}}<br><i class="far fa-clock"></i>{{n.datetime}}
+				</span>
+			</span>
+		</span>
+	</a>
+	{% endif %}
+	{% if n.content == 'transfer_grn' %}
+	<a href="/notify-check/{{n.id}}/{{n.content}}/{{n.content_id}}/">
+		<span class="noti2_check">
+			<span class="sub_noti3">
+				<i class="fas fa-file-signature noti_cart_icon"></i>
+			</span>
+			<span class="sub_noti4">
+				<span class="sub_sub_noti1">
+				Internal Transfer GRN Entry with number "content_val". Entry from {{n.from_site}} by {{n.from_user}}. Click to view</span>
+				<span class="sub_sub_noti2">
+					<i class="fas fa-check-circle"></i>{{n.status}}<br><i class="far fa-clock"></i>{{n.datetime}}
+				</span>
+			</span>
+		</span>
+	</a>
+	{% endif %}
+	{% if n.content == 'sales_add' %}
+	<a href="/sales-detail/{{n.content_id}}/">
+		<span class="noti2_check">
+			<span class="sub_noti3">
+				<i class="fas fa-file-signature noti_cart_icon"></i>
+			</span>
+			<span class="sub_noti4">
+				<span class="sub_sub_noti1"> New out sales entry with issuing location "{{n.content_val}}" to buyer "{{n.content_val1}}". Entry from {{n.from_site}} by {{n.from_user}}. Click to view</span>
+				<span class="sub_sub_noti2">
+					<i class="fas fa-check-circle"></i>{{n.status}}<br><i class="far fa-clock"></i>{{n.datetime}}
+				</span>
+			</span>
+		</span>
+	</a>
+	{% endif %}
+	{% endfor %}
+	
+	{% if len1 == 0 and len2 == 0 %}
+	<span class="noti_not_found">
+		No notifications found
+	</span>
+	{% endif %}
+	
+</div>

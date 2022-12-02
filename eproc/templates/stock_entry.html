@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/stock_entry.css' %}?v=1.4">
+{% endblock %}
+{% block wave %}
+<img src="{% static 'img/back.png' %}" id="backimg">
+{% endblock %}
+{% block content %}
+<div class="col col-xl-2 col-lg-2 d-md-1 d-none d-lg-inline">
+	<span style="opacity: 0;">.</span>
+</div>
+<div class="col col-xl-8 col-lg-8 col-md-8">
+	<div class="predefine1">
+		<div class="head">
+			<span class="head1">Add Stock Item</span>
+			<span class="head2">Enter new item details in stock</span>
+		</div>
+		<div class="prebody" id="formbody">
+			{% if messages %}
+				{% for message in messages %}
+				<input type="hidden" class="msgon" value="{{message}}">
+				{% endfor %}
+			{% endif %}
+			<form method="POST" action="/add-stock/" id="StockForm" autocomplete="off" name="StockForm">
+				{% csrf_token %}
+				<div class="col col-xl-6 col-lg-6">
+					<div class="fields">
+						<label class="label"><span>Name of Item<font style="color: red;">*</font></span></label>
+						<input type="text" class="form-control inputs" name="name" id="name">
+						<input type="hidden" name="url" id="url">
+					</div>
+				</div>
+				<div class="col col-xl-6 col-lg-6">
+					<div class="fields">
+						<label class="label"><span>Alias</span></label>
+						<input type="text" class="form-control inputs" name="alias" id="alias">
+					</div>
+				</div>
+				<div class="col col-xl-6 col-lg-6">
+					<div class="fields">
+						<label class="label"><span>Stock Category<font style="color: red;">*</font></span></label>
+						<select class="form-control inputs" name="stock_category" id="stock_category">
+							<option value="" disabled selected>Choose category</option>
+							{% for c in stock_cat %}
+							<option value="{{c.name}}">{{c.name}}</option>
+							{% endfor %}
+						</select>
+						<input type="hidden" name="categoryurl" id="categoryurl">
+					</div>
+				</div>
+				<div class="col col-xl-6 col-lg-6">
+					{% for ps, range in psupa %}
+					<div class="fields subcatshow" id="subcatshow{{ps.0.cat_url}}">
+						<label class="label"><span>Stock Sub Category<font style="color: red;">*</font></span></label>
+						<select class="form-control inputs subcategory" id="subcategory{{ps.0.cat_url}}">
+							<option value="" disabled selected>Choose category</option>
+							{% for c in ps %}
+							<option value="{{c.name}}">{{c.name}}</option>
+							{% endfor %}
+						</select>
+					</div>
+					{% endfor %}
+					<input type="hidden" name="subcategory" id="subcatval">
+					<input type="hidden" name="subcategoryurl" id="subcatvalurl">
+					<input type="hidden" name="mainurl" id="mainurl">
+				</div>
+				<div class="col col-xl-6 col-lg-6">
+					<div class="fields">
+						<label class="label"><span>UOM<font style="color: red;">*</font></span></label>
+						<select class="form-control inputs" name="uom" id="uom">
+							<option value="" disabled selected>Choose UOM</option>
+							{% for c in uom_dash %}
+							<option value="{{c.uom}}">{{c.uom}}</option>
+							{% endfor %}
+						</select>
+					</div>
+				</div>
+				<div class="col col-xl-6 col-lg-6">
+					<div class="fields">
+						<label class="label"><span>Stock Type<font style="color: red;">*</font></span></label>
+						<select class="form-control inputs" name="stock_type" id="stock_type">
+							<option value="" disabled selected>Choose type</option>
+							<option value="inventory">inventory</option>
+							<option value="non inventory">non inventory</option>
+						</select>
+					</div>
+				</div>
+				<div class="col col-xl-6 col-lg-6">
+					<div class="fields">
+						<label class="label"><span>Site (Select multiple if any)<font style="color: red;">*</font></span></label>
+						<select class="form-control inputs" name="site" id="site">
+							<option value="" disabled selected>Choose site</option>
+							{% for c in site_dash %}
+							<option value="{{c.name}}">{{c.name}}</option>
+							{% endfor %}
+						</select>
+					</div>
+				</div>
+				<div class="siteblock" id="siteb">
+					<div class="sblock_head">
+						<span></span><i class="fas fa-times closeblock"></i>
+					</div>
+					<div class="sblock_body">
+						<div class="col col-xl-4 col-lg-4">
+							<div class="fields">
+								<label class="label"><span>Opening Quantity</span></label>
+								<input type="number" class="form-control inputs quantity" value="0" step=".01">
+							</div>
+						</div>
+						<div class="col col-xl-4 col-lg-4">
+							<div class="fields">
+								<label class="label"><span>Rate</span></label>
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<div class="input-group-text">NPR</div>
+									</div>
+									<input type="number" class="form-control inputs rate" value="0" step=".01">
+								</div>
+							</div>
+						</div>
+						<div class="col col-xl-4 col-lg-4">
+							<div class="fields">
+								<label class="label"><span>Amount</span></label>
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<div class="input-group-text">NPR</div>
+									</div>
+									<input type="number" class="form-control inputs amount" value="0" step=".01" readonly>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col col-xl-12 col-lg-12">
+					<div class="sitecol">
+						
+					</div>
+				</div>
+
+				<div class="hidden_inputs"></div>
+			
+				<div class="col col-xl-12 col-lg-12">
+					<div class="fields">
+						<button type="submit" class="submit_btn">SUBMIT</button><i class="fa fa-spinner fa-spin mx-2 spinner" id="spinner1"></i>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<div class="col col-xl-2 col-lg-2 d-md-1 d-none d-lg-inline">
+	<span style="opacity: 0;">.</span>
+</div>
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'js/stock_entry.js' %}?v=1.5"></script>
+{% endblock %}

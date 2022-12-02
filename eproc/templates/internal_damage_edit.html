@@ -1,0 +1,314 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/purchase.css' %}?v=1.3">
+<link rel="stylesheet" href="{% static 'css/invoice.css' %}?v=1.4">
+{% endblock %}
+{% block wave %}
+<img src="{% static 'img/back.png' %}" id="backimg">
+{% endblock %}
+{% block content %}
+<div class="col col-xl-2 col-lg-2 d-md-1 d-none d-lg-inline">
+  <span style="opacity: 0;">.</span>
+</div>
+<div class="col col-xl-8 col-lg-8 col-md-10">
+  <div class="predefine1">
+    <div class="head">
+      <span class="head1">Edit Internal Transfered Damage Stocks</span>
+      <span class="head2">Edit details of damage stocks</span>
+    </div>
+    <div class="prebody" id="formbody">
+    	<input type="hidden" id="jnum" value="{{item.purchase_order_number}}">
+      <form method="POST" action="/edit-internal-damage/" id="DamageForm" autocomplete="off" name="DamageForm">
+        {% csrf_token %}
+        <input type="hidden" name="pid" value="{{item.id}}">
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>Entry Date<font style="color: red;">*</font></span></label>
+            <input type="text" class="form-control inputs" name="date" id="date" value="{{item.entry_date}}">
+          </div>
+        </div>
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>Damage Number<font style="color: red;">*</font></span></label>
+            <input type="text" class="form-control inputs" name="damage_number" id="damage_number" value="{{item.damage_number}}" readonly>
+          </div>
+        </div>
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>Narration</span></label>
+            <textarea class="form-control" name="narrat" id="narrat" rows="6">{{item.narration}}</textarea>
+          </div>
+        </div>
+
+        {% for igood, range in igoods %}
+        {% for i in igood %}
+        <input type="hidden" class="gooid{{igood.0.grn}}" value="{{igood.0.grn}}{{i.id}}" data="{{igood.0.grn}}">
+        <input type="hidden" id="item{{igood.0.grn}}{{i.id}}" value="{{i.item}}">
+        <input type="hidden" id="alias{{igood.0.grn}}{{i.id}}" value="{{i.alias}}">
+        <input type="hidden" id="itemid{{igood.0.grn}}{{i.id}}" value="{{i.item_id}}">
+        <input type="hidden" id="uom{{igood.0.grn}}{{i.id}}" value="{{i.uom}}">
+        <input type="hidden" id="qty{{igood.0.grn}}{{i.id}}" value="{{i.quantity}}">
+        {% endfor %}
+        {% endfor %}
+
+        {% for i in pitem %}
+	      <input type="hidden" class="pvnon{{i.grn}}" value="{{i.pvn}}">
+	    {% endfor %}
+	    {% for i in mitm %}
+	      <input type="hidden" class="pvnon{{i.pvn}}" value="{{i.pvn}}">
+	    {% endfor %}
+
+        {% for p in porder %}
+        <input type="hidden" id="po{{p.purchase_number}}" value="{{p.purchase_number}}">
+        {% endfor %}
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>Internal Transfer GRN<font style="color: red;">*</font></span></label>
+            <div class="fields" style="border: 1px solid #ddd; padding: 10px 20px;" id="checkblock">
+              <span id="yjobcheck"><input type="checkbox" id="yesjob" checked> Yes</span>
+              <!-- <span id="njobcheck"><input type="checkbox" id="nojob" > No</span> -->
+              <input type="hidden" name="jorder" id="jorder" value="yes">
+            </div>
+            <div class="fields">
+              <input type="text" name="jobnumber" id="jobnumber" class="form-control inputs" placeholder="Enter PO number" value="{{item.internal_number}}">
+              <span class="help_text">Enter PO number and press enter</span>
+              <span class="already_error porder_e">Please provide valid internal transfer number</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="col col-xl-12">
+          <div class="grncol">
+            {% for bill, range in bills %}
+            {% if bill.0.pvn %}
+            <div class="coldiv grd{{bill.0.pvn}}" id="colrec{{bill.0.pvn}}{{forloop.counter}}">
+              <span class="coldes">{{bill.0.pvn}}</span>
+              <button type="button" class="colbtn" name="{{bill.0.pvn}}" data="{{bill.0.pvn}}{{forloop.counter}}"><i class="fa fa-times"></i></button>
+            </div>
+            {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+
+
+        <div class="hidden_inputs">
+            {% for bill, range in bills %}
+            <input type="hidden" class="irecon" value="{{forloop.counter}}">
+            <input type="hidden" name="pvnval" class="pvnval" id="pval{{bill.0..pvn}}" value="{{bill.0.pvn}}">
+            {% endfor %}
+            {% for b in pp %}
+            <input type="hidden" name="itemadd" id="itemad{{forloop.counter}}" value="{{forloop.counter}}">
+            <input type="hidden" name="inameid{{b.pvn}}{{forloop.counter}}" id="inameid{{forloop.counter}}" value="{{b.item_id}}">
+            <input type="hidden" name="iname{{b.pvn}}{{forloop.counter}}" id="iname{{forloop.counter}}" value="{{b.item}}">
+            <input type="hidden" name="ialias{{b.pvn}}{{forloop.counter}}" id="ialias{{forloop.counter}}" value="{{b.alias}}">
+            <input type="hidden" name="iuom{{b.pvn}}{{forloop.counter}}" id="iuom{{forloop.counter}}" value="{{b.uom}}">
+            <input type="hidden" name="iqty{{b.pvn}}{{forloop.counter}}" id="iqty{{forloop.counter}}" value="{{b.quantity}}">
+            {% endfor %}
+            {% for b in bill_count %}
+            <input type="hidden" class="bill_count" value="{{b}}">
+            {% endfor %}
+            {% for b in pp %}
+            <input type="hidden" name="pvnitm" class="pvnitm{{b.pvn}}" value="{{forloop.counter}}">
+            {% endfor %}
+        </div>
+
+        <div class="col col-12">
+          <div class="goods table-responsive">
+            <div class="loading">
+              <div class="loadcontent">
+                Loading....
+              </div>
+            </div>
+                  <span class="maintainhead">
+                    Damage Items:
+                    <button type="button" id="additem" class="mainbtn">+ ADD ITEMS</button>
+                  </span>
+                  <table class="table table-bordered table-hover" id="MaintainanceTable">
+                    <thead>
+                      <tr>
+                        <th scope="col">Action</th>
+                        <th scope="col">Items</th>
+                        <th scope="col">UOM</th>
+                        <th scope="col">Quantity</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for b in pp %}
+                      <tr id="itemrow{{forloop.counter}}" class="itemrow{{b.pvn}}">
+                        <td>
+                          <button type="button" class="edititem" id="eitem{{forloop.counter}}" data="{{forloop.counter}}"><i class="far fa-edit"></i></button>
+                          <button type="button" class="delitem" id="ditem{{forloop.counter}}" data="{{forloop.counter}}"><i class="far fa-trash-alt"></i></button>
+                        </td>
+                        <td>{{b.item}}({{b.alias}})</td>
+                        <td>{{b.uom}}</td>
+                        <td>{{b.quantity}}</td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                    <tfoot class="tfoot2">
+                      <tr class="boldrow">
+                        <td colspan="7" style="text-align: center;">No items</td>
+                        
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+        </div>
+
+        <div class="col col-xl-12 col-lg-12">
+          {% if messages %}
+            {% for message in messages %}
+            <input type="hidden" class="msgon" value="{{message}}">
+            {% endfor %}
+          {% endif %}
+          <div class="fields">
+            <button type="submit" class="submit_btn">SUBMIT</button><i class="fa fa-spinner fa-spin mx-2 spinner" id="spinner1"></i>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<div class="col col-xl-2 col-lg-2 d-md-1 d-none d-lg-inline">
+  <span style="opacity: 0;">.</span>
+</div>
+
+<!---item pop over-------------------->
+
+<div class="edit_popupbanner">
+  <div class="col col-xl-3 col-lg-3 col-md-1 d-none d-md-inline">
+    <span style="opacity: 0;">.</span>
+  </div>
+  <div class="col col-xl-6 col-lg-6 col-md-10">
+    <div class="predefine1" id="edit_popup">
+      <div class="edithead">
+        Add Item <i class="fa fa-times" id="close_edit"></i>
+      </div>
+      <div class="prebody editbody">
+        <div class="col col-xl-6 col-lg-6">
+          {% for i in item_real %}
+          <input type="hidden" id="ini{{i.id}}" data="{{i.uom}}" value="{{i.item}}" name="{{i.alias}}">
+          {% endfor %}
+          {% for i in item_real %}
+          <input type="hidden" class="itemclass" data="{{i.item}}" value="{{i.id}}">
+          {% endfor %}
+          {% for i in pitem %}
+          <input type="hidden" class="pitm{{i.pvn}}" data="{{i.item}}" value="{{i.item_id}}" name="{{i.alias}}">
+          {% endfor %}
+          {% for i in mitm %}
+          <input type="hidden" class="pitm{{i.pvn}}" data="{{i.item}}" value="{{i.item_id}}" name="{{i.alias}}">
+          {% endfor %}
+          <div class="fields">
+            <label class="label"><span>Item<font style="color: red;">*</font></span></label>
+            <select class="form-control inputs" name="item" id="item">
+              <option value="" disabled selected>Choose item</option>
+              
+            </select>
+            <input type="hidden" name="itemname" id="itemname">
+            <input type="hidden" name="itemalias" id="itemalias" readonly>
+          </div>
+        </div>
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>UOM<font style="color: red;">*</font></span></label>
+            <input type="text" class="form-control inputs" name="uom" id="uom" readonly>
+            <!-- <select class="form-control inputs" name="uom" id="uom">
+              <option value="" disabled selected>Choose UOM</option>
+              {% for c in uom_dash %}
+              <option value="{{c.uom}}">{{c.uom}}</option>
+              {% endfor %}
+            </select> -->
+          </div>
+        </div>
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>Quantity<font style="color: red;">*</font></span></label>
+            <input type="number" class="form-control inputs" name="qty" id="qty" step=".01">
+          </div>
+        </div>
+        <div class="col col-xl-12 col-lg-12">
+          <div class="fields">
+            <button type="submit" class="submit_btn" id="additembtn">ADD</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col col-xl-3 col-lg-3 col-md-1 d-none d-md-inline">
+    <span style="opacity: 0;">.</span>
+  </div>
+</div>
+
+<div class="edit_popupbanner1">
+  <div class="col col-xl-3 col-lg-3 col-md-1 d-none d-md-inline">
+    <span style="opacity: 0;">.</span>
+  </div>
+  <div class="col col-xl-6 col-lg-6 col-md-10">
+    <div class="predefine1" id="edit_popup1">
+      <div class="edithead">
+        Edit Item <i class="fa fa-times" id="close_edit1"></i>
+      </div>
+      <div class="prebody editbody">
+        <div class="col col-xl-6 col-lg-6">
+          {% for i in item_real %}
+          <input type="hidden" id="eini{{i.id}}" data="{{i.uom}}" value="{{i.item}}" name="{{i.alias}}">
+          {% endfor %}
+          {% for i in item_real %}
+          <input type="hidden" class="eitemclass" data="{{i.item}}" value="{{i.id}}">
+          {% endfor %}
+          {% for i in pitem %}
+          <input type="hidden" class="epitm{{i.pvn}}" data="{{i.item}}" value="{{i.item_id}}" name="{{i.alias}}">
+          {% endfor %}
+          {% for i in mitm %}
+          <input type="hidden" class="epitm{{i.pvn}}" data="{{i.item}}" value="{{i.item_id}}" name="{{i.alias}}">
+          {% endfor %}
+          <input type="hidden" id="dfaultid">
+          <div class="fields">
+            <label class="label"><span>Item<font style="color: red;">*</font></span></label>
+            <select class="form-control inputs" name="edititem" id="edititem">
+              <option value="" disabled selected>Choose item</option>
+              
+            </select>
+            <input type="hidden" name="edititemname" id="edititemname">
+            <input type="hidden" name="edititemalias" id="edititemalias" readonly>
+          </div>
+        </div>
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>UOM<font style="color: red;">*</font></span></label>
+            <input type="text" class="form-control inputs" name="edituom" id="edituom" readonly>
+            <!-- <select class="form-control inputs" name="uom" id="uom">
+              <option value="" disabled selected>Choose UOM</option>
+              {% for c in uom_dash %}
+              <option value="{{c.uom}}">{{c.uom}}</option>
+              {% endfor %}
+            </select> -->
+          </div>
+        </div>
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>Quantity<font style="color: red;">*</font></span></label>
+            <input type="number" class="form-control inputs" name="editqty" id="editqty" step=".01">
+          </div>
+        </div>
+        <div class="col col-xl-12 col-lg-12">
+          <div class="fields">
+            <button type="submit" class="submit_btn" id="additemeditbtn">UPDATE</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col col-xl-3 col-lg-3 col-md-1 d-none d-md-inline">
+    <span style="opacity: 0;">.</span>
+  </div>
+</div>
+
+
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'js/internal_damage_edit.js' %}?v=1.0"></script>
+{% endblock %}

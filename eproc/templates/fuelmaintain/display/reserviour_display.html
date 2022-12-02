@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/predefine.css' %}?v=1.4">
+{% endblock %}
+{% block wave %}
+<img src="{% static 'img/back.png' %}" id="backimg">
+{% endblock %}
+{% block content %}
+<div class="col col-xl-1 col-lg-1 d-none d-lg-inline">
+	<span style="opacity: 0;">.</span>
+</div>
+<div class="col col-xl-10 col-lg-10">
+	<div class="predefine1">
+		<div class="head">
+			<span class="head1">Reserviours</span>
+			<span class="head2">View and Manage reserviour's details</span>
+		</div>
+		{% if messages %}
+			{% for message in messages %}
+			<input type="hidden" class="msgon" value="{{message}}">
+			{% endfor %}
+		{% endif %}
+		<div class="prebody table-responsive">
+			{% if reserve %}
+			{% for s in reserve %}
+			<input type="hidden" id="name{{s.id}}" value="{{s.name}}">
+			<input type="hidden" id="url{{s.id}}" value="{{s.url}}">
+			<input type="hidden" id="location{{s.id}}" value="{{s.location}}">
+			<input type="hidden" id="opening{{s.id}}" value="{{s.opening}}">
+			<input type="hidden" id="capacity{{s.id}}" value="{{s.capacity}}">
+			<input type="hidden" id="site{{s.id}}" value="{{s.site}}">
+			<input type="hidden" id="stock{{s.id}}" value="{{s.stock}}">
+			{% endfor %}
+			<table class="table table-bordered table-hover" id="SupplierTable">
+				<thead>
+				  <tr>
+					<th scope="col">Name</th>
+					<th scope="col">Site</th>
+					<th scope="col">Location</th>
+					<th scope="col">Capacity</th>
+					<th scope="col">Opening Stock</th>
+					<th scope="col">Total Stock</th>
+					<th scope="col">Action</th>
+				  </tr>
+				</thead>
+				<tbody>
+					{% for s in reserve %}
+					<tr>
+						<td>{{s.name}}</td>
+						<td>{{s.site}}</td>
+						<td>{{s.location}}</td>
+						<td>{{s.capacity}}</td>
+						<td>{{s.opening}}</td>
+						<td>{{s.stock}}</td>
+						<td>
+							<button type="button" class="sup_edit" data="{{s.id}}"><i class="far fa-edit"></i></button>
+							<button type="button" class="sup_delete" data="{{s.id}}"><i class="far fa-trash-alt"></i></button>
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+			{% else %}
+			<span class="no_content">
+				No reserviours found
+			</span>
+			{% endif %}
+		</div>
+	</div>
+</div>
+<div class="col col-xl-1 col-lg-1 d-none d-lg-inline">
+	<span style="opacity: 0;">.</span>
+</div>
+
+<!-- pop up for edition ------>
+
+<div class="edit_popupbanner">
+	<div class="col col-xl-3 col-lg-3 col-md-1 d-none d-md-inline">
+		<span style="opacity: 0;">.</span>
+	</div>
+	<div class="col col-xl-6 col-lg-6 col-md-10">
+		<div class="predefine1" id="edit_popup">
+			<div class="edithead">
+				Edit Reserviour <i class="fa fa-times" id="close_edit"></i>
+			</div>
+			<div class="prebody editbody" id="formbody">
+				<form method="POST" action="/update-reserviour/" id="ReserveEditForm" autocomplete="off" name="ReserveEditForm">
+					{% csrf_token %}
+					<input type="hidden" id="suid" name="suid">
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>Name<font style="color: red;">*</font></span></label>
+							<input type="text" class="form-control inputs" name="name" id="name">
+							<input type="hidden" name="url" id="url">
+							<input type="hidden" name="dname" id="dname">
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>Site<font style="color: red;">*</font></span></label>
+							<select class="form-control inputs" name="site" id="site">
+				              <option value="" disabled selected>Choose site</option>
+				              {% for c in site_dash %}
+				              <option value="{{c.name}}">{{c.name}}</option>
+				              {% endfor %}
+				            </select>
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>Location<font style="color: red;">*</font></span></label>
+							<input type="text" class="form-control inputs" name="location" id="location">
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>Capacity<font style="color: red;">*</font></span></label>
+							<div class="input-group">
+								<input type="number" name="capacity" id="capacity" class="form-control inputs" step='.01' readonly>
+								<div class="input-group-append">
+									<div class="input-group-text">ltrs</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<input type="hidden" id="dopening" name="dopening">
+							<input type="hidden" id="dstock" name="dstock">
+							<label class="label"><span>Opening Stock<font style="color: red;">*</font></span></label>
+							<div class="input-group">
+								<input type="number" name="opening" id="opening" class="form-control inputs" step='.01'>
+								<div class="input-group-append">
+									<div class="input-group-text">ltrs</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col col-xl-12 col-lg-12">
+						<div class="fields">
+							<button type="submit" class="submit_btn">SAVE</button><i class="fa fa-spinner fa-spin mx-2 spinner" id="spinner1"></i>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div class="col col-xl-3 col-lg-3 col-md-1 d-none d-md-inline">
+		<span style="opacity: 0;">.</span>
+	</div>
+</div>
+
+<!-- po up deletion ------------------->
+
+<div class="del_popupbanner">
+	<div class="col col-xl-4 col-lg-4 col-md-3 d-none d-md-inline">
+		<span style="opacity: 0;">.</span>
+	</div>
+	<div class="col col-xl-4 col-lg-4 col-md-6">
+
+		<div class="predefine1" id="del_popup">
+			Reserviour will be deleted. Do you wish to continue?
+
+			<form method="POST" action="/delete-reserviour/">
+				{% csrf_token %}
+				<input type="hidden" name="sid" id="sid">
+				<button type="submit" class="del_btn">Yes</button>
+				<button type="button" class="del_btn" id="cancel_btn">No</button>
+			</form>
+		</div>
+	</div>
+	<div class="col col-xl-4 col-lg-4 col-md-3 d-none d-md-inline">
+		<span style="opacity: 0;">.</span>
+	</div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'js/reserviour.js' %}?v=1.4"></script>
+{% endblock %}

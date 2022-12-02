@@ -1,0 +1,16 @@
+procurement/
+account/migrations/
+account/__pycache__/
+account/__init__.py
+eproc/migrations/
+eproc/__pycache__/
+eproc/__init__.py
+static/admin/
+__pycache__/
+public/
+tmp/
+db.sqlite3
+manage.py
+passenger_wsgi.py
+require.txt
+stderr.log

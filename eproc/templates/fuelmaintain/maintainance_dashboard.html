@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/purchase.css' %}?v=1.3">
+{% endblock %}
+{% block content %}
+<div class="col col-xl-6 col-lg-6 col-md-6">
+	<div class="predefine1">
+		<div class="head">
+			<span class="head1">Manage Maintainance</span>
+			<span class="head2">Add and manage maintainance</span>
+		</div>
+		<div class="col col-xl-6 col-lg-6 col-md-6">
+			<div class="prebody">
+			    <a href="{% url 'vehicle_move' %}"><div class="component maintaincomp">
+					<div class="compcover"></div>
+					<div class="compcontent">
+						<span class="comp1"><i class="fas fa-truck-moving"></i>Vehicle Movement</span>
+						<span class="comp2">Add new vehicle movement record</span>
+					</div>
+				</div></a>
+				<a href="{% url 'fuel_manage' %}"><div class="component maintaincomp">
+					<div class="compcover"></div>
+					<div class="compcontent">
+						<span class="comp1"><i class="fas fa-gas-pump"></i>Fuel Consumption</span>
+						<span class="comp2">Add new consumption in system</span>
+					</div>
+				</div></a>
+				<a href="{% url 'manage_maintainance' %}"><div class="component maintaincomp">
+					<div class="compcover"></div>
+					<div class="compcontent">
+						<span class="comp1"><i class="fas fa-wrench"></i>Maintainance Entry</span>
+						<span class="comp2">Entry for new vehicle maintainance</span>
+					</div>
+				</div></a>
+				<a href="{% url 'vehicle' %}"><div class="component maintaincomp">
+					<div class="compcover"></div>
+					<div class="compcontent">
+						<span class="comp1"><i class="fas fa-truck-moving"></i>Vehicles</span>
+						<span class="comp2">Entry for new vehicle addition</span>
+					</div>
+				</div></a>
+				<a href="{% url 'vehicle_type' %}"><div class="component maintaincomp">
+					<div class="compcover"></div>
+					<div class="compcontent">
+						<span class="comp1"><i class="fas fa-truck"></i>Vehicle Type</span>
+						<span class="comp2">Add/Manage vehicle Types</span>
+					</div>
+				</div></a>
+			</div>
+		</div>
+		<div class="col col-xl-6 col-lg-6 col-md-6">
+			<div class="prebody">
+				<a href="{% url 'fuel_type' %}"><div class="component maintaincomp">
+					<div class="compcover"></div>
+					<div class="compcontent">
+						<span class="comp1"><i class="fas fa-thermometer-quarter"></i>Fuel Type</span>
+						<span class="comp2">Add/Manage fuel Types</span>
+					</div>
+				</div></a>
+				<a href="{% url 'problem_category' %}"><div class="component maintaincomp">
+					<div class="compcover"></div>
+					<div class="compcontent">
+						<span class="comp1"><i class="fas fa-cog"></i>Problem Category</span>
+						<span class="comp2">Add/Manage problem categories</span>
+					</div>
+				</div></a>
+				<a href="{% url 'problem_subcategory' %}"><div class="component maintaincomp">
+					<div class="compcover"></div>
+					<div class="compcontent">
+						<span class="comp1"><i class="fas fa-cog"></i>Problem Sub Categories</span>
+						<span class="comp2">Add/Manage problem sub categories</span>
+					</div>
+				</div></a>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="col col-xl-6 col-lg-6 col-md-6">
+	<div class="predefine2">
+		<div class="wavediv">
+			
+		</div>
+		<div class="wavecontent">
+			<a href="{% url 'fuel_display' %}"><div class="wavecount">
+				<div class="wnumber">
+					{{count1}}
+				</div>
+				<div class="wtext">
+					<span class="wtext1">Consumption</span>
+					<span class="wtext2">Total consumption records in system</span>
+				</div>
+			</div></a>
+			<a href="{% url 'maintainance_display' %}"><div class="wavecount">
+				<div class="wnumber">
+					{{count2}}
+				</div>
+				<div class="wtext">
+					<span class="wtext1">Maintainance</span>
+					<span class="wtext2">Total maintainance records in system</span>
+				</div>
+			</div></a>
+			<a href="{% url 'vehicle_display' %}"><div class="wavecount">
+				<div class="wnumber">
+					{{count3}}
+				</div>
+				<div class="wtext">
+					<span class="wtext1">Vehicles</span>
+					<span class="wtext2">Total vehicles in system</span>
+				</div>
+			</div></a>
+			<a href="{% url 'move_display' %}"><div class="wavecount">
+				<div class="wnumber">
+					{{count4}}
+				</div>
+				<div class="wtext">
+					<span class="wtext1">Vehicle Movements</span>
+					<span class="wtext2">Total vehicle movement records in system</span>
+				</div>
+			</div></a>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block js %}
+
+{% endblock %}

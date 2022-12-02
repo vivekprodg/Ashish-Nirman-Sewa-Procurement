@@ -1,0 +1,359 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/sale_dash.css' %}">
+<link rel="stylesheet" href="{% static 'css/sale.css' %}">
+{% endblock %}
+{% block wave %}
+<img src="{% static 'img/back.png' %}" id="backimg">
+{% endblock %}
+{% block content %}
+<div class="col col-xl-2 col-lg-2 d-md-1 d-none d-lg-inline">
+	<span style="opacity: 0;">.</span>
+</div>
+<div class="col col-xl-8 col-lg-8 col-md-10">
+	<div class="predefine1">
+		<div class="head">
+			<span class="head1">Out Sales Entry</span>
+			<span class="head2">Enter new out sales entry details</span>
+		</div>
+		<div class="prebody" id="formbody">
+			<input type="hidden" id="dinvtype" value="{{item.invoice_type}}">
+			<form method="POST" action="/edit-sales/" id="SalesForm" autocomplete="off" name="SalesForm">
+				{% csrf_token %}
+				<input type="hidden" name="sid" id="sid" value="{{item.id}}">
+				<div class="col col-xl-6 col-lg-6">
+					<div class="fields">
+						<label class="label"><span>Sales Date<font style="color: red;">*</font></span></label>
+						<input type="text" class="form-control inputs" name="date" id="date" value="{{item.sales_date}}">
+					</div>
+				</div>
+				<div class="col col-xl-6 col-lg-6">
+					<div class="fields">
+						<label class="label"><span>Sales ID<font style="color: red;">*</font></span></label>
+						<input type="text" class="form-control inputs" name="saleid" id="saleid" value="{{item.sales_id}}" readonly>
+					</div>
+				</div>
+				<div class="col col-xl-6 col-lg-6">
+					<div class="fields">
+						<label class="label"><span>Issuing Location<font style="color: red;">*</font></span></label>
+						<input type="text" class="form-control inputs" name="issue_locate" id="issue_locate" value="{{item.issuing_location}}" readonly>
+					</div>
+				</div>
+				<div class="col col-xl-6 col-lg-6">
+					<div class="fields">
+						<label class="label"><span>Buyer <font style="color: red;">*</font></span></label>
+						<input type="text" class="form-control inputs" name="buyer" id="buyer" value="{{item.buyer}}">
+					</div>
+				</div>
+				<div class="col col-xl-6 col-lg-6">
+					<div class="fields">
+						<label class="label"><span>Invoice Type<font style="color: red;">*</font></span></label>
+						<select class="form-control inputs" name="invoice_type" id="invoice_type">
+							<option value="" disabled selected>Choose invoice type</option>
+							<option value="Plain Bill">Plain Bill</option>
+							<option value="Pan Bill">Pan Bill</option>
+							<option value="VAT Bill">VAT Bill</option>
+						</select>
+					</div>
+				</div>
+
+				<div class="hidden_inputs">
+					{% for b in invitem %}
+	                  <input type="hidden" name="itemadd" id="itemad{{forloop.counter}}" value="{{forloop.counter}}">
+	                  <input type="hidden" name="inameid{{forloop.counter}}" id="inameid{{forloop.counter}}" value="{{b.item_id}}">
+	                  <input type="hidden" name="iname{{forloop.counter}}" id="iname{{forloop.counter}}" value="{{b.item}}">
+	                  <input type="hidden" name="iuom{{forloop.counter}}" id="iuom{{forloop.counter}}" value="{{b.uom}}">
+	                  <input type="hidden" name="iqty{{forloop.counter}}" id="iqty{{forloop.counter}}" value="{{b.quantity}}">
+	                  <input type="hidden" name="irate{{forloop.counter}}" id="irate{{forloop.counter}}" value="{{b.rate}}">
+	                  <input type="hidden" name="iamt{{forloop.counter}}" id="iamt{{forloop.counter}}" value="{{b.amount}}">
+	                  <input type="hidden" class="inv_amount" value="{{b.amount}}">
+	                {% endfor %}
+	                {% for b in inv_count %}
+	                <input type="hidden" class="inv_count" value="{{b}}">
+	                {% endfor %}
+				</div>
+
+				<div class="col col-12">
+					<div class="goods">
+		              <span class="maintainhead">
+		                Add Sales Items:
+		                <button type="button" id="additem" class="mainbtn">+ ADD ITEMS</button>
+		              </span>
+		              <table class="table table-bordered table-hover" id="ItemTable">
+		                <thead>
+		                  <tr>
+		                    <th scope="col">Action</th>
+		                    <th scope="col">Items</th>
+		                    <th scope="col">UOM</th>
+		                    <th scope="col">Quantity</th>
+		                    <th scope="col">Rate</th>
+		                    <th scope="col">Amount</th>
+		                  </tr>
+		                </thead>
+		                <tbody>
+		                  {% for b in invitem %}
+		                  <tr id="itemrow{{forloop.counter}}">
+		                    <td>
+		                      <button type="button" class="edititem" id="eitem{{forloop.counter}}" data="{{forloop.counter}}"><i class="far fa-edit"></i></button>
+		                      <button type="button" class="delitem" id="ditem{{forloop.counter}}" data="{{forloop.counter}}"><i class="far fa-trash-alt"></i></button>
+		                    </td>
+		                    <td>{{b.item}}</td>
+		                    <td>{{b.uom}}</td>
+		                    <td>{{b.quantity}}</td>
+		                    <td>{{b.rate}}</td>
+		                    <td>{{b.amount}}</td>
+		                  </tr>
+		                  {% endfor %}
+		                </tbody>
+		                <tfoot class="tfoot2" style="display:none;">
+		                  <tr class="boldrow">
+		                    <td colspan="5" style="text-align: center;">No items</td>
+		                    
+		                  </tr>
+		                </tfoot>
+		                <tfoot class="tfoot">
+		                  <tr>
+		                    <td colspan="6" style="border:none;"></td>
+		                  </tr>
+		                  <tr>
+		                    <td colspan="6" style="border:none;"></td>
+		                  </tr>
+		                  <tr class="boldrow table-sm">
+		                    <td colspan="5">Sub Total</td>
+		                    <td>
+		                      <div class="input-group">
+		                        <div class="input-group-append">
+		                          <div class="input-group-text">NPR</div>
+		                        </div>
+		                        <input type="number" name="subtotal" id="subtotal" class="form-control" step='.01' value="{{item.sub_total}}" readonly>
+		                      </div>
+		                    </td>
+		                  </tr>
+		                  <tr class="boldrow table-sm">
+		                    <td colspan="5">Discount</td>
+		                    <td>
+		                    	<div class="input-group">
+		                    		<div class="input-group-append">
+		                    			<div class="input-group-text">NPR</div>
+		                    		</div>
+		                    		<input type="number" name="discount2" id="discount2" class="form-control" step='.01' value="{{item.discount_amt}}">
+		                    	</div>
+		                    	<div class="input-group" id="dis1">
+		                    		<input type="number" name="discount1" id="discount1" class="form-control" step='.01' value="{{item.discount_per}}">
+		                    		<div class="input-group-append">
+		                    			<div class="input-group-text">%</div>
+		                    		</div>
+		                    	</div>
+		                    </td>
+		                  </tr>
+		                  <tr class="boldrow table-sm">
+		                    <td colspan="5">Vat</td>
+		                    <td>
+		                      <div class="input-group">
+		                        <div class="input-group-append">
+		                          <div class="input-group-text">NPR</div>
+		                        </div>
+		                        <input type="number" name="vat" id="vat" class="form-control" step='.01' value="{{item.vat}}" readonly>
+		                      </div>
+		                    </td>
+		                  </tr>
+		                  <tr class="boldrow table-sm">
+		                    <td colspan="5">Total Amount</td>
+		                    <td>
+		                      <div class="input-group">
+		                        <div class="input-group-append">
+		                          <div class="input-group-text">NPR</div>
+		                        </div>
+		                        <input type="number" name="total" id="total" class="form-control" step='.01' value="{{item.total}}" readonly>
+		                      </div>
+		                    </td>
+		                  </tr>
+		                </tfoot>
+		              </table>
+		            </div>
+				</div>
+
+				<div class="col col-xl-12 col-lg-12">
+					{% if messages %}
+						{% for message in messages %}
+						<input type="hidden" class="msgon" value="{{message}}">
+						{% endfor %}
+					{% endif %}
+					<div class="fields">
+						<button type="submit" class="submit_btn">SUBMIT</button><i class="fa fa-spinner fa-spin mx-2 spinner" id="spinner1"></i>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<div class="col col-xl-2 col-lg-2 d-md-1 d-none d-lg-inline">
+	<span style="opacity: 0;">.</span>
+</div>
+
+<!---item pop over-------------------->
+
+<div class="edit_popupbanner">
+	<div class="col col-xl-3 col-lg-3 col-md-1 d-none d-md-inline">
+		<span style="opacity: 0;">.</span>
+	</div>
+	<div class="col col-xl-6 col-lg-6 col-md-10">
+		<div class="predefine1" id="edit_popup">
+			<div class="edithead">
+				Add goods <i class="fa fa-times" id="close_edit"></i>
+			</div>
+			<div class="prebody editbody">
+				<div class="col col-xl-6 col-lg-6">
+					{% for i in item_dash %}
+					<input type="hidden" name="{{i.rate}}" id="ini{{i.id}}" data="{{i.uom}}" value="{{i.item}}">
+					{% endfor %}
+					<div class="fields">
+						<label class="label"><span>Item<font style="color: red;">*</font></span></label>
+						<select class="form-control inputs" name="item" id="item">
+							<option value="" disabled selected>Choose item</option>
+							{% for c in item_dash %}
+							<option value="{{c.id}}">{{c.item}}</option>
+							{% endfor %}
+						</select>
+						<input type="hidden" name="itemname" id="itemname" readonly>
+					</div>
+				</div>
+				<div class="col col-xl-6 col-lg-6">
+					<div class="fields">
+						<label class="label"><span>UOM<font style="color: red;">*</font></span></label>
+						<input type="text" class="form-control inputs" name="uom" id="uom" readonly>
+						<!-- <select class="form-control inputs" name="uom" id="uom">
+							<option value="" disabled selected>Choose UOM</option>
+							{% for c in uom_dash %}
+							<option value="{{c.uom}}">{{c.uom}}</option>
+							{% endfor %}
+						</select> -->
+					</div>
+				</div>
+				<div class="col col-xl-6 col-lg-6">
+					<div class="fields">
+						<label class="label"><span>Quantity<font style="color: red;">*</font></span></label>
+						<input type="number" class="form-control inputs" name="qty" id="qty" step=".01">
+					</div>
+				</div>
+				<div class="col col-xl-6 col-lg-6">
+					<div class="fields">
+						<label class="label"><span>Rate<font style="color: red;">*</font></span></label>
+						<div class="input-group">
+							<div class="input-group-append">
+								<div class="input-group-text">NPR</div>
+							</div>
+							<input type="number" name="rate" id="rate" class="form-control" step='.01' value="0" readonly>
+						</div>
+					</div>
+				</div>
+				<div class="col col-xl-6 col-lg-6">
+					<div class="fields">
+						<label class="label"><span>Amount<font style="color: red;">*</font></span></label>
+						<div class="input-group">
+							<div class="input-group-append">
+								<div class="input-group-text">NPR</div>
+							</div>
+							<input type="number" name="amount" id="amount" class="form-control" step='.01' value="0" readonly>
+						</div>
+					</div>
+				</div>
+				<div class="col col-xl-12 col-lg-12">
+					<div class="fields">
+						<button type="submit" class="submit_btn" id="additembtn">ADD</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col col-xl-3 col-lg-3 col-md-1 d-none d-md-inline">
+		<span style="opacity: 0;">.</span>
+	</div>
+</div>
+
+<div class="edit_popupbanner1">
+	<div class="col col-xl-3 col-lg-3 col-md-1 d-none d-md-inline">
+		<span style="opacity: 0;">.</span>
+	</div>
+	<div class="col col-xl-6 col-lg-6 col-md-10">
+		<div class="predefine1" id="edit_popup1">
+			<div class="edithead">
+				Edit goods <i class="fa fa-times" id="close_edit1"></i>
+			</div>
+			<div class="prebody editbody">
+				<div class="col col-xl-6 col-lg-6">
+					{% for i in item_dash %}
+					<input type="hidden" name="{{i.rate}}" id="eini{{i.id}}" data="{{i.uom}}" value="{{i.item}}">
+					{% endfor %}
+					<input type="hidden" id="dfaultid">
+					<div class="fields">
+						<label class="label"><span>Item<font style="color: red;">*</font></span></label>
+						<select class="form-control inputs" name="edititem" id="edititem">
+							<option value="" disabled selected>Choose item</option>
+							{% for c in item_dash %}
+							<option value="{{c.id}}">{{c.item}}</option>
+							{% endfor %}
+						</select>
+						<input type="hidden" name="edititemname" id="edititemname" readonly>
+					</div>
+				</div>
+				<div class="col col-xl-6 col-lg-6">
+					<div class="fields">
+						<label class="label"><span>UOM<font style="color: red;">*</font></span></label>
+						<input type="text" class="form-control inputs" name="edituom" id="edituom" readonly>
+						<!-- <select class="form-control inputs" name="uom" id="uom">
+							<option value="" disabled selected>Choose UOM</option>
+							{% for c in uom_dash %}
+							<option value="{{c.uom}}">{{c.uom}}</option>
+							{% endfor %}
+						</select> -->
+					</div>
+				</div>
+				<div class="col col-xl-6 col-lg-6">
+					<div class="fields">
+						<label class="label"><span>Quantity<font style="color: red;">*</font></span></label>
+						<input type="number" class="form-control inputs" name="editqty" id="editqty" step=".01">
+					</div>
+				</div>
+				<div class="col col-xl-6 col-lg-6">
+					<div class="fields">
+						<label class="label"><span>Rate<font style="color: red;">*</font></span></label>
+						<div class="input-group">
+							<div class="input-group-append">
+								<div class="input-group-text">NPR</div>
+							</div>
+							<input type="number" name="editrate" id="editrate" class="form-control" step='.01' value="0" readonly>
+						</div>
+					</div>
+				</div>
+				<div class="col col-xl-6 col-lg-6">
+					<div class="fields">
+						<label class="label"><span>Amount<font style="color: red;">*</font></span></label>
+						<div class="input-group">
+							<div class="input-group-append">
+								<div class="input-group-text">NPR</div>
+							</div>
+							<input type="number" name="editamount" id="editamount" class="form-control" step='.01' value="0" readonly>
+						</div>
+					</div>
+				</div>
+				<div class="col col-xl-12 col-lg-12">
+					<div class="fields">
+						<button type="submit" class="submit_btn" id="additemeditbtn">UPDATE</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col col-xl-3 col-lg-3 col-md-1 d-none d-md-inline">
+		<span style="opacity: 0;">.</span>
+	</div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'js/sale_edit.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,284 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/stock_entry.css' %}?v=1.2">
+{% endblock %}
+{% block wave %}
+<img src="{% static 'img/back.png' %}" id="backimg">
+{% endblock %}
+{% block content %}
+<div class="col col-xl-1 col-lg-1 d-none d-lg-inline">
+	<span style="opacity: 0;">.</span>
+</div>
+<div class="col col-xl-10 col-lg-10">
+	<div class="predefine1 stockdefine">
+		<div class="head">
+			<span class="head1">Sitewise Stock Items</span>
+			<span class="head2">View and Manage item's details</span>
+		</div>
+		<div class="prebody table-responsive">
+			{% if messages %}
+				{% for message in messages %}
+				<input type="hidden" class="msgon" value="{{message}}">
+				{% endfor %}
+			{% endif %}
+			{% if s_item %}
+			{% for s in s_item %}
+			<input type="hidden" id="name{{s.id}}" value="{{s.item}}">
+			<input type="hidden" id="url{{s.id}}" value="{{s.url}}">
+			<input type="hidden" id="ali{{s.id}}" value="{{s.alias}}">
+			<input type="hidden" id="cat{{s.id}}" value="{{s.stock_category}}">
+			<input type="hidden" id="subcat{{s.id}}" value="{{s.stock_subcategory}}">
+			<input type="hidden" id="uom{{s.id}}" value="{{s.uom}}">
+			<input type="hidden" id="opening{{s.id}}" value="{{s.opening}}">
+			<input type="hidden" id="qty{{s.id}}" value="{{s.quantity}}">
+			<input type="hidden" id="rate{{s.id}}" value="{{s.rate}}">
+			<input type="hidden" id="amt{{s.id}}" value="{{s.amount}}">
+			<input type="hidden" id="type{{s.id}}" value="{{s.stock_type}}">
+			<input type="hidden" id="s_site{{s.id}}" value="{{s.stock_site}}">
+			{% endfor %}
+			<div class="search_banner">
+				<form method="POST" action="/search-item/" id="StockSearch" name="StockSearch">
+	        		{% csrf_token %}
+		        	<div class="input-group">
+		        		<select class="form-control inputs" name="searchcat" id="searchcategory">
+							<option value="" disabled selected>Choose category</option>
+							{% for c in stock_cat %}
+							<option value="{{c.name}}">{{c.name}}</option>
+							{% endfor %}
+						</select>
+						{% for ps, range in psupa %}
+						<select class="form-control inputs subcatsearch" id="subcatsearch{{ps.0.cat_url}}">
+							<option value="" disabled selected>Choose sub category</option>
+							{% for p in ps %}
+							<option value="{{p.name}}">{{p.name}}</option>
+							{% endfor %}
+						</select>
+						{% endfor %}
+						<input type="hidden" name="searchsubcat" id="subcsearch">
+						<select class="form-control inputs" name="searchsite" id="searchsite">
+							<option value="" disabled selected>Choose site</option>
+							{% for c in site_dash %}
+							<option value="{{c.name}}">{{c.name}}</option>
+							{% endfor %}
+						</select>
+		        		<input type="text" name="search" class="form-control" id="ssearch" placeholder="Search name...">
+		        		<div class="input-group-append">
+		        			<button type="submit" class="btn btn-primary" id="find_btn"><i class="fas fa-search"></i></button>
+		        		</div>
+		        	</div>
+	        	</form>
+			</div>
+			<table class="table table-bordered table-hover" id="StockTable">
+				<thead>
+				  <tr>
+					<th scope="col">Name</th>
+					<th scope="col">Alias</th>
+					<th scope="col">Stock Category</th>
+					<th scope="col">Stock Sub Category</th>
+					<th scope="col">UOM</th>
+					<th scope="col">Opening</th>
+					<th scope="col">Stock Quantity</th>
+					<th scope="col">Rate</th>
+					<th scope="col">Amount</th>
+					<th scope="col">Stock Type</th>
+					<th scope="col">Stock Site</th>
+					<th scope="col">Action</th>
+				  </tr>
+				</thead>
+				<tbody>
+					{% for s in s_item %}
+					<tr>
+						<td>{{s.item}}</td>
+						<td>{{s.alias}}</td>
+						<td>{{s.stock_category}}</td>
+						<td>{{s.stock_subcategory}}</td>
+						<td>{{s.uom}}</td>
+						<td>{{s.opening}}</td>
+						<td>{{s.quantity}}</td>
+						<td>{{s.rate}}</td>
+						<td>{{s.amount}}</td>
+						<td>{{s.stock_type}}</td>
+						<td>{{s.stock_site}}</td>
+						<td>
+							<button type="button" class="sup_edit" data="{{s.id}}"><i class="far fa-edit"></i></button>
+							<button type="button" class="sup_delete" data="{{s.id}}"><i class="far fa-trash-alt"></i></button>
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+			{% else %}
+			<span class="no_content">
+				No items found
+			</span>
+			{% endif %}
+		</div>
+	</div>
+</div>
+<div class="col col-xl-1 col-lg-1 d-none d-lg-inline">
+	<span style="opacity: 0;">.</span>
+</div>
+
+<!-- pop up for edition ------>
+
+<div class="edit_popupbanner">
+	<div class="col col-xl-3 col-lg-3 col-md-1 d-none d-md-inline">
+		<span style="opacity: 0;">.</span>
+	</div>
+	<div class="col col-xl-6 col-lg-6 col-md-10">
+		<div class="predefine1" id="edit_popup">
+			<div class="edithead">
+				Edit Item <i class="fa fa-times" id="close_edit"></i>
+			</div>
+			<div class="prebody editbody" id="formbody">
+				<form method="POST" action="/update-stock/" id="StockEditForm" autocomplete="off" name="StockEditForm">
+					{% csrf_token %}
+					<input type="hidden" id="suid" name="suid">
+					<input type="hidden" id="dname" name="dname">
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>Item Name<font style="color: red;">*</font></span></label>
+							<input type="text" class="form-control inputs" name="name" id="name" readonly>
+							<input type="hidden" name="url" id="url">
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>Alias</span></label>
+							<input type="text" class="form-control inputs" name="alias" id="alias" readonly>
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>Stock Category<font style="color: red;">*</font></span></label>
+							<input type="hidden" id="catinp" name="category">
+							<select class="form-control inputs" id="category" disabled="true">
+								<option value="" disabled selected>Choose category</option>
+								{% for c in stock_cat %}
+								<option value="{{c.name}}">{{c.name}}</option>
+								{% endfor %}
+							</select>
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>Stock Sub Category</span></label>
+							<input type="text" class="form-control inputs" name="subcategory" id="subcategory" readonly>
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>UOM<font style="color: red;">*</font></span></label>
+							<input type="hidden" id="uominp" name="uom">
+							<select class="form-control inputs" id="uom" disabled="true">
+								<option value="" disabled selected>Choose UOM</option>
+								{% for c in uom_dash %}
+								<option value="{{c.uom}}">{{c.uom}}</option>
+								{% endfor %}
+							</select>
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>Stock Type<font style="color: red;">*</font></span></label>
+							<input type="hidden" id="typeinp" name="type">
+							<select class="form-control inputs" id="type" disabled="true">
+								<option value="" disabled selected>Choose type</option>
+								<option value="inventory">inventory</option>
+								<option value="non inventory">non inventory</option>
+								<option value="fixed asset">fixed asset</option>
+							</select>
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>Site<font style="color: red;">*</font></span></label>
+							<input type="hidden" id="siteinp" name="site">
+							<select class="form-control inputs" id="editsite" disabled="true">
+								<option value="" disabled selected>Choose site</option>
+								{% for c in site_dash %}
+								<option value="{{c.name}}">{{c.name}}</option>
+								{% endfor %}
+							</select>
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>Opening</span></label>
+							<input type="number" class="form-control inputs" name="opening" id="opening">
+							<input type="hidden" id="dopen">
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>Stock Quantity</span></label>
+							<input type="number" class="form-control inputs" name="quantity" id="quantity" readonly>
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>Rate<font style="color: red;">*</font></span></label>
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<div class="input-group-text">NPR</div>
+								</div>
+								<input type="number" name="rate" class="form-control inputs" id="rate" value="0" step=".01">
+							</div>
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>Amount<font style="color: red;">*</font></span></label>
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<div class="input-group-text">NPR</div>
+								</div>
+								<input type="number" name="amount" class="form-control inputs" id="amount" value="0" step=".01" readonly>
+							</div>
+						</div>
+					</div>
+					<div class="col col-xl-12 col-lg-12">
+						<div class="fields">
+							<button type="submit" class="submit_btn">SAVE</button><i class="fa fa-spinner fa-spin mx-2 spinner" id="spinner1"></i>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div class="col col-xl-3 col-lg-3 col-md-1 d-none d-md-inline">
+		<span style="opacity: 0;">.</span>
+	</div>
+</div>
+
+<!-- po up deletion ------------------->
+
+<div class="del_popupbanner">
+	<div class="col col-xl-4 col-lg-4 col-md-3 d-none d-md-inline">
+		<span style="opacity: 0;">.</span>
+	</div>
+	<div class="col col-xl-4 col-lg-4 col-md-6">
+
+		<div class="predefine1" id="del_popup">
+			Item will be deleted. Do you wish to continue?
+
+			<form method="POST" action="/delete-stock/">
+				{% csrf_token %}
+				<input type="hidden" name="sid" id="sid">
+				<button type="submit" class="del_btn">Yes</button>
+				<button type="button" class="del_btn" id="cancel_btn">No</button>
+			</form>
+		</div>
+	</div>
+	<div class="col col-xl-4 col-lg-4 col-md-3 d-none d-md-inline">
+		<span style="opacity: 0;">.</span>
+	</div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'js/stock_entry.js' %}?v=1.5"></script>
+{% endblock %}

@@ -1,0 +1,293 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/purchase.css' %}?v=1.3">
+<link rel="stylesheet" href="{% static 'css/goods.css' %}?v=1.4">
+{% endblock %}
+{% block wave %}
+<img src="{% static 'img/back.png' %}" id="backimg">
+{% endblock %}
+{% block content %}
+<div class="col col-xl-2 col-lg-2 d-md-1 d-none d-lg-inline">
+	<span style="opacity: 0;">.</span>
+</div>
+<div class="col col-xl-8 col-lg-8 col-md-10">
+	<div class="predefine1">
+		<div class="head">
+			<span class="head1">GRN Entry for Internal Transfer</span>
+			<span class="head2">Edit goods receive entry details</span>
+		</div>
+		<div class="prebody" id="formbody">
+			<input type="hidden" id="glocate" value="{{item.location}}">
+			<input type="hidden" id="gsup" value="{{item.supplier_id}}">
+			<form method="POST" action="/edit-transfer-grn/" id="GoodsForm" autocomplete="off" name="GoodsForm">
+				{% csrf_token %}
+				<input type="hidden" name="gid" value="{{item.id}}">
+				<div class="col col-xl-6 col-lg-6">
+					<div class="fields">
+						<label class="label"><span>Date<font style="color: red;">*</font></span></label>
+						<input type="text" class="form-control inputs" name="date" id="date" value="{{item.entry_date}}">
+					</div>
+				</div>
+				<div class="col col-xl-6 col-lg-6">
+					<div class="fields">
+						<label class="label"><span>Transfer GRN Number<font style="color: red;">*</font></span></label>
+						<input type="text" class="form-control inputs" name="grn" id="grn" value="{{item.grn_number}}" readonly>
+					</div>
+				</div>
+				<div class="col col-xl-6 col-lg-6">
+					<div class="fields">
+						<label class="label"><span>Narration</span></label>
+						<textarea class="form-control" name="narrat" id="narrat" rows="6">{{item.narration}}</textarea>
+					</div>
+				</div>
+				{% for igood, range in igoods %}
+				{% for i in igood %}
+				<input type="hidden" class="gooid{{igood.0.pvn}}" value="{{igood.0.pvn}}{{i.id}}" data="{{igood.0.pvn}}">
+				<input type="hidden" id="item{{igood.0.pvn}}{{i.id}}" value="{{i.item}}">
+				<input type="hidden" id="alias{{igood.0.pvn}}{{i.id}}" value="{{i.alias}}">
+				<input type="hidden" id="itemid{{igood.0.pvn}}{{i.id}}" value="{{i.item_id}}">
+				<input type="hidden" id="uom{{igood.0.pvn}}{{i.id}}" value="{{i.uom}}">
+				<input type="hidden" id="qty{{igood.0.pvn}}{{i.id}}" value="{{i.quantity}}">
+				{% endfor %}
+				{% endfor %}
+				{% for i in mitm %}
+				<input type="hidden" class="gooid{{i.pvn}}" value="{{i.pvn}}{{i.id}}" data="{{i.pvn}}">
+				<input type="hidden" id="item{{i.pvn}}{{i.id}}" value="{{i.item}}">
+				<input type="hidden" id="alias{{i.pvn}}{{i.id}}" value="{{i.alias}}">
+				<input type="hidden" id="itemid{{i.pvn}}{{i.id}}" value="{{i.item_id}}">
+				<input type="hidden" id="uom{{i.pvn}}{{i.id}}" value="{{i.uom}}">
+				<input type="hidden" id="qty{{i.pvn}}{{i.id}}" value="{{i.quantity}}">
+				{% endfor %}
+				<div class="col col-xl-6 col-lg-6">
+					<div class="fields">
+						<label class="label"><span>Internal Transfer Number</span></label>
+						<input type="text" class="form-control inputs" name="pvn" id="pvn">
+						<span class="help_text">Enter Voucher number and press enter</span>
+						<!-- <button type="button" class="addgrn" id="addgrn">ADD</button>  -->
+					</div>
+				</div>
+				<div class="col col-xl-12">
+					<div class="grncol">
+						{% for inv, range in invitem %}
+						{% if inv.0.pvn %}
+						<div class="coldiv grd{{inv.0.pvn}}" id="colrec{{inv.0.pvn}}{{forloop.counter}}">
+							<span class="coldes">{{inv.0.pvn}}</span>
+							<button type="button" class="colbtn" name="{{inv.0.pvn}}" data="{{inv.0.pvn}}{{forloop.counter}}"><i class="fa fa-times"></i></button>
+						</div>
+						{% endif %}
+						{% endfor %}
+					</div>
+				</div>
+
+				<div class="hidden_inputs">
+					{% for inv, range in invitem %}
+					<input type="hidden" class="rec_count" value="{{forloop.counter}}">
+					{% for i in inv %}
+					{% if inv.0.grn == i.grn %}
+					<input type="hidden" class="irec{{inv.0.pvn}}{{forloop.parentloop.counter}}" value="{{inv.0.pvn}}{{forloop.counter}}" data="{{forloop.parentloop.counter}}">
+					<input type="hidden" name="itemadd" id="itemad{{inv.0.pvn}}{{forloop.counter}}" value="{{inv.0.pvn}}{{forloop.counter}}">
+					<input type="hidden" name="ipvn{{inv.0.pvn}}{{forloop.counter}}" id="ipvn{{inv.0.pvn}}{{forloop.counter}}" value="{{i.pvn}}">
+					<input type="hidden" name="inameid{{inv.0.pvn}}{{forloop.counter}}" id="inameid{{inv.0.pvn}}{{forloop.counter}}" value="{{i.item_id}}">
+					<input type="hidden" name="iname{{inv.0.pvn}}{{forloop.counter}}" id="iname{{inv.0.pvn}}{{forloop.counter}}" value="{{i.item}}">
+					<input type="hidden" name="ialias{{inv.0.pvn}}{{forloop.counter}}" id="ialias{{inv.0.pvn}}{{forloop.counter}}" value="{{i.alias}}">
+					<input type="hidden" name="iuom{{inv.0.pvn}}{{forloop.counter}}" id="iuom{{inv.0.pvn}}{{forloop.counter}}" value="{{i.uom}}">
+					<input type="hidden" name="iqty{{inv.0.pvn}}{{forloop.counter}}" id="iqty{{inv.0.pvn}}{{forloop.counter}}" value="{{i.quantity}}">
+
+					<input type="hidden" class="rate_count" value="{{i.id}}">
+					{% endif %}
+					{% endfor %}
+					{% endfor %}
+					{% for pvn in inv_count %}
+	                <input type="hidden" class="inv_count" value="{{pvn}}">
+	                {% endfor %}
+				</div>
+
+				<div class="col col-12">
+					<div class="goods">
+		              <span class="maintainhead">
+		                Goods Received:
+		                <!-- <button type="button" id="additem" class="mainbtn">+ ADD ITEMS</button> -->
+		              </span>
+		              <table class="table table-bordered table-hover" id="ItemTable">
+		                <thead>
+		                  <tr>
+		                    <th scope="col">Items</th>
+		                    <th scope="col">UOM</th>
+		                    <th scope="col">Quantity</th>
+		                  </tr>
+		                </thead>
+		                <tbody>
+		                  {% for inv, range in invitem %}
+		                  {% for b in inv %}
+		                  <tr id="itemrow{{inv.0.pvn}}{{forloop.counter}}">
+		                    <td>{{b.item}}({{b.alias}})</td>
+		                    <td>{{b.uom}}</td>
+		                    <td>{{b.quantity}}</td>
+		                  </tr>
+		                  {% endfor %}
+		                  {% endfor %}
+		                </tbody>
+		                <tfoot class="tfoot2" style="display:none;">
+		                  <tr class="boldrow">
+		                    <td colspan="5" style="text-align: center;">No items</td>
+		                    
+		                  </tr>
+		                </tfoot>
+		              </table>
+		            </div>
+				</div>
+
+				<div class="col col-xl-12 col-lg-12">
+					{% if messages %}
+						{% for message in messages %}
+						<input type="hidden" class="msgon" value="{{message}}">
+						{% endfor %}
+					{% endif %}
+					<div class="fields">
+						<button type="submit" class="submit_btn">SUBMIT</button><i class="fa fa-spinner fa-spin mx-2 spinner" id="spinner1"></i>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<div class="col col-xl-2 col-lg-2 d-md-1 d-none d-lg-inline">
+	<span style="opacity: 0;">.</span>
+</div>
+
+<!---item pop over-------------------->
+
+<div class="edit_popupbanner">
+	<div class="col col-xl-3 col-lg-3 col-md-1 d-none d-md-inline">
+		<span style="opacity: 0;">.</span>
+	</div>
+	<div class="col col-xl-6 col-lg-6 col-md-10">
+		<div class="predefine1" id="edit_popup">
+			<div class="edithead">
+				Add goods <i class="fa fa-times" id="close_edit"></i>
+			</div>
+			<div class="prebody editbody">
+				<div class="col col-xl-6 col-lg-6">
+					{% for i in item_dash %}
+					<input type="hidden" id="ini{{i.id}}" data="{{i.uom}}" value="{{i.item}}" name="{{i.alias}}">
+					{% endfor %}
+					<div class="fields">
+						<label class="label"><span>Item<font style="color: red;">*</font></span></label>
+						<select class="form-control inputs" name="item" id="item">
+							<option value="" disabled selected>Choose item</option>
+							{% for c in item_dash %}
+							<option value="{{c.id}}">{{c.item}}</option>
+							{% endfor %}
+						</select>
+						<input type="hidden" name="itemname" id="itemname" readonly>
+						<input type="hidden" name="itemalias" id="itemalias" readonly>
+					</div>
+				</div>
+				<div class="col col-xl-6 col-lg-6">
+					<div class="fields">
+						<label class="label"><span>UOM<font style="color: red;">*</font></span></label>
+						<input type="text" class="form-control inputs" name="uom" id="uom" readonly>
+						<!-- <select class="form-control inputs" name="uom" id="uom">
+							<option value="" disabled selected>Choose UOM</option>
+							{% for c in uom_dash %}
+							<option value="{{c.uom}}">{{c.uom}}</option>
+							{% endfor %}
+						</select> -->
+					</div>
+				</div>
+				<div class="col col-xl-6 col-lg-6">
+					<div class="fields">
+						<label class="label"><span>Quantity<font style="color: red;">*</font></span></label>
+						<input type="number" class="form-control inputs" name="qty" id="qty" step=".01">
+					</div>
+				</div>
+				<div class="col col-xl-6 col-lg-6">
+					<div class="fields">
+						<label class="label"><span>Inspection Remarks</span></label>
+						<input type="text" class="form-control inputs" name="remark" id="remark">
+					</div>
+				</div>
+				<div class="col col-xl-12 col-lg-12">
+					<div class="fields">
+						<button type="submit" class="submit_btn" id="additembtn">ADD</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col col-xl-3 col-lg-3 col-md-1 d-none d-md-inline">
+		<span style="opacity: 0;">.</span>
+	</div>
+</div>
+
+<div class="edit_popupbanner1">
+	<div class="col col-xl-3 col-lg-3 col-md-1 d-none d-md-inline">
+		<span style="opacity: 0;">.</span>
+	</div>
+	<div class="col col-xl-6 col-lg-6 col-md-10">
+		<div class="predefine1" id="edit_popup1">
+			<div class="edithead">
+				Edit goods <i class="fa fa-times" id="close_edit1"></i>
+			</div>
+			<div class="prebody editbody">
+				<div class="col col-xl-6 col-lg-6">
+					{% for i in item_dash %}
+					<input type="hidden" id="ini{{i.id}}" data="{{i.uom}}" value="{{i.item}}" name="{{i.alias}}">
+					{% endfor %}
+					<input type="hidden" id="dfaultid" readonly>
+					<div class="fields">
+						<label class="label"><span>Item<font style="color: red;">*</font></span></label>
+						<select class="form-control inputs" name="edititem" id="edititem">
+							<option value="" disabled selected>Choose item</option>
+							{% for c in item_dash %}
+							<option value="{{c.id}}">{{c.item}}</option>
+							{% endfor %}
+						</select>
+						<input type="hidden" name="edititemname" id="edititemname" readonly>
+						<input type="hidden" name="edititemalias" id="edititemalias" readonly>
+					</div>
+				</div>
+				<div class="col col-xl-6 col-lg-6">
+					<div class="fields">
+						<label class="label"><span>UOM<font style="color: red;">*</font></span></label>
+						<input type="text" class="form-control inputs" name="edituom" id="edituom" readonly>
+						<!-- <select class="form-control inputs" name="uom" id="uom">
+							<option value="" disabled selected>Choose UOM</option>
+							{% for c in uom_dash %}
+							<option value="{{c.uom}}">{{c.uom}}</option>
+							{% endfor %}
+						</select> -->
+					</div>
+				</div>
+				<div class="col col-xl-6 col-lg-6">
+					<div class="fields">
+						<label class="label"><span>Quantity<font style="color: red;">*</font></span></label>
+						<input type="number" class="form-control inputs" name="editqty" id="editqty" step=".01">
+					</div>
+				</div>
+				<div class="col col-xl-6 col-lg-6">
+					<div class="fields">
+						<label class="label"><span>Inspection Remarks</span></label>
+						<input type="text" class="form-control inputs" name="editremark" id="editremark">
+					</div>
+				</div>
+				<div class="col col-xl-12 col-lg-12">
+					<div class="fields">
+						<button type="submit" class="submit_btn" id="additemeditbtn">UPDATE</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col col-xl-3 col-lg-3 col-md-1 d-none d-md-inline">
+		<span style="opacity: 0;">.</span>
+	</div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'js/transfer_grn_edit.js' %}?v=1.0"></script>
+{% endblock %}

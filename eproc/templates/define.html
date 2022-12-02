@@ -1,0 +1,43 @@
+<div class="predefine2">
+	<div class="wavediv">
+		
+	</div>
+	<div class="wavecontent">
+		<a href="{% url 'site_display' %}"><div class="wavecount">
+			<div class="wnumber">
+				{{sitecount}}
+			</div>
+			<div class="wtext">
+				<span class="wtext1">Sites</span>
+				<span class="wtext2">Total sites in system</span>
+			</div>
+		</div></a>
+		<a href="{% url 'display_supplier' %}"><div class="wavecount">
+			<div class="wnumber">
+				{{scount}}
+			</div>
+			<div class="wtext">
+				<span class="wtext1">Suppliers</span>
+				<span class="wtext2">Total suppliers in system</span>
+			</div>
+		</div></a>
+		<!-- <a href="{% url 'manage_location' %}"><div class="wavecount">
+			<div class="wnumber">
+				{{lcount}}
+			</div>
+			<div class="wtext">
+				<span class="wtext1">Locations</span>
+				<span class="wtext2">Total locations in system</span>
+			</div>
+		</div></a> -->
+		<a href="{% url 'manage_uom' %}"><div class="wavecount">
+			<div class="wnumber">
+				{{vcount}}
+			</div>
+			<div class="wtext">
+				<span class="wtext1">UOM</span>
+				<span class="wtext2">Total unit of measurements in system</span>
+			</div>
+		</div></a>
+	</div>
+</div>

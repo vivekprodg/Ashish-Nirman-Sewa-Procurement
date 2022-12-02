@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/predefine.css' %}?v=1.3">
+{% endblock %}
+
+{% block content %}
+<div class="col col-xl-6 col-lg-6 col-md-6">
+	<div class="predefine1">
+		<div class="head">
+			<span class="head1">Add Unit of Measure</span>
+			<span class="head2">Enter new UOM details</span>
+		</div>
+		<div class="prebody" id="formbody">
+			<form method="POST" action="/add-uom/" id="UOMForm" autocomplete="off" name="UOMForm">
+				{% csrf_token %}
+				<div class="col col-xl-6 col-lg-6">
+					<div class="fields">
+						<label class="label"><span>UOM<font style="color: red;">*</font></span></label>
+						<input type="text" class="form-control inputs" name="name" id="name">
+					</div>
+				</div>
+				<div class="col col-xl-12 col-lg-12">
+					{% if messages %}
+						{% for message in messages %}
+						<input type="hidden" class="msgon" value="{{message}}">
+						{% endfor %}
+					{% endif %}
+					<div class="fields">
+						<button type="submit" class="submit_btn">SUBMIT</button><i class="fa fa-spinner fa-spin mx-2 spinner" id="spinner1"></i>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<div class="col col-xl-6 col-lg-6 col-md-6">
+	<div class="predefine1">
+		<div class="head">
+			<span class="head1">UOM</span>
+			<span class="head2">Manage UOM details</span>
+		</div>
+		<div class="prebody" id="displaybody">
+			{% for l in uom_dash %}
+			<input type="hidden" id="name{{l.id}}" value="{{l.uom}}">
+			{% endfor %}
+			{% if uom_dash %}
+			{% for l in uom_dash %}
+			<div class="block">
+				<span class="subblock1"><i class="fas fa-circle"></i> {{l.uom}}</span>
+				<span class="subblock2">
+					<button type="button" class="sup_edit" data="{{l.id}}"><i class="far fa-edit"></i></button>
+					<button type="button" class="sup_delete" data="{{l.id}}"><i class="far fa-trash-alt"></i></button>
+				</span>
+			</div>
+			{% endfor %}
+			{% else %}
+			<span class="no_content">
+				No UOM found
+			</span>
+			{% endif %}
+		</div>
+	</div>
+</div>
+
+<!-- pop up for edition ------>
+
+<div class="edit_popupbanner">
+	<div class="col col-xl-3 col-lg-3 col-md-1 d-none d-md-inline">
+		<span style="opacity: 0;">.</span>
+	</div>
+	<div class="col col-xl-6 col-lg-6 col-md-10">
+		<div class="predefine1" id="edit_popup">
+			<div class="edithead">
+				Edit Location <i class="fa fa-times" id="close_edit"></i>
+			</div>
+			<div class="prebody editbody" id="formbody">
+				<form method="POST" action="/edit-uom/" id="UOMEditForm" autocomplete="off" name="UOMEditForm">
+					{% csrf_token %}
+					<input type="hidden" id="luid" name="lid">
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>UOM<font style="color: red;">*</font></span></label>
+							<input type="text" class="form-control inputs" name="name" id="editname">
+							<input type="hidden" name="default" id="default">
+						</div>
+					</div>
+					<div class="col col-xl-12 col-lg-12">
+						<div class="fields">
+							<button type="submit" class="submit_btn">SAVE</button><i class="fa fa-spinner fa-spin mx-2 spinner" id="spinner2"></i>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div class="col col-xl-3 col-lg-3 col-md-1 d-none d-md-inline">
+		<span style="opacity: 0;">.</span>
+	</div>
+</div>
+
+<!-- po up deletion ------------------->
+
+<div class="del_popupbanner">
+	<div class="col col-xl-4 col-lg-4 col-md-3 d-none d-md-inline">
+		<span style="opacity: 0;">.</span>
+	</div>
+	<div class="col col-xl-4 col-lg-4 col-md-6">
+
+		<div class="predefine1" id="del_popup">
+			UOM will be deleted. Do you wish to continue?
+
+			<form method="POST" action="/delete-uom/">
+				{% csrf_token %}
+				<input type="hidden" name="lid" id="lid">
+				<button type="submit" class="del_btn">Yes</button>
+				<button type="button" class="del_btn" id="cancel_btn">No</button>
+			</form>
+		</div>
+	</div>
+	<div class="col col-xl-4 col-lg-4 col-md-3 d-none d-md-inline">
+		<span style="opacity: 0;">.</span>
+	</div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'js/uom.js' %}?v=1.3"></script>
+{% endblock %}

@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/predefine.css' %}?v=1.3">
+<link rel="stylesheet" href="{% static 'css/goods.css' %}?v=1.4">
+{% endblock %}
+{% block wave %}
+<img src="{% static 'img/back.png' %}" id="backimg">
+{% endblock %}
+{% block content %}
+<div class="col col-xl-1 col-lg-1 d-none d-lg-inline">
+	<span style="opacity: 0;">.</span>
+</div>
+<div class="col col-xl-10 col-lg-10">
+	<div class="predefine1">
+		<div class="head">
+			<span class="head1">Vehicle Movements</span>
+			<span class="head2">View movement details</span>
+		</div>
+		{% if messages %}
+			{% for message in messages %}
+			<input type="hidden" class="msgon" value="{{message}}">
+			{% endfor %}
+		{% endif %}
+		<div class="prebody table-responsive">
+			{% if item.status == 'travelling' %}
+			<div class="vehicle_view">
+				Please click below if vehicle "{{item.vehicle_number}}" is arrived to the location "{{item.to_site}}".
+				<br><br>
+				<form method="POST" action="/movement-status/" id="vform">
+					{% csrf_token %}
+					<input type="hidden" id="sid" name="sid" value="{{item.id}}">
+					<input type="hidden" id="date" name="date">
+					<button type="submit" class="submit_btnv">ARRIVED</button>
+				</form>
+			</div>
+			{% else %}
+			<div class="vehicle_view">
+				Vehicle "{{item.vehicle_number}}" has arrived to its location "{{item.to_site}}" from "{{item.from_site}}" at {{item.arrival_datetime}}.
+				<span class="statuscheckv approved">
+					<i class="far fa-check-circle"></i> Arrived
+				</span>
+			</div>
+			{% endif %}
+		</div>
+	</div>
+</div>
+<div class="col col-xl-1 col-lg-1 d-none d-lg-inline">
+	<span style="opacity: 0;">.</span>
+</div>
+
+<!-- pop up for edition ------>
+
+{% endblock %}
+
+{% block js %}
+<script>
+	var nep = NepaliFunctions.GetCurrentBsDate();
+	var yr;
+	var mn;
+	var dt;
+	for (var key in nep){
+		if(key=='year'){
+			yr = nep[key];
+		}
+		if(key=='month'){
+			mn = nep[key];
+		}
+		if(key=='day'){
+			dt = nep[key];
+		}
+	}
+	var dte = yr+'-'+mn+'-'+dt;
+	$('#date').val(dte);
+</script>
+{% endblock %}

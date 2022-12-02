@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/purchase.css' %}?v=1.3">
+<link rel="stylesheet" href="{% static 'css/goods.css' %}?v=1.3">
+{% endblock %}
+
+
+{% block wave %}
+<img src="{% static 'img/back.png' %}" id="backimg">
+{% endblock %}
+{% block content %}
+<div class="col col-xl-2 col-lg-2 d-md-1 d-none d-lg-inline">
+  <span style="opacity: 0;">.</span>
+</div>
+<div class="col col-xl-8 col-lg-8 col-md-10">
+  <div class="predefine1">
+    <div class="head">
+      <span class="head1">Add Reserviour</span>
+      <span class="head2">Enter new reserviour details</span>
+    </div>
+    <div class="prebody" id="formbody">
+      <form method="POST" action="/add-reserviour/" id="ReserviourForm" autocomplete="off" name="ReserviourForm">
+        {% csrf_token %}
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>Reserviour Name<font style="color: red;">*</font></span></label>
+            <input type="text" class="form-control inputs" name="name" id="name">
+            <input type="hidden" name="url" id="url">
+          </div>
+        </div>
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>Site<font style="color: red;">*</font></span></label>
+            <select class="form-control inputs" name="site" id="site">
+              <option value="" disabled selected>Choose site</option>
+              {% for c in site_dash %}
+              <option value="{{c.name}}">{{c.name}}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>Location</span></label>
+            <input type="text" class="form-control inputs" name="location" id="location">
+          </div>
+        </div>
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>Capacity<font style="color: red;">*</font></span></label>
+            <div class="input-group">
+              <input type="number" name="capacity" id="capacity" class="form-control inputs" step='.01'>
+              <div class="input-group-append">
+                <div class="input-group-text">ltrs</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>Opening Stock<font style="color: red;">*</font></span></label>
+            <div class="input-group">
+              <input type="number" name="opening" id="opening" class="form-control inputs" step='.01'>
+              <div class="input-group-append">
+                <div class="input-group-text">ltrs</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col col-xl-12 col-lg-12">
+          {% if messages %}
+            {% for message in messages %}
+            <input type="hidden" class="msgon" value="{{message}}">
+            {% endfor %}
+          {% endif %}
+          <div class="fields">
+            <button type="submit" class="submit_btn">SUBMIT</button><i class="fa fa-spinner fa-spin mx-2 spinner" id="spinner1"></i>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+<div class="col col-xl-2 col-lg-2 d-md-1 d-none d-lg-inline">
+  <span style="opacity: 0;">.</span>
+</div>
+
+
+{% endblock %}
+
+{% block js %}
+<script src="{% static '/js/reserviour.js' %}?v=1.3"></script>
+{% endblock %}

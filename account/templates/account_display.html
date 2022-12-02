@@ -1,0 +1,252 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/account.css' %}?v=1.1">
+{% endblock %}
+{% block wave %}
+<img src="{% static 'img/back.png' %}" id="backimg">
+{% endblock %}
+{% block content %}
+<div class="col col-xl-1 col-lg-1 d-none d-lg-inline">
+	<span style="opacity: 0;">.</span>
+</div>
+<div class="col col-xl-10 col-lg-10">
+	<div class="predefine1 stockdefine">
+		<div class="head">
+			<span class="head1">Sytem Users</span>
+			<span class="head2">View and Manage users details</span>
+		</div>
+		<div class="prebody table-responsive">
+			{% if messages %}
+				{% for message in messages %}
+				<input type="hidden" class="msgon" value="{{message}}">
+				{% endfor %}
+			{% endif %}
+			{% if s_item %}
+			{% for s in s_item %}
+			<input type="hidden" id="username{{s.id}}" value="{{s.user_name}}">
+			<input type="hidden" id="userid{{s.id}}" value="{{s.user_id}}">
+			<input type="hidden" id="first{{s.id}}" value="{{s.first_name}}">
+			<input type="hidden" id="last{{s.id}}" value="{{s.last_name}}">
+			<input type="hidden" id="email{{s.id}}" value="{{s.email}}">
+			<input type="hidden" id="site{{s.id}}" value="{{s.site}}">
+			<input type="hidden" id="role{{s.id}}" value="{{s.role}}">
+			{% endfor %}
+			<!-- <div class="search_banner">
+				<form method="POST" action="/search-material-issue/">
+	        		{% csrf_token %}
+		        	<div class="input-group">
+		        		<input type="text" name="search" class="form-control" placeholder="Search records...">
+		        		<div class="input-group-append">
+		        			<button type="submit" class="btn btn-primary" id="find_btn"><i class="fas fa-search"></i></button>
+		        		</div>
+		        	</div>
+	        	</form>
+			</div> -->
+			<table class="table table-bordered table-hover" id="IssueTable">
+				<thead>
+				  <tr>
+					<th scope="col">User Name</th>
+					<th scope="col">First Name</th>
+					<th scope="col">Last Name</th>
+					<th scope="col">Email</th>
+					<th scope="col">Site</th>
+					<th scope="col">Role</th>
+					<th scope="col">Action</th>
+				  </tr>
+				</thead>
+				<tbody>
+					{% for s in s_item %}
+					<tr>
+						<td>{{s.user_name}}</td>
+						<td>{{s.first_name}}</td>
+						<td>{{s.last_name}}</td>
+						<td>{{s.email}}</td>
+						<td>{{s.site}}</td>
+						<td>{{s.role}}</td>
+						<td>
+							{% if s.active_status == 'yes' %}
+							<button type="button" class="sup_edit" data="{{s.id}}"><i class="far fa-edit"></i></i></button></a>
+							<button type="button" class="sup_delete" data="{{s.id}}"><i class="far fa-trash-alt"></i></button>
+							<button type="button" class="usup_delete" data="{{s.id}}" data-toggle="tooltip" data-placement="bottom" title="Deactivate"><i class="fas fa-ban"></i></button>
+							{% endif %}
+							{% if s.active_status == 'no' %}
+							<button type="button" class="uusup_delete" data="{{s.id}}" data-toggle="tooltip" data-placement="bottom" title="Not Active"><i class="fas fa-ban"></i></button>
+							{% endif %}
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+			{% else %}
+			<span class="no_content">
+				No users found
+			</span>
+			{% endif %}
+		</div>
+	</div>
+</div>
+<div class="col col-xl-1 col-lg-1 d-none d-lg-inline">
+	<span style="opacity: 0;">.</span>
+</div>
+
+<!-- pop up for edition ------>
+
+<div class="edit_popupbanner">
+	<div class="col col-xl-3 col-lg-3 col-md-1 d-none d-md-inline">
+		<span style="opacity: 0;">.</span>
+	</div>
+	<div class="col col-xl-6 col-lg-6 col-md-10">
+		<div class="predefine1" id="edit_popup">
+			<div class="edithead">
+				Edit Item <i class="fa fa-times" id="close_edit"></i>
+			</div>
+			<div class="prebody editbody" id="formbody">
+				<form method="POST" action="/account/update-user/" id="UserEditForm" autocomplete="off" name="UserEditForm">
+					{% csrf_token %}
+					<input type="hidden" id="uid" name="uid">
+					<input type="hidden" id="user_id" name="user_id">
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>User Name<font style="color: red;">*</font></span></label>
+							<input type="text" class="form-control inputs" name="user_name" id="user_name" readonly>
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>First Name<font style="color: red;">*</font></span></label>
+							<input type="text" class="form-control inputs" name="first_name" id="first_name">
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>Last Name<font style="color: red;">*</font></span></label>
+							<input type="text" class="form-control inputs" name="last_name" id="last_name">
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>Email<font style="color: red;">*</font></span></label>
+							<input type="text" class="form-control inputs" name="email" id="email" readonly>
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>Site<font style="color: red;">*</font></span></label>
+							<select class="form-control inputs" name="site" id="site">
+								<option value="" disabled selected>Choose site</option>
+								{% for c in site_dash %}
+								<option value="{{c.name}}">{{c.name}}</option>
+								{% endfor %}
+							</select>
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>Role<font style="color: red;">*</font></span></label>
+							<select class="form-control inputs" name="role" id="role">
+								<option value="" disabled selected>Choose role</option>
+								<option value="admin">admin</option>
+								<option value="staff">staff</option>
+							</select>
+						</div>
+					</div>
+					<div class="col col-xl-12 col-lg-12">
+						<div class="fields">
+							<button type="submit" class="submit_btn">SAVE</button><i class="fa fa-spinner fa-spin mx-2 spinner" id="spinner1"></i>
+						</div>
+						<div class="fields">
+							<button type="button" class="submit_btn" id="chng_pass">CHANGE PASSWORD</button>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="password_change">
+				<div class="password_cover">
+					<div class="edithead">
+						Change Password <i class="fa fa-times" id="close_pass"></i>
+					</div>
+					<form method="POST" action="/account/change-user-password/" id="ChangePassword" autocomplete="off" name="ChangePassword">
+						{% csrf_token %}
+						<input type="hidden" id="user" name="user">
+						<div class="col col-xl-6 col-lg-6">
+							<div class="fields">
+								<label class="label"><span>New Password<font style="color: red;">*</font></span></label>
+								<input type="password" class="form-control inputs" name="password1" id="password1">
+							</div>
+						</div>
+						<div class="col col-xl-6 col-lg-6">
+							<div class="fields">
+								<label class="label"><span>Confirm Password<font style="color: red;">*</font></span></label>
+								<input type="password" class="form-control inputs" name="password2" id="password2">
+							</div>
+						</div>
+						<div class="col col-xl-12 col-lg-12">
+							<div class="fields">
+								<button type="submit" class="submit_btn">SUBMIT</button><i class="fa fa-spinner fa-spin mx-2 spinner" id="spinner1"></i>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col col-xl-3 col-lg-3 col-md-1 d-none d-md-inline">
+		<span style="opacity: 0;">.</span>
+	</div>
+</div>
+
+<!-- po up deletion ------------------->
+
+<div class="del_popupbanner">
+	<div class="col col-xl-4 col-lg-4 col-md-3 d-none d-md-inline">
+		<span style="opacity: 0;">.</span>
+	</div>
+	<div class="col col-xl-4 col-lg-4 col-md-6">
+
+		<div class="predefine1" id="del_popup">
+			User will be deleted. Do you wish to continue?
+
+			<form method="POST" action="/account/delete-user/">
+				{% csrf_token %}
+				<input type="hidden" name="user_id" id="user_id2">
+				<input type="hidden" name="uid" id="uid2">
+				<button type="submit" class="del_btn">Yes</button>
+				<button type="button" class="del_btn" id="cancel_btn">No</button>
+			</form>
+		</div>
+	</div>
+	<div class="col col-xl-4 col-lg-4 col-md-3 d-none d-md-inline">
+		<span style="opacity: 0;">.</span>
+	</div>
+</div>
+
+<div class="udel_popupbanner">
+	<div class="col col-xl-4 col-lg-4 col-md-3 d-none d-md-inline">
+		<span style="opacity: 0;">.</span>
+	</div>
+	<div class="col col-xl-4 col-lg-4 col-md-6">
+
+		<div class="predefine1" id="udel_popup">
+			User will be deactivated from the system. Do you wish to continue?
+
+			<form method="POST" action="/account/deactivate-user/">
+				{% csrf_token %}
+				<input type="hidden" name="user_id" id="uuser_id2">
+				<input type="hidden" name="uid" id="uuid2">
+				<button type="submit" class="del_btn">Yes</button>
+				<button type="button" class="del_btn" id="ucancel_btn">No</button>
+			</form>
+		</div>
+	</div>
+	<div class="col col-xl-4 col-lg-4 col-md-3 d-none d-md-inline">
+		<span style="opacity: 0;">.</span>
+	</div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+	<script src="{% static 'js/account.js' %}?v=1.1"></script>
+{% endblock %}

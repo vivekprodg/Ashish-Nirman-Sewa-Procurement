@@ -1,0 +1,314 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/permission.css' %}">
+{% endblock %}
+{% block wave %}
+<img src="{% static 'img/back.png' %}" id="backimg">
+{% endblock %}
+{% block content %}
+<div class="col col-xl-1 col-lg-1 d-none d-lg-inline">
+	<span style="opacity: 0;">.</span>
+</div>
+<div class="col col-xl-10 col-lg-10">
+	<!-- <div class="success_ban">
+		<i class="fa fa-check-circle"></i>Successfully updated in the system
+	</div>
+	<div class="pro_ban">
+		<i class="fa fa-spinner fa-spin mx-2"></i>Updating
+	</div> -->
+	<div class="predefine1 stockdefine">
+		<div class="head">
+			<span class="head1">Manage Permissions</span>
+			<span class="head2">View and Manage user's permission</span>
+		</div>
+		<div class="prebody table-responsive">
+			{% if messages %}
+				{% for message in messages %}
+				<input type="hidden" class="msgon" value="{{message}}">
+				{% endfor %}
+			{% endif %}
+			<div class="permission_btn">
+				<button type="button" class="submit_btn perbtn" id="perop">OPERATIONAL PERMISSIONS</button>
+				<button type="button" class="submit_btn perbtn" id="pernoti">NOTIFICATION PERMISSIONS</button>
+			</div>
+			<div class="permission_ban" id="operation_permit">
+				<span class="permit_head">
+					Operational Permissions
+				</span>
+				<div class="per_user_btn">
+					<button type="button" class="submit_btn uoperbtn" id="mainad">MAIN ADMIN</button>
+					<button type="button" class="submit_btn uoperbtn" id="mainst">MAIN STAFF</button>
+					<button type="button" class="submit_btn uoperbtn" id="siteadd">SITE ADMIN</button>
+					<button type="button" class="submit_btn uoperbtn" id="sitest">SITE STAFF</button>
+				</div>
+				<div class="permit_content" id="mainadop">
+					<span class="pcontent_head">
+						Main Admin
+					</span>
+					<div class="permit_subcontent table-responsive">
+						<table class="table table-hover PermissionTable">
+							{% for main_admin_op, range in mao %}
+							<th scope="col">{{main_admin_op.0.title}}</th>
+							<th scope="col"></th>
+							<tbody>
+								{% csrf_token %}
+								{% for m in main_admin_op %}
+								<tr>
+									<td><i class="fas fa-chevron-circle-right"></i>{{m.description}}</td>
+									<td style="text-align:right;">
+										<label class="switch">
+											{% if m.main_admin == 'yes' %}
+									      <input type="checkbox" class="cngpermission" data="{{m.id}}" name="main_admin" checked>
+									      {% endif %}
+									      {% if m.main_admin == 'no' %}
+									      <input type="checkbox" class="cngpermission" data="{{m.id}}" name="main_admin">
+									      {% endif %}
+										     <span class="slider round"></span>
+									    </label>
+									</td>
+								</tr>
+								{% endfor %}
+							</tbody>
+							{% endfor %}
+						</table>
+						
+					</div>
+				</div>
+				<div class="permit_content" id="mainstop">
+					<span class="pcontent_head">
+						Main Staff
+					</span>
+					<div class="permit_subcontent">
+						<table class="table table-hover PermissionTable">
+							{% for main_staff_op, range in mso %}
+							<th scope="col">{{main_staff_op.0.title}}</th>
+							<th scope="col"></th>
+							<tbody>
+								{% csrf_token %}
+								{% for m in main_staff_op %}
+								<tr>
+									<td><i class="fas fa-chevron-circle-right"></i>{{m.description}}</td>
+									<td style="text-align:right;">
+										<label class="switch">
+											{% if m.main_staff == 'yes' %}
+									      <input type="checkbox" class="cngpermission" data="{{m.id}}" name="main_staff" checked>
+									      {% endif %}
+									      {% if m.main_staff == 'no' %}
+									      <input type="checkbox" class="cngpermission" data="{{m.id}}" name="main_staff">
+									      {% endif %}
+										     <span class="slider round"></span>
+									    </label>
+									</td>
+								</tr>
+								{% endfor %}
+							</tbody>
+							{% endfor %}
+						</table>
+					</div>
+				</div>
+				<div class="permit_content" id="siteadop">
+					<span class="pcontent_head">
+						Site Admin
+					</span>
+					<div class="permit_subcontent">
+						<table class="table table-hover PermissionTable">
+							{% for site_admin_op, range in sao %}
+							<th scope="col">{{site_admin_op.0.title}}</th>
+							<th scope="col"></th>
+							<tbody>
+								{% csrf_token %}
+								{% for m in site_admin_op %}
+								<tr>
+									<td><i class="fas fa-chevron-circle-right"></i>{{m.description}}</td>
+									<td style="text-align:right;">
+										<label class="switch">
+											{% if m.site_admin == 'yes' %}
+									      <input type="checkbox" class="cngpermission" data="{{m.id}}" name="site_admin" checked>
+									      {% endif %}
+									      {% if m.site_admin == 'no' %}
+									      <input type="checkbox" class="cngpermission" data="{{m.id}}" name="site_admin">
+									      {% endif %}
+										     <span class="slider round"></span>
+									    </label>
+									</td>
+								</tr>
+								{% endfor %}
+							</tbody>
+							{% endfor %}
+						</table>
+					</div>
+				</div>
+				<div class="permit_content" id="sitestop">
+					<span class="pcontent_head">
+						Site Staff
+					</span>
+					<div class="permit_subcontent">
+						<table class="table table-hover PermissionTable">
+							{% for site_staff_op, range in sso %}
+							<th scope="col">{{site_staff_op.0.title}}</th>
+							<th scope="col"></th>
+							<tbody>
+								{% csrf_token %}
+								{% for m in site_staff_op %}
+								<tr>
+									<td><i class="fas fa-chevron-circle-right"></i>{{m.description}}</td>
+									<td style="text-align:right;">
+										<label class="switch">
+											{% if m.site_staff == 'yes' %}
+									      <input type="checkbox" class="cngpermission" data="{{m.id}}" name="site_staff" checked>
+									      {% endif %}
+									      {% if m.site_staff == 'no' %}
+									      <input type="checkbox" class="cngpermission" data="{{m.id}}" name="site_staff">
+									      {% endif %}
+										     <span class="slider round"></span>
+									    </label>
+									</td>
+								</tr>
+								{% endfor %}
+							</tbody>
+							{% endfor %}
+						</table>
+					</div>
+				</div>
+			</div>
+
+			<div class="permission_ban" id="notify_permit">
+				<span class="permit_head">
+					Notification Permissions
+				</span>
+				<div class="per_user_btn">
+					<button type="button" class="submit_btn unperbtn" id="notimainad">MAIN ADMIN</button>
+					<button type="button" class="submit_btn unperbtn" id="notimainst">MAIN STAFF</button>
+					<button type="button" class="submit_btn unperbtn" id="notisitead">SITE ADMIN</button>
+					<button type="button" class="submit_btn unperbtn" id="notisitest">SITE STAFF</button>
+				</div>
+				<div class="permit_content" id="mainadnoti">
+					<span class="pcontent_head">
+						Main Admin
+					</span>
+					<div class="permit_subcontent">
+						<table class="table table-hover PermissionTable">
+							<tbody>
+								{% csrf_token %}
+								{% for m in main_admin_noti %}
+								<tr>
+									<td><i class="fas fa-chevron-circle-right"></i>{{m.description}}</td>
+									<td style="text-align:right;">
+										<label class="switch">
+											{% if m.main_admin == 'yes' %}
+									      <input type="checkbox" class="cngnotify" data="{{m.id}}" name="main_admin" checked>
+									      {% endif %}
+									      {% if m.main_admin == 'no' %}
+									      <input type="checkbox" class="cngnotify" data="{{m.id}}" name="main_admin">
+									      {% endif %}
+										     <span class="slider round"></span>
+									    </label>
+									</td>
+								</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="permit_content" id="mainstnoti">
+					<span class="pcontent_head">
+						Main Staff
+					</span>
+					<div class="permit_subcontent">
+						<table class="table table-hover PermissionTable">
+							<tbody>
+								{% csrf_token %}
+								{% for m in main_staff_noti %}
+								<tr>
+									<td><i class="fas fa-chevron-circle-right"></i>{{m.description}}</td>
+									<td style="text-align:right;">
+										<label class="switch">
+											{% if m.main_staff == 'yes' %}
+									      <input type="checkbox" class="cngnotify" data="{{m.id}}" name="main_staff" checked>
+									      {% endif %}
+									      {% if m.main_staff == 'no' %}
+									      <input type="checkbox" class="cngnotify" data="{{m.id}}" name="main_staff">
+									      {% endif %}
+										     <span class="slider round"></span>
+									    </label>
+									</td>
+								</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="permit_content" id="siteadnoti">
+					<span class="pcontent_head">
+						Site Admin
+					</span>
+					<div class="permit_subcontent">
+						<table class="table table-hover PermissionTable">
+							<tbody>
+								{% csrf_token %}
+								{% for m in site_admin_noti %}
+								<tr>
+									<td><i class="fas fa-chevron-circle-right"></i>{{m.description}}</td>
+									<td style="text-align:right;">
+										<label class="switch">
+											{% if m.site_admin == 'yes' %}
+									      <input type="checkbox" class="cngnotify" data="{{m.id}}" name="site_admin" checked>
+									      {% endif %}
+									      {% if m.site_admin == 'no' %}
+									      <input type="checkbox" class="cngnotify" data="{{m.id}}" name="site_admin">
+									      {% endif %}
+										     <span class="slider round"></span>
+									    </label>
+									</td>
+								</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="permit_content" id="sitestnoti">
+					<span class="pcontent_head">
+						Site Staff
+					</span>
+					<div class="permit_subcontent">
+						<table class="table table-hover PermissionTable">
+							<tbody>
+								{% csrf_token %}
+								{% for m in site_staff_noti %}
+								<tr>
+									<td><i class="fas fa-chevron-circle-right"></i>{{m.description}}</td>
+									<td style="text-align:right;">
+										<label class="switch">
+											{% if m.site_staff == 'yes' %}
+									      <input type="checkbox" class="cngnotify" data="{{m.id}}" name="site_staff" checked>
+									      {% endif %}
+									      {% if m.site_staff == 'no' %}
+									      <input type="checkbox" class="cngnotify" data="{{m.id}}" name="site_staff">
+									      {% endif %}
+										     <span class="slider round"></span>
+									    </label>
+									</td>
+								</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+<div class="col col-xl-1 col-lg-1 d-none d-lg-inline">
+	<span style="opacity: 0;">.</span>
+</div>
+
+
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'js/permission.js' %}?v=1.1"></script>
+{% endblock %}

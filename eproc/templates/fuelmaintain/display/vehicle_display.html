@@ -1,0 +1,270 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/predefine.css' %}?v=1.4">
+{% endblock %}
+{% block wave %}
+<img src="{% static 'img/back.png' %}" id="backimg">
+{% endblock %}
+{% block content %}
+<div class="col col-xl-1 col-lg-1 d-none d-lg-inline">
+	<span style="opacity: 0;">.</span>
+</div>
+<div class="col col-xl-10 col-lg-10">
+	<div class="predefine1">
+		<div class="head">
+			<span class="head1">Vehicles</span>
+			<span class="head2">View and Manage vehicles details</span>
+		</div>
+		{% if messages %}
+			{% for message in messages %}
+			<input type="hidden" class="msgon" value="{{message}}">
+			{% endfor %}
+		{% endif %}
+		<div class="prebody table-responsive">
+			{% if s_item %}
+			{% for s in s_item %}
+			<input type="hidden" id="vtype{{s.id}}" value="{{s.vehicle_type}}">
+			<input type="hidden" id="vtypeid{{s.id}}" value="{{s.vehicle_type_id}}">
+			<input type="hidden" id="dvehinum{{s.id}}" value="{{s.vehicle_number}}">
+			<input type="hidden" id="durl{{s.id}}" value="{{s.url}}">
+			<input type="hidden" id="dchurl{{s.id}}" value="{{s.chasis_url}}">
+			<input type="hidden" id="denurl{{s.id}}" value="{{s.engine_url}}">
+			<input type="hidden" id="dchasis{{s.id}}" value="{{s.chasis_number}}">
+			<input type="hidden" id="dengine{{s.id}}" value="{{s.engine_number}}">
+			<input type="hidden" id="dcapa{{s.id}}" value="{{s.capacity}}">
+			<input type="hidden" id="downer{{s.id}}" value="{{s.owner_name}}">
+			<input type="hidden" id="ddriver{{s.id}}" value="{{s.driver_name}}">
+			<input type="hidden" id="dhelper{{s.id}}" value="{{s.helper_name}}">
+			<input type="hidden" id="dcon1{{s.id}}" value="{{s.contact1}}">
+			<input type="hidden" id="dcon2{{s.id}}" value="{{s.contact2}}">
+			{% endfor %}
+			<div class="search_banner">
+				<form method="POST" action="/search-vehicle/">
+	        		{% csrf_token %}
+		        	<div class="input-group">
+		        		<input type="text" name="search" class="form-control" placeholder="Search records...">
+		        		<div class="input-group-append">
+		        			<button type="submit" class="btn btn-primary" id="find_btn"><i class="fas fa-search"></i></button>
+		        		</div>
+		        	</div>
+	        	</form>
+			</div>
+			<table class="table table-bordered table-hover" id="SupplierTable">
+				<thead>
+				  <tr>
+					<th scope="col">Vehicle Number</th>
+                    <th scope="col">Chasis Number</th>
+                    <th scope="col">Engine Number</th>
+                    <th scope="col">Vehicle Type</th>
+                    <th scope="col">Owner Name</th>
+                    <th scope="col">Driver Name</th>
+                    <th scope="col">Helper Name</th>
+                    <th scope="col">Capacity</th>
+                    <th scope="col">Contact Number 1</th>
+                    <th scope="col">Contact Number 2</th>
+                    <th scope="col">Current Location</th>
+                    <th scope="col">Action</th>
+				  </tr>
+				</thead>
+				<tbody>
+					{% for s in s_item %}
+					<tr>
+						<td>{{s.vehicle_number}}</td>
+	                    <td>{{s.chasis_number}}</td>
+	                    <td>{{s.engine_number}}</td>
+	                    <td>{{s.vehicle_type}}</td>
+	                    <td>{{s.owner_name}}</td>
+	                    <td>{{s.driver_name}}</td>
+	                    <td>{{s.helper_name}}</td>
+	                    <td>{{s.capacity}}</td>
+	                    <td>{{s.contact1}}</td>
+	                    <td>{{s.contact2}}</td>
+	                    <td>{{s.current}}</td>
+						<td>
+							{% if s.active_status == 'yes' %}
+							<button type="button" class="sup_edit" data="{{s.id}}"><i class="far fa-edit"></i></button>
+							<button type="button" class="sup_delete" data="{{s.id}}"><i class="far fa-trash-alt"></i></button>
+							<button type="button" class="usup_delete" data="{{s.id}}" data-toggle="tooltip" data-placement="bottom" title="Deactivate"><i class="fas fa-ban"></i></button>
+							{% endif %}
+							{% if s.active_status == 'no' %}
+							<button type="button" class="uusup_delete" data="{{s.id}}" data-toggle="tooltip" data-placement="bottom" title="Not Active"><i class="fas fa-ban"></i></button>
+							{% endif %}
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+			{% else %}
+			<span class="no_content">
+				No vehicles found
+			</span>
+			{% endif %}
+		</div>
+	</div>
+</div>
+<div class="col col-xl-1 col-lg-1 d-none d-lg-inline">
+	<span style="opacity: 0;">.</span>
+</div>
+
+<!-- pop up for edition ------>
+
+<div class="edit_popupbanner">
+	<div class="col col-xl-3 col-lg-3 col-md-1 d-none d-md-inline">
+		<span style="opacity: 0;">.</span>
+	</div>
+	<div class="col col-xl-6 col-lg-6 col-md-10">
+		<div class="predefine1" id="edit_popup">
+			<div class="edithead">
+				Edit Vehicle <i class="fa fa-times" id="close_edit"></i>
+			</div>
+			<div class="prebody editbody" id="formbody">
+				<form method="POST" action="/update-vehicle/" id="VehicleForm" autocomplete="off" name="VehicleForm">
+					{% csrf_token %}
+					<input type="hidden" id="suid" name="suid">
+					<input type="hidden" id="defaultvehi" name="defaultvehi">
+					<input type="hidden" id="defaultchasis" name="defaultchasis">
+					<input type="hidden" id="defaultengine" name="defaultengine">
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>Vehicle Number<font style="color: red;">*</font></span></label>
+							<input type="text" class="form-control inputs" name="vehicle_number" id="vehicle_number">
+							<input type="hidden" name="vehi_url" id="vehi_url">
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>Chasis Number<font style="color: red;">*</font></span></label>
+							<input type="text" class="form-control inputs" name="chasis_number" id="chasis_number">
+							<input type="hidden" name="chasis_url" id="chasis_url">
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>Engine Number<font style="color: red;">*</font></span></label>
+							<input type="text" class="form-control inputs" name="engine_number" id="engine_number">
+							<input type="hidden" name="engine_url" id="engine_url">
+						</div>
+					</div>
+					{% for d in v_type %}
+			        <input type="hidden" id="vttype{{d.id}}" value="{{d.type_name}}">
+			        {% endfor %}
+			        <input type="hidden" name="vehicle_type_name" id="vehicle_type_name">
+			        <div class="col col-xl-6 col-lg-6">
+			          <div class="fields">
+			            <label class="label"><span>Vehicle Type<font style="color: red;">*</font></span></label>
+			            <select class="form-control inputs" name="vehicle_type" id="vehicle_type">
+			              <option value="" disabled selected>Choose vehicle type</option>
+			              {% for c in v_type %}
+			              <option value="{{c.id}}">{{c.type_name}}</option>
+			              {% endfor %}
+			            </select>
+			          </div>
+			        </div>
+			        <div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>Owner Name<font style="color: red;">*</font></span></label>
+							<input type="text" class="form-control inputs" name="owner_name" id="owner_name">
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>Driver Name<font style="color: red;">*</font></span></label>
+							<input type="text" class="form-control inputs" name="driver_name" id="driver_name">
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>Helper Name<font style="color: red;">*</font></span></label>
+							<input type="text" class="form-control inputs" name="helper_name" id="helper_name">
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>Capacity</span></label>
+							<div class="input-group">
+								<input type="number" name="capacity" id="capacity" class="form-control inputs" step='.01'>
+								<div class="input-group-append">
+									<div class="input-group-text">ft<sup>3</sup></div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+			          <div class="fields">
+			            <label class="label"><span>Contact Number 1<font style="color: red;">*</font></span></label>
+			            <input type="number" name="contact1" id="contact1" class="form-control inputs">
+			          </div>
+			        </div>
+			        <div class="col col-xl-6 col-lg-6">
+			          <div class="fields">
+			            <label class="label"><span>Contact Number 2</span></label>
+			            <input type="number" name="contact2" id="contact2" class="form-control inputs">
+			          </div>
+			        </div>
+					<div class="col col-xl-12 col-lg-12">
+						<div class="fields">
+							<button type="submit" class="submit_btn">SAVE</button><i class="fa fa-spinner fa-spin mx-2 spinner" id="spinner1"></i>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div class="col col-xl-3 col-lg-3 col-md-1 d-none d-md-inline">
+		<span style="opacity: 0;">.</span>
+	</div>
+</div>
+
+<!-- po up deletion ------------------->
+
+<div class="del_popupbanner">
+	<div class="col col-xl-4 col-lg-4 col-md-3 d-none d-md-inline">
+		<span style="opacity: 0;">.</span>
+	</div>
+	<div class="col col-xl-4 col-lg-4 col-md-6">
+
+		<div class="predefine1" id="del_popup">
+			Vehicle will be deleted. Do you wish to continue?
+
+			<form method="POST" action="/delete-vehiclelist/">
+				{% csrf_token %}
+				<input type="hidden" name="sid" id="sid">
+				<button type="submit" class="del_btn">Yes</button>
+				<button type="button" class="del_btn" id="cancel_btn">No</button>
+			</form>
+		</div>
+	</div>
+	<div class="col col-xl-4 col-lg-4 col-md-3 d-none d-md-inline">
+		<span style="opacity: 0;">.</span>
+	</div>
+</div>
+
+<div class="udel_popupbanner">
+	<div class="col col-xl-4 col-lg-4 col-md-3 d-none d-md-inline">
+		<span style="opacity: 0;">.</span>
+	</div>
+	<div class="col col-xl-4 col-lg-4 col-md-6">
+
+		<div class="predefine1" id="udel_popup">
+			Vehicle will be deactivated in the system. Do you wish to continue?
+
+			<form method="POST" action="/deactivate-vehiclelist/">
+				{% csrf_token %}
+				<input type="hidden" name="sid" id="ssid">
+				<button type="submit" class="del_btn">Yes</button>
+				<button type="button" class="del_btn" id="ucancel_btn">No</button>
+			</form>
+		</div>
+	</div>
+	<div class="col col-xl-4 col-lg-4 col-md-3 d-none d-md-inline">
+		<span style="opacity: 0;">.</span>
+	</div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'js/manage_vehicle.js' %}?v=1.6"></script>
+{% endblock %}

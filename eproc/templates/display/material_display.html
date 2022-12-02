@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/material.css' %}?v=1.3">
+{% endblock %}
+{% block wave %}
+<img src="{% static 'img/back.png' %}" id="backimg">
+{% endblock %}
+{% block content %}
+<div class="col col-xl-1 col-lg-1 d-none d-lg-inline">
+	<span style="opacity: 0;">.</span>
+</div>
+<div class="col col-xl-10 col-lg-10">
+	<div class="predefine1 stockdefine">
+		<div class="head">
+			<span class="head1">Material Issue Records</span>
+			<span class="head2">View and Manage issued details</span>
+		</div>
+		<div class="prebody table-responsive">
+			{% if messages %}
+				{% for message in messages %}
+				<input type="hidden" class="msgon" value="{{message}}">
+				{% endfor %}
+			{% endif %}
+			{% for product, range in s_item %}
+			{% if product %}
+			<div class="search_banner">
+				<form method="POST" action="/search-material-issue/">
+	        		{% csrf_token %}
+		        	<div class="input-group">
+		        		<input type="text" name="search" class="form-control" placeholder="Search records...">
+		        		<div class="input-group-append">
+		        			<button type="submit" class="btn btn-primary" id="find_btn"><i class="fas fa-search"></i></button>
+		        		</div>
+		        	</div>
+	        	</form>
+			</div>
+			<table class="table table-bordered table-hover" id="IssueTable">
+				<thead>
+				  <tr>
+					<th scope="col">Issue Date</th>
+					<th scope="col">Material Issue Number</th>
+					<th scope="col">Purchase Order Number</th>
+					<th scope="col">Issuing Location</th>
+					<th scope="col">Issue For</th>
+					<!-- <th scope="col">Receiving Location</th> -->
+					<th scope="col">Action</th>
+				  </tr>
+				</thead>
+				<tbody>
+					{% for s in product %}
+					<tr>
+						<td>{{s.issue_date}}</td>
+						<td>{{s.mie_number}}</td>
+						<td>{{s.purchase_order_number}}</td>
+						<td>{{s.issuing_location}}</td>
+						<td>{{s.issue_for}}</td>
+						<!-- <td>{{s.receiving_location}}</td> -->
+						<td>
+							<a href="/material-issue-detail/{{s.id}}/"><button type="button" class="sup_edit eye" data="{{s.id}}"><i class="fas fa-eye"></i></button></a>
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+			<span class="page_numbers">
+				{% if product.has_other_pages %}
+				<ul class="pagination">
+					{% if product.has_previous %}
+					<li><a href="?page={{ product.previous_page_number }}">&laquo;</a></li>
+					{% else %}
+					<li class="prev_disabled">&laquo;</li>
+					{% endif %}
+					{% for i in product.paginator.page_range %}
+					{% if product.number == i %}
+					<li class="">{{ i }}</li>
+					{% else %}
+					<li><a href="?page={{ i }}">{{ i }}</a></li>
+					{% endif %}
+					{% endfor %}
+					{% if product.has_next %}
+					<li><a href="?page={{ product.next_page_number }}">&raquo;</a></li>
+					{% else %}
+					<li class="next_disabled">&raquo;</li>
+					{% endif %}
+				</ul>
+				{% endif %}
+			</span>
+			{% else %}
+			<span class="no_content">
+				No issue record found
+			</span>
+			{% endif %}
+			{% endfor %}
+		</div>
+	</div>
+</div>
+<div class="col col-xl-1 col-lg-1 d-none d-lg-inline">
+	<span style="opacity: 0;">.</span>
+</div>
+
+{% endblock %}
+
+{% block js %}
+<script>
+	$(window).on('load', function(){
+		if($('.msgon').length>0){
+			var msg = $('.msgon').first().val();
+			if(msg=='done'){
+				$('.success_ban').show('slide', {direction: 'right'}, 500);
+				setTimeout(function(){
+					$('.success_ban').hide('slide', {direction: 'right'}, 500);
+				}, 5000);
+			}
+			if(msg=='error'){
+				$('.error_ban').show('slide', {direction: 'right'}, 500);
+				setTimeout(function(){
+					$('.error_ban').hide('slide', {direction: 'right'}, 500);
+				}, 5000);
+			}
+		}
+	});
+</script>
+{% endblock %}

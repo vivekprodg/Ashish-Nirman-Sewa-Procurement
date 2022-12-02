@@ -1,0 +1,312 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/purchase.css' %}?v=1.3">
+<link rel="stylesheet" href="{% static 'css/goods.css' %}?v=1.3">
+{% endblock %}
+
+
+{% block wave %}
+<img src="{% static 'img/back.png' %}" id="backimg">
+{% endblock %}
+{% block content %}
+<div class="col col-xl-2 col-lg-2 d-md-1 d-none d-lg-inline">
+  <span style="opacity: 0;">.</span>
+</div>
+<div class="col col-xl-8 col-lg-8 col-md-10">
+  <div class="predefine1">
+    <div class="head">
+      <span class="head1">Fuel Purchase Bill Entry</span>
+      <span class="head2">Enter new purchase bill details</span>
+    </div>
+    <div class="prebody" id="formbody">
+      <input type="hidden" id="dtrans" value="{{item.transaction_type}}">
+      <input type="hidden" id="dsup" value="{{item.supplier_id}}">
+      <form method="POST" action="/edit-fuel-purchase-bill/" id="PurchaseBillAdd" autocomplete="off" name="PurchaseBillAdd">
+        {% csrf_token %}
+        <input type="hidden" name="pid" value="{{item.id}}">
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span> Entry Date<font style="color: red;">*</font></span></label>
+            <input type="text" name="date" id="date" class="form-control inputs" value="{{item.entry_date}}">
+          </div>
+        </div>
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>Purchase Order Number<font style="color: red;">*</font></span></label>
+            <input type="text" name="purchase_number" id="purchase_number" class="form-control inputs" value="{{item.purchase_order_number}}">
+            <input type="hidden" name="pon" id="pon" value="{{item.purchase_order_number}}">
+            <span class="help_text">Provide approved purchase order number</span>
+          </div>
+        </div>
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>Purchase Bill Number<font style="color: red;">*</font></span></label>
+            <input type="text" name="purchase_bill_number" id="purchase_bill_number" class="form-control" value="{{item.purchase_bill_number}}" readonly>
+          </div>
+        </div>
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span> Invoice Number</span></label>
+            <input type="text" name="invoice" id="invoice" class="form-control inputs" value="{{item.invoice_number}}">
+          </div>
+        </div>
+
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>Supplier<font style="color: red;">*</font></span></label>
+            <select class="form-control inputs" name="supplier" id="supplier">
+              <option value="" disabled selected>Choose supplier</option>
+              {% for c in supplier_dash %}
+              <option value="{{c.id}}">{{c.name}}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>Transaction Type<font style="color: red;">*</font></span></label>
+            <div class="fields" style="border: 1px solid #ddd; padding: 10px 20px;" id="tranblock">
+              <span id="cacheck"><input type="checkbox" id="cajob" checked> Cash</span>
+              <span id="crcheck"><input type="checkbox" id="crejob"> Credit</span>
+              <input type="hidden" name="trans" id="trans" value="{{item.transaction_type}}">
+            </div>
+          </div>
+        </div>
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields" id="payday">
+            <label class="label"><span>Credit Days<font style="color: red;">*</font></span></label>
+            <div class="input-group">
+              <input type="number" name="day" id="day" class="form-control inputs" value="{{item.day}}">
+              <div class="input-group-append">
+                <div class="input-group-text">Days</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col col-xl-12 col-lg-12">
+          <div class="purchaseorder_cover">
+            <span class="jobmodulehead">
+              Purchase Order Details
+            </span>
+            <hr style="float:left; width: 100%;">
+            <div class="jobload">
+            </div>
+            {% for a in party %}
+            <div class="purchaseorder_ban" id="pcover{{a.purchase_number}}">
+              <input type="hidden" name="site{{a.purchase_number}}" id="site{{a.purchase_number}}" value="{{a.issuing_site}}">
+              <input type="hidden" name="pn{{a.purchase_number}}" id="pn{{a.purchase_number}}" value="{{a.purchase_number}}">
+              <input type="hidden" name="reserve{{a.purchase_number}}" id="reserve{{a.purchase_number}}" value="{{a.reserviour}}">
+              <input type="hidden" name="poentry{{a.purchase_number}}" id="poentry{{a.purchase_number}}" value="{{a.entry_date}}">
+              <input type="hidden" name="postatus{{a.purchase_number}}" id="postatus{{a.purchase_number}}" value="{{a.status}}">
+              <input type="hidden" name="poapprove{{a.purchase_number}}" id="poapprove{{a.purchase_number}}" value="{{a.approved_by}}">
+              <input type="hidden" name="pofuel{{a.purchase_number}}" id="pofuel{{a.purchase_number}}" value="{{a.fuel_type}}">
+              <input type="hidden" name="polocation{{a.purchase_number}}" id="polocation{{a.purchase_number}}" value="{{a.location}}">
+              <input type="hidden" name="popurchase{{a.purchase_number}}" id="popurchase{{a.purchase_number}}" value="{{a.purchase_location}}">
+              <input type="hidden" name="poqty{{a.purchase_number}}" id="poqty{{a.purchase_number}}" value="{{a.quantity}}">
+              <input type="hidden" name="porate{{a.purchase_number}}" id="porate{{a.purchase_number}}" value="{{a.rate}}">
+              <input type="hidden" name="poamt{{a.purchase_number}}" id="poamt{{a.purchase_number}}" value="{{a.amount}}">
+              <div class="col col-xl-6 col-lg-6 col-md-6">
+                <div class="jobcontent1">
+
+                  <div class="jcontent">
+                    <span class="jc1">
+                      Date
+                    </span>
+                    <span class="jc2">
+                      {{a.entry_date}}
+                    </span>
+                  </div>
+                  <div class="jcontent">
+                    <span class="jc1">
+                      Purchase Order Number
+                    </span>
+                    <span class="jc2">
+                      {{a.purchase_number}}
+                    </span>
+                  </div>
+                  <div class="jcontent">
+                    <span class="jc1">
+                      Issuing Site
+                    </span>
+                    <span class="jc2">
+                      {{a.issuing_site}}
+                    </span>
+                  </div>
+                  <div class="jcontent">
+                    <span class="jc1">
+                      Reserviour
+                    </span>
+                    <span class="jc2">
+                      {{a.reserviour}}
+                    </span>
+                  </div>
+                  <div class="jcontent">
+                    <span class="jc1">
+                      Fuel Type
+                    </span>
+                    <span class="jc2">
+                      {{a.fuel_type}}
+                    </span>
+                  </div>
+                  <div class="jcontent">
+                    <span class="jc1">
+                      Status
+                    </span>
+                    <span class="jc2">
+                      {{a.status}}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="col col-xl-6 col-lg-6 col-md-6">
+                <div class="jobcontent1">
+                  {% if a.quantity %}
+                  <div class="jcontent">
+                    <span class="jc1">
+                      Quantity
+                    </span>
+                    <span class="jc2">
+                      {{a.quantity}} ltrs
+                    </span>
+                  </div>
+                  {% endif %}
+                  {% if a.rate %}
+                  <div class="jcontent">
+                    <span class="jc1">
+                      Rate
+                    </span>
+                    <span class="jc2">
+                      Rs {{a.rate|intcomma}} 
+                    </span>
+                  </div>
+                  {% endif %}
+                  {% if a.amount %}
+                  <div class="jcontent">
+                    <span class="jc1">
+                      Amount
+                    </span>
+                    <span class="jc2">
+                      Rs {{a.amount|intcomma}} 
+                    </span>
+                  </div>
+                  {% endif %}
+                  <div class="jcontent">
+                    <span class="jc1">
+                      Entry By
+                    </span>
+                    <span class="jc2">
+                      {{a.entry_by}}
+                    </span>
+                  </div>
+                  {% if a.status == 'approved' %}
+                  <div class="jcontent">
+                    <span class="jc1">
+                      Approved By
+                    </span>
+                    <span class="jc2">
+                      {{a.approved_by}}
+                    </span>
+                  </div>
+                  <div class="jcontent">
+                    <span class="jc1">
+                      Approved Purchase Location
+                    </span>
+                    <span class="jc2">
+                      {{a.purchase_location}}
+                    </span>
+                  </div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <input type="hidden" name="defaultqty" id="defaultqty" value="{{item.quantity}}">
+            <label class="label"><span>Quantity<font style="color: red;">*</font></span></label>
+            <div class="input-group">
+              <input type="number" name="quantity" id="quantity" class="form-control inputs" step='.01' value="{{item.quantity}}">
+              <div class="input-group-append">
+                <div class="input-group-text">ltrs</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>Rate<font style="color: red;">*</font></span></label>
+            <div class="input-group">
+              <div class="input-group-append">
+                <div class="input-group-text">NPR</div>
+              </div>
+              <input type="number" name="rate" id="rate" class="form-control inputs" step='.01' value="{{item.rate}}">
+            </div>
+          </div>
+        </div>
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <input type="hidden" id="vatd" value="{{item.vat}}">
+            <label class="label"><span>Amount<font style="color: red;">*</font></span></label>
+            <div class="input-group">
+              <div class="input-group-append">
+                <div class="input-group-text">NPR</div>
+              </div>
+              <input type="number" name="amount" id="amount" class="form-control inputs" step='.01' value="{{item.amount}}" readonly>
+            </div>
+          </div>
+        </div>
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>Vat<font style="color: red;">*</font></span></label>
+            <div class="input-group">
+              <div class="input-group-append">
+                <div class="input-group-text">NPR</div>
+              </div>
+              <input type="number" name="vat" id="vat" class="form-control inputs" step='.01' value="{{item.vat}}" readonly>
+            </div>
+          </div>
+        </div>
+        <div class="col col-xl-12 col-lg-12">
+          <div class="fields">
+            <input type="hidden" name="vatval" id="vatval" value="no">
+            <span class="vatcheck"><input type="checkbox" id="vatc"> VAT</span>
+          </div>
+        </div>
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>Narration</span></label>
+            <textarea class="form-control" name="narrat" id="narrat" rows="6">{{item.narration}}</textarea>
+          </div>
+        </div>
+
+        <div class="col col-xl-12 col-lg-12">
+          {% if messages %}
+            {% for message in messages %}
+            <input type="hidden" class="msgon" value="{{message}}">
+            {% endfor %}
+          {% endif %}
+          <div class="fields">
+            <button type="submit" class="submit_btn">SUBMIT</button><i class="fa fa-spinner fa-spin mx-2 spinner" id="spinner1"></i>
+          </div>
+        </div>
+        
+      </form>
+    </div>
+  </div>
+</div>
+<div class="col col-xl-2 col-lg-2 d-md-1 d-none d-lg-inline">
+  <span style="opacity: 0;">.</span>
+</div>
+
+
+{% endblock %}
+
+{% block js %}
+<script src="{% static '/js/edit_purchasebill.js' %}?v=1.4"></script>
+{% endblock %}

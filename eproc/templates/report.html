@@ -1,0 +1,817 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/report.css' %}?v=1.6">
+{% endblock %}
+{% block wave %}
+<img src="{% static 'img/back.png' %}" id="backimg">
+{% endblock %}
+{% block content %}
+<div class="col col-xl-2 col-lg-2 d-md-1 d-none d-lg-inline">
+	<span style="opacity: 0;">.</span>
+</div>
+<div class="col col-xl-8 col-lg-8 col-md-10">
+	<div class="predefine1">
+		<div class="head">
+			<span class="head1">Report </span>
+			<span class="head2">View the reports of following categories</span>
+		</div>
+		<div class="prebody" id="formbody">
+			<button type="button" class="report_btn" id="rbtn1" data="stockreport">STOCK REPORT</button>
+			<button type="button" class="report_btn" id="rbtn2" data="grnreport">GRN REPORT</button>
+			<button type="button" class="report_btn" id="rbtn3" data="invoicereport">PURCHASE INVOICE REPORT</button>
+			<button type="button" class="report_btn" id="rbtn4" data="materialreport">MATERIAL ISSUE REPORT</button>
+			<button type="button" class="report_btn" id="rbtn5" data="internalreport">INTERNAL TRANSFER REPROT</button>
+			<button type="button" class="report_btn" id="rbtn6" data="transfergrn">INTERNAL TRANSFER GRN REPORT</button>
+			<button type="button" class="report_btn" id="rbtn7" data="fuelpurchase">FUEL PURCHASE REPORT</button><button type="button" class="report_btn" id="rbtn8" data="vehiclefuel">VEHICLE WISE FUEL CONSUMPTION</button>
+			<button type="button" class="report_btn" id="rbtn9" data="maintainlog">MAINTAINANCE LOG</button>
+			<button type="button" class="report_btn" id="rbtn10" data="vehiclemaintain">VEHICLE WISE MAINTAINCE</button>
+			<button type="button" class="report_btn" id="rbtn11" data="vendormaintain">VENDOR WISE TRANSACTION LOG</button>
+			<button type="button" class="report_btn" id="rbtn12" data="vehiclemove">VEHICLE MOVEMENT REPORT</button>
+		</div>
+	</div>
+</div>
+<div class="col col-xl-2 col-lg-2 d-md-1 d-none d-lg-inline">
+	<span style="opacity: 0;">.</span>
+</div>
+
+<div class="edit_popupbanner">
+	<div class="col col-xl-3 col-lg-3 col-md-1 d-none d-md-inline">
+		<span style="opacity: 0;">.</span>
+	</div>
+	<div class="col col-xl-6 col-lg-6 col-md-10">
+		<div class="predefine1 rep" id="stockreport">
+			<div class="edithead">
+				Report Details <i class="fa fa-times close_edit" data="stockreport"></i>
+			</div>
+			<div class="dprebody"> 
+				<form method="POST" action="/generate-reports/">
+					{% csrf_token %}
+					<input type="hidden" name="report_val" value="stock_report">
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>Sites</span></label>
+							<select class="form-control inputs" name="site" id="site">
+								<option value="" disabled selected>Choose site</option>
+								{% for c in site_dash %}
+								<option value="{{c.name}}">{{c.name}}</option>
+								{% endfor %}
+							</select>
+							<input type="hidden" name="itemname" id="itemname" readonly>
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						{% for i in item_dash %}
+						<input type="hidden" id="ini{{i.id}}" data="{{i.uom}}" value="{{i.item}}">
+						{% endfor %}
+						<div class="fields">
+							<label class="label"><span>Item</span></label>
+							<select class="form-control inputs" name="item" id="item">
+								<option value="" disabled selected>Choose item</option>
+								{% for c in item_dash %}
+								<option value="{{c.item}}">{{c.item}}</option>
+								{% endfor %}
+							</select>
+							<input type="hidden" name="itemname" id="itemname" readonly>
+						</div>
+					</div>
+					<div class="col col-xl-12 col-lg-12">
+						<div class="fields">
+							<button type="submit" class="submit_btn">SUBMIT</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+
+		<div class="predefine1 rep" id="grnreport">
+			<div class="edithead">
+				Report Details <i class="fa fa-times close_edit" data="grnreport"></i>
+			</div>
+			<div class="dprebody"> 
+				<form method="POST" action="/generate-reports/">
+					{% csrf_token %}
+					<input type="hidden" name="report_val" value="grn_report">
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>From Date<font style="color: red;">*</font></span></label>
+							<input type="text" class="form-control inputs fromdate" name="fromdate">
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>To Date<font style="color: red;">*</font></span></label>
+							<input type="text" class="form-control inputs todate" name="todate">
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>Sites</span></label>
+							<select class="form-control inputs" name="site" id="site">
+								<option value="" disabled selected>Choose site</option>
+								{% for c in site_dash %}
+								<option value="{{c.name}}">{{c.name}}</option>
+								{% endfor %}
+							</select>
+							<input type="hidden" name="itemname" id="itemname" readonly>
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						{% for i in item_dash %}
+						<input type="hidden" id="ini{{i.id}}" data="{{i.uom}}" value="{{i.item}}">
+						{% endfor %}
+						<div class="fields">
+							<label class="label"><span>Item</span></label>
+							<select class="form-control inputs" name="item" id="item">
+								<option value="" disabled selected>Choose item</option>
+								{% for c in item_dash %}
+								<option value="{{c.item}}">{{c.item}}</option>
+								{% endfor %}
+							</select>
+							<input type="hidden" name="itemname" id="itemname" readonly>
+						</div>
+					</div>
+					<div class="col col-xl-12 col-lg-12">
+						<div class="fields">
+							<button type="submit" class="submit_btn">SUBMIT</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+
+		<div class="predefine1 rep" id="invoicereport">
+			<div class="edithead">
+				Report Details <i class="fa fa-times close_edit" data="invoicereport"></i>
+			</div>
+			<div class="dprebody"> 
+				<form method="POST" action="/generate-reports/">
+					{% csrf_token %}
+					<input type="hidden" name="report_val" value="invoice_report">
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>From Date<font style="color: red;">*</font></span></label>
+							<input type="text" class="form-control inputs fromdate" name="fromdate">
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>To Date<font style="color: red;">*</font></span></label>
+							<input type="text" class="form-control inputs todate" name="todate">
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>Sites</span></label>
+							<select class="form-control inputs" name="site" id="site">
+								<option value="" disabled selected>Choose site</option>
+								{% for c in site_dash %}
+								<option value="{{c.name}}">{{c.name}}</option>
+								{% endfor %}
+							</select>
+							<input type="hidden" name="itemname" id="itemname" readonly>
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						{% for i in item_dash %}
+						<input type="hidden" id="ini{{i.id}}" data="{{i.uom}}" value="{{i.item}}">
+						{% endfor %}
+						<div class="fields">
+							<label class="label"><span>Item</span></label>
+							<select class="form-control inputs" name="item" id="item">
+								<option value="" disabled selected>Choose item</option>
+								{% for c in item_dash %}
+								<option value="{{c.item}}">{{c.item}}</option>
+								{% endfor %}
+							</select>
+							<input type="hidden" name="itemname" id="itemname" readonly>
+						</div>
+					</div>
+					<div class="col col-xl-12 col-lg-12">
+						<div class="fields">
+							<button type="submit" class="submit_btn">SUBMIT</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+
+		<div class="predefine1 rep" id="materialreport">
+			<div class="edithead">
+				Report Details <i class="fa fa-times close_edit" data="materialreport"></i>
+			</div>
+			<div class="dprebody"> 
+				<form method="POST" action="/generate-reports/">
+					{% csrf_token %}
+					<input type="hidden" name="report_val" value="material_report">
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>From Date<font style="color: red;">*</font></span></label>
+							<input type="text" class="form-control inputs fromdate" name="fromdate">
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>To Date<font style="color: red;">*</font></span></label>
+							<input type="text" class="form-control inputs todate" name="todate">
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>Sites</span></label>
+							<select class="form-control inputs" name="site" id="site">
+								<option value="" disabled selected>Choose site</option>
+								{% for c in site_dash %}
+								<option value="{{c.name}}">{{c.name}}</option>
+								{% endfor %}
+							</select>
+							<input type="hidden" name="itemname" id="itemname" readonly>
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						{% for i in item_dash %}
+						<input type="hidden" id="ini{{i.id}}" data="{{i.uom}}" value="{{i.item}}">
+						{% endfor %}
+						<div class="fields">
+							<label class="label"><span>Item</span></label>
+							<select class="form-control inputs" name="item" id="item">
+								<option value="" disabled selected>Choose item</option>
+								{% for c in item_dash %}
+								<option value="{{c.item}}">{{c.item}}</option>
+								{% endfor %}
+							</select>
+							<input type="hidden" name="itemname" id="itemname" readonly>
+						</div>
+					</div>
+					<div class="col col-xl-12 col-lg-12">
+						<div class="fields">
+							<button type="submit" class="submit_btn">SUBMIT</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+
+		<div class="predefine1 rep" id="internalreport">
+			<div class="edithead">
+				Report Details <i class="fa fa-times close_edit" data="internalreport"></i>
+			</div>
+			<div class="dprebody"> 
+				<form method="POST" action="/generate-reports/">
+					{% csrf_token %}
+					<input type="hidden" name="report_val" value="internal_report">
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>From Date<font style="color: red;">*</font></span></label>
+							<input type="text" class="form-control inputs fromdate" name="fromdate">
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>To Date<font style="color: red;">*</font></span></label>
+							<input type="text" class="form-control inputs todate" name="todate">
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>Sites<font style="color: red;">*</font></span></label>
+							<select class="form-control inputs" name="site" id="site">
+								<option value="" disabled selected>Choose site</option>
+								{% for c in site_dash %}
+								<option value="{{c.name}}">{{c.name}}</option>
+								{% endfor %}
+							</select>
+							<input type="hidden" name="itemname" id="itemname" readonly>
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						{% for i in item_dash %}
+						<input type="hidden" id="ini{{i.id}}" data="{{i.uom}}" value="{{i.item}}">
+						{% endfor %}
+						<div class="fields">
+							<label class="label"><span>Item<font style="color: red;">*</font></span></label>
+							<select class="form-control inputs" name="item" id="item">
+								<option value="" disabled selected>Choose item</option>
+								{% for c in item_dash %}
+								<option value="{{c.item}}">{{c.item}}</option>
+								{% endfor %}
+							</select>
+							<input type="hidden" name="itemname" id="itemname" readonly>
+						</div>
+					</div>
+					<div class="col col-xl-12 col-lg-12">
+						<div class="fields">
+							<button type="submit" class="submit_btn">SUBMIT</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+
+		<div class="predefine1 rep" id="transfergrn">
+			<div class="edithead">
+				Report Details <i class="fa fa-times close_edit" data="transfergrn"></i>
+			</div>
+			<div class="dprebody"> 
+				<form method="POST" action="/generate-reports/">
+					{% csrf_token %}
+					<input type="hidden" name="report_val" value="transfer_grn">
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>From Date<font style="color: red;">*</font></span></label>
+							<input type="text" class="form-control inputs fromdate" name="fromdate">
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>To Date<font style="color: red;">*</font></span></label>
+							<input type="text" class="form-control inputs todate" name="todate">
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>Sites<font style="color: red;">*</font></span></label>
+							<select class="form-control inputs" name="site" id="site">
+								<option value="" disabled selected>Choose site</option>
+								{% for c in site_dash %}
+								<option value="{{c.name}}">{{c.name}}</option>
+								{% endfor %}
+							</select>
+							<input type="hidden" name="itemname" id="itemname" readonly>
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						{% for i in item_dash %}
+						<input type="hidden" id="ini{{i.id}}" data="{{i.uom}}" value="{{i.item}}">
+						{% endfor %}
+						<div class="fields">
+							<label class="label"><span>Item<font style="color: red;">*</font></span></label>
+							<select class="form-control inputs" name="item" id="item">
+								<option value="" disabled selected>Choose item</option>
+								{% for c in item_dash %}
+								<option value="{{c.item}}">{{c.item}}</option>
+								{% endfor %}
+							</select>
+							<input type="hidden" name="itemname" id="itemname" readonly>
+						</div>
+					</div>
+					<div class="col col-xl-12 col-lg-12">
+						<div class="fields">
+							<button type="submit" class="submit_btn">SUBMIT</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+
+		<div class="predefine1 rep" id="fuelpurchase">
+			<div class="edithead">
+				Report Details <i class="fa fa-times close_edit" data="fuelpurchase"></i>
+			</div>
+			<div class="dprebody"> 
+				<form method="POST" action="/generate-reports/">
+					{% csrf_token %}
+					<input type="hidden" name="report_val" value="fuel_purchase">
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>From Date<font style="color: red;">*</font></span></label>
+							<input type="text" class="form-control inputs fromdate" name="fromdate">
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>To Date<font style="color: red;">*</font></span></label>
+							<input type="text" class="form-control inputs todate" name="todate">
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>Reserviour</span></label>
+							<select class="form-control inputs" name="site" id="site">
+								<option value="" disabled selected>Choose reserviour</option>
+								{% for c in reserve %}
+								<option value="{{c.name}}">{{c.name}}</option>
+								{% endfor %}
+							</select>
+							<input type="hidden" name="itemname" id="itemname" readonly>
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>Fuel Type</span></label>
+							<select class="form-control inputs" name="item" id="item">
+								<option value="" disabled selected>Choose fuel</option>
+								{% for c in f_type %}
+								<option value="{{c.name}}">{{c.name}}</option>
+								{% endfor %}
+							</select>
+						</div>
+					</div>
+					<div class="col col-xl-12 col-lg-12">
+						<div class="fields">
+							<button type="submit" class="submit_btn">SUBMIT</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+
+		<div class="predefine1 rep" id="vehiclefuel">
+			<div class="edithead">
+				Report Details <i class="fa fa-times close_edit" data="vehiclefuel"></i>
+			</div>
+			<div class="dprebody"> 
+				<form method="POST" action="/generate-reports/" name="VFForm" id="VFForm">
+					{% csrf_token %}
+					<input type="hidden" name="report_val" value="vehicle_fuel">
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>From Date<font style="color: red;">*</font></span></label>
+							<input type="text" class="form-control inputs fromdate" name="fromdate">
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>To Date<font style="color: red;">*</font></span></label>
+							<input type="text" class="form-control inputs todate" name="todate">
+						</div>
+					</div>
+					{% for d in v_type %}
+			        <input type="hidden" id="vtypenamefuel{{d.id}}" value="{{d.type_name}}">
+			        {% endfor %}
+			        <div class="col col-xl-6 col-lg-6">
+			          <div class="fields">
+			            <input type="hidden" id="vehicle_type_namefuel" name="vehicle_type_name">
+			            <label class="label"><span>Vehicle Type<font style="color: red;">*</font></span></label>
+			            <select class="form-control inputs" name="vehicle_type" id="vehicle_typefuel">
+			              <option value="" disabled selected>Choose vehicle type</option>
+			              {% for c in v_type %}
+			              <option value="{{c.id}}">{{c.type_name}}</option>
+			              {% endfor %}
+			            </select>
+			          </div>
+			        </div>
+			        <input type="hidden" name="vehicle" id="vehicle_confirmfuel">
+			        <input type="hidden" name="num_type" id="num_typefuel">
+			        <div class="col col-xl-6 col-lg-6">
+			          <div class="fields">
+			            <label class="label"><span>Vehicle/Engine/Chasis Number</span></label>
+			            {% for vehi, range in vehis %}
+			            <div class="fields vehicles inputs" id="vehitypenumidfuel{{vehi.0.vehicle_type_id}}">
+			              <select id="vehi_numberfuel{{vehi.0.vehicle_type_id}}" class="form-control">
+			                <option value="" disabled selected>Choose vehicle number</option>
+			                {% for d in vehi %}
+			                <option value="{{d.vehicle_number}}">{{d.vehicle_number}}</option>
+			                {% endfor %}
+			              </select>
+			            </div>
+			            <div class="fields vehicles inputs" id="vehitypechasisidfuel{{vehi.0.vehicle_type_id}}">
+			              <select id="vehi_chasisfuel{{vehi.0.vehicle_type_id}}" class="form-control">
+			                <option value="" disabled selected>Choose chasis number</option>
+			                {% for d in vehi %}
+			                <option value="{{d.chasis_number}}">{{d.chasis_number}}</option>
+			                {% endfor %}
+			              </select>
+			            </div>
+			            <div class="fields vehicles inputs" id="vehitypeengineidfuel{{vehi.0.vehicle_type_id}}">
+			              <select id="vehi_enginefuel{{vehi.0.vehicle_type_id}}" class="form-control">
+			                <option value="" disabled selected>Choose engine number</option>
+			                {% for d in vehi %}
+			                <option value="{{d.engine_number}}">{{d.engine_number}}</option>
+			                {% endfor %}
+			              </select>
+			            </div>
+			            {% endfor  %}
+			          </div>
+			          <div class="fields fcheck">
+			            <span class="ch_check"><input type="checkbox" id="chasis_checkfuel">Chasis Number</span>
+			            <span class="en_check"><input type="checkbox" id="engine_checkfuel">Engine Number</span>
+			          </div>
+			        </div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>Reserviour</span></label>
+							<select class="form-control inputs" name="site" id="site">
+								<option value="" disabled selected>Choose reserviour</option>
+								{% for c in reserve %}
+								<option value="{{c.name}}">{{c.name}}</option>
+								{% endfor %}
+							</select>
+							<input type="hidden" name="itemname" id="itemname" readonly>
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>Fuel Type</span></label>
+							<select class="form-control inputs" name="item" id="item">
+								<option value="" disabled selected>Choose fuel</option>
+								{% for c in f_type %}
+								<option value="{{c.name}}">{{c.name}}</option>
+								{% endfor %}
+							</select>
+						</div>
+					</div>
+					<div class="col col-xl-12 col-lg-12">
+						<div class="fields">
+							<button type="submit" class="submit_btn">SUBMIT</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+
+		<div class="predefine1 rep" id="maintainlog">
+			<div class="edithead">
+				Report Details <i class="fa fa-times close_edit" data="maintainlog"></i>
+			</div>
+			<div class="dprebody"> 
+				<form method="POST" action="/generate-reports/">
+					{% csrf_token %}
+					<input type="hidden" name="report_val" value="maintain_log">
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>From Date<font style="color: red;">*</font></span></label>
+							<input type="text" class="form-control inputs fromdate" name="fromdate">
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>To Date<font style="color: red;">*</font></span></label>
+							<input type="text" class="form-control inputs todate" name="todate">
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>Sites</span></label>
+							<select class="form-control inputs" name="site" id="site">
+								<option value="" disabled selected>Choose site</option>
+								{% for c in site_dash %}
+								<option value="{{c.name}}">{{c.name}}</option>
+								{% endfor %}
+							</select>
+							<input type="hidden" name="itemname" id="itemname" readonly>
+						</div>
+					</div>
+					<div class="col col-xl-12 col-lg-12">
+						<div class="fields">
+							<button type="submit" class="submit_btn">SUBMIT</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+
+		<div class="predefine1 rep" id="vehiclemaintain">
+			<div class="edithead">
+				Report Details <i class="fa fa-times close_edit" data="vehiclemaintain"></i>
+			</div>
+			<div class="dprebody"> 
+				<form method="POST" action="/generate-reports/" name="VMForm" id="VMForm">
+					{% csrf_token %}
+					<input type="hidden" name="report_val" value="vehicle_maintain">
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>From Date<font style="color: red;">*</font></span></label>
+							<input type="text" class="form-control inputs fromdate" name="fromdate">
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>To Date<font style="color: red;">*</font></span></label>
+							<input type="text" class="form-control inputs todate" name="todate">
+						</div>
+					</div>
+					{% for d in v_type %}
+			        <input type="hidden" id="vtypenamemain{{d.id}}" value="{{d.type_name}}">
+			        {% endfor %}
+			        <div class="col col-xl-6 col-lg-6">
+			          <div class="fields">
+			            <input type="hidden" id="vehicle_type_namemain" name="vehicle_type_name">
+			            <label class="label"><span>Vehicle Type<font style="color: red;">*</font></span></label>
+			            <select class="form-control inputs" name="vehicle_type" id="vehicle_typemain">
+			              <option value="" disabled selected>Choose vehicle type</option>
+			              {% for c in v_type %}
+			              <option value="{{c.id}}">{{c.type_name}}</option>
+			              {% endfor %}
+			            </select>
+			          </div>
+			        </div>
+			        <input type="hidden" name="vehicle" id="vehicle_confirmmain">
+			        <input type="hidden" name="num_type" id="num_typemain">
+			        <div class="col col-xl-6 col-lg-6">
+			          <div class="fields">
+			            <label class="label"><span>Vehicle/Engine/Chasis Number</span></label>
+			            {% for vehi, range in vehis %}
+			            <div class="fields vehicles inputs" id="vehitypenumidmain{{vehi.0.vehicle_type_id}}">
+			              <select id="vehi_numbermain{{vehi.0.vehicle_type_id}}" class="form-control">
+			                <option value="" disabled selected>Choose vehicle number</option>
+			                {% for d in vehi %}
+			                <option value="{{d.vehicle_number}}">{{d.vehicle_number}}</option>
+			                {% endfor %}
+			              </select>
+			            </div>
+			            <div class="fields vehicles inputs" id="vehitypechasisidmain{{vehi.0.vehicle_type_id}}">
+			              <select id="vehi_chasismain{{vehi.0.vehicle_type_id}}" class="form-control">
+			                <option value="" disabled selected>Choose chasis number</option>
+			                {% for d in vehi %}
+			                <option value="{{d.chasis_number}}">{{d.chasis_number}}</option>
+			                {% endfor %}
+			              </select>
+			            </div>
+			            <div class="fields vehicles inputs" id="vehitypeengineidmain{{vehi.0.vehicle_type_id}}">
+			              <select id="vehi_enginemain{{vehi.0.vehicle_type_id}}" class="form-control">
+			                <option value="" disabled selected>Choose engine number</option>
+			                {% for d in vehi %}
+			                <option value="{{d.engine_number}}">{{d.engine_number}}</option>
+			                {% endfor %}
+			              </select>
+			            </div>
+			            {% endfor  %}
+			          </div>
+			          <div class="fields fcheck">
+			            <span class="ch_check"><input type="checkbox" id="chasis_checkmain">Chasis Number</span>
+			            <span class="en_check"><input type="checkbox" id="engine_checkmain">Engine Number</span>
+			          </div>
+			        </div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>Sites</span></label>
+							<select class="form-control inputs" name="site" id="site">
+								<option value="" disabled selected>Choose site</option>
+								{% for c in site_dash %}
+								<option value="{{c.name}}">{{c.name}}</option>
+								{% endfor %}
+							</select>
+							<input type="hidden" name="itemname" id="itemname" readonly>
+						</div>
+					</div>
+					<div class="col col-xl-12 col-lg-12">
+						<div class="fields">
+							<button type="submit" class="submit_btn">SUBMIT</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+
+		<div class="predefine1 rep" id="vendormaintain">
+			<div class="edithead">
+				Report Details <i class="fa fa-times close_edit" data="vendormaintain"></i>
+			</div>
+			<div class="dprebody"> 
+				<form method="POST" action="/generate-reports/">
+					{% csrf_token %}
+					<input type="hidden" name="report_val" value="vendor_maintain">
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>From Date<font style="color: red;">*</font></span></label>
+							<input type="text" class="form-control inputs fromdate" name="fromdate">
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>To Date<font style="color: red;">*</font></span></label>
+							<input type="text" class="form-control inputs todate" name="todate">
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						{% for c in supplier_dash %}
+						<input type="hidden" id="sup{{c.id}}" value="{{c.name}}">
+						{% endfor %}
+						<div class="fields">
+							<label class="label"><span>Vendor/Supplier</span></label>
+							<select class="form-control inputs" name="sup" id="sup">
+								<option value="" disabled selected>Choose supplier</option>
+								{% for c in supplier_dash %}
+								<option value="{{c.id}}">{{c.name}}</option>
+								{% endfor %}
+							</select>
+							<input type="hidden" name="supname" id="supname" readonly>
+						</div>
+					</div>
+					<div class="col col-xl-12 col-lg-12">
+						<div class="fields">
+							<button type="submit" class="submit_btn">SUBMIT</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+
+		<div class="predefine1 rep" id="vehiclemove">
+			<div class="edithead">
+				Report Details <i class="fa fa-times close_edit" data="vehiclemove"></i>
+			</div>
+			<div class="dprebody"> 
+				<form method="POST" action="/generate-reports/" name="MoveForm" id="MoveForm">
+					{% csrf_token %}
+					<input type="hidden" name="report_val" value="vehicle_move">
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>From Date<font style="color: red;">*</font></span></label>
+							<input type="text" class="form-control inputs fromdate" name="fromdate">
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>To Date<font style="color: red;">*</font></span></label>
+							<input type="text" class="form-control inputs todate" name="todate">
+						</div>
+					</div>
+					{% for d in v_type %}
+			        <input type="hidden" id="vtypenamemove{{d.id}}" value="{{d.type_name}}">
+			        {% endfor %}
+			        <div class="col col-xl-6 col-lg-6">
+			          <div class="fields">
+			            <input type="hidden" id="vehicle_type_namemove" name="vehicle_type_name">
+			            <label class="label"><span>Vehicle Type<font style="color: red;">*</font></span></label>
+			            <select class="form-control inputs" name="vehicle_type" id="vehicle_typemove">
+			              <option value="" disabled selected>Choose vehicle type</option>
+			              {% for c in v_type %}
+			              <option value="{{c.id}}">{{c.type_name}}</option>
+			              {% endfor %}
+			            </select>
+			          </div>
+			        </div>
+			        <input type="hidden" name="vehicle" id="vehicle_confirmmove">
+			        <input type="hidden" name="num_type" id="num_typemove">
+			        <div class="col col-xl-6 col-lg-6">
+			          <div class="fields">
+			            <label class="label"><span>Vehicle/Engine/Chasis Number</span></label>
+			            {% for vehi, range in vehis %}
+			            <div class="fields vehicles inputs" id="vehitypenumidmove{{vehi.0.vehicle_type_id}}">
+			              <select id="vehi_numbermove{{vehi.0.vehicle_type_id}}" class="form-control">
+			                <option value="" disabled selected>Choose vehicle number</option>
+			                {% for d in vehi %}
+			                <option value="{{d.vehicle_number}}">{{d.vehicle_number}}</option>
+			                {% endfor %}
+			              </select>
+			            </div>
+			            <div class="fields vehicles inputs" id="vehitypechasisidmove{{vehi.0.vehicle_type_id}}">
+			              <select id="vehi_chasismove{{vehi.0.vehicle_type_id}}" class="form-control">
+			                <option value="" disabled selected>Choose chasis number</option>
+			                {% for d in vehi %}
+			                <option value="{{d.chasis_number}}">{{d.chasis_number}}</option>
+			                {% endfor %}
+			              </select>
+			            </div>
+			            <div class="fields vehicles inputs" id="vehitypeengineidmove{{vehi.0.vehicle_type_id}}">
+			              <select id="vehi_enginemove{{vehi.0.vehicle_type_id}}" class="form-control">
+			                <option value="" disabled selected>Choose engine number</option>
+			                {% for d in vehi %}
+			                <option value="{{d.engine_number}}">{{d.engine_number}}</option>
+			                {% endfor %}
+			              </select>
+			            </div>
+			            {% endfor  %}
+			          </div>
+			          <div class="fields fcheck">
+			            <span class="ch_check"><input type="checkbox" id="chasis_checkmove">Chasis Number</span>
+			            <span class="en_check"><input type="checkbox" id="engine_checkmove">Engine Number</span>
+			          </div>
+			        </div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>From Site</span></label>
+							<select class="form-control inputs" name="fromsite" id="site1">
+								<option value="" disabled selected>Choose site</option>
+								{% for c in site_dash %}
+								<option value="{{c.name}}">{{c.name}}</option>
+								{% endfor %}
+							</select>
+							<input type="hidden" name="itemname" id="itemname" readonly>
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>To Site</span></label>
+							<select class="form-control inputs" name="tosite" id="site2">
+								<option value="" disabled selected>Choose site</option>
+								{% for c in site_dash %}
+								<option value="{{c.name}}">{{c.name}}</option>
+								{% endfor %}
+							</select>
+							<input type="hidden" name="itemname" id="itemname" readonly>
+						</div>
+					</div>
+					<div class="col col-xl-12 col-lg-12">
+						<div class="fields">
+							<button type="submit" class="submit_btn">SUBMIT</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+
+	</div>
+	<div class="col col-xl-3 col-lg-3 col-md-1 d-none d-md-inline">
+		<span style="opacity: 0;">.</span>
+	</div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'js/report.js' %}?v=1.4"></script>
+{% endblock %}

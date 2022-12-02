@@ -1,0 +1,160 @@
+{% load humanize %}
+<html>
+<head>
+  <title>Report</title>
+  <style>
+    *{
+  color:#000;
+  padding:5px 10px;
+  margin:0px;
+}
+body{
+    padding: 0px;
+    margin: 0px;
+    counter-reset: Serial;
+}
+@page {
+    size: letter landscape;
+    margin: 2cm;
+}
+    .report_banner{
+  float: left;
+  width: 100%;
+  height: inherit;
+  background: #fff;
+  box-shadow: 0px 0px 8px 0px #ddd;
+  padding: 20px 15px;
+}
+.report_subbanner1{
+  float: left;
+  width: 100%;
+  height: inherit;
+}
+.report_head1{
+  float:left;
+  width: 100%;
+  font-size: 17px;
+  color: #000;
+  text-align:center;
+}
+.report_head2{
+  float:left;
+  width: 100%;
+  font-size: 14px;
+  color: #000;
+  text-align:center;
+  text-transform: uppercase;
+}
+
+.report_subbanner2{
+  float: left;
+  width: 100%;
+  height: inherit;
+  margin-top: 20px;
+}
+.report_summary{
+  float: left;
+  width: 100%;
+  height: inherit;
+  margin-top: 20px;
+}
+.report_subbanner2 table{
+  border: 1px solid #ddd;
+  font-size: 12px;
+  text-align: center;
+}
+.report_summary table{
+  border: 1px solid #ddd;
+  font-size: 12px;
+  text-align: center;
+}
+.report_subbanner2 table th{
+  color: rgba(0,0,0,.8);
+}
+.report_summary table th{
+  color: rgba(0,0,0,.8);
+}
+.report_summary table tbody tr td:first-child:before{
+  counter-increment: Serial;
+  content: counter(Serial);
+}
+
+.no_report{
+  float:left;
+  width:100%;
+  font-size: 14px;
+  color: #008ECC;
+  padding: 30px 0px;
+  text-align:center;
+}
+.boldrow{
+  font-weight: bold;
+} 
+  </style>
+</head>
+<body>
+  <div class="report_container">
+    <div class="col-12">
+      <div class="report_banner">
+          {% if fuel_consump %}
+          <div class="report_subbanner1">
+            <iframe class="report_head1" style="color: #000; font-size: 19px;">
+              Ashish Nirman Sewa
+            </iframe><br>
+            <iframe class="report_head1" style="font-size: 13px; color: rgba(0,0,0,.8);">
+              Kathmandu
+            </iframe>
+            <div class="report_head1">
+              Fuel Cunsumption Report of {{reserviour}} 
+            </div>
+            <div class="report_head2">
+              {% if pbn %}
+              Last Entry Purchase Bill Number: {{pbn}}
+              {% endif %}
+
+            </div>
+
+          </div>
+          <div class="report_subbanner2">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">Date</th>
+                  <th scope="col">Coupon Number</th>
+                  <th scope="col">Site</th>
+                  <th scope="col">Vehicle Type</th>
+                  <th scope="col">Vehicle Number</th>
+                  <th scope="col">Kilometers</th>
+                  <th scope="col">Quantity (ltrs)</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for c in fuel_consump %}
+                <tr>
+                  <td>{{c.date}}</td>
+                  <td>{{c.coupon_number}}</td>
+                  <td>{{c.user_site}}</td>
+                  <td>{{c.vehicle_type}}</td>
+                  <td>{{c.vehicle_number}} ({{c.number_type}})</td>
+                  <td>{{c.kilometer}} KM</td>
+                  <td>{{c.quantity}}</td>
+                </tr>
+                {% endfor %}
+                <tr class="boldrow">
+                  <td colspan="6">Total</td>
+                  <td>{{consump_total.quantity__sum|floatformat:2}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          {% else %}
+          <span class="no_report">
+            No report found for your request
+          </span>
+          {% endif %}
+
+      </div>
+    </div>
+  </div>
+  <body>
+  </html>

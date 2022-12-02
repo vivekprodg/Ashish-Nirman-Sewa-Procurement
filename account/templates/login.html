@@ -1,0 +1,107 @@
+{% load static %}
+
+<!doctype html>
+<html lang="en">
+<head>
+	<title>
+		Procurement Dashboard
+	</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="Expires" content="0" />
+	<link rel="shortcut icon" type="image/png" href="{% static 'img/favicon/fav.png' %}"/>
+	<link rel="stylesheet" href="{% static 'css/bootstrap/bootstrap.min.css' %}">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css">
+	<link rel="stylesheet" href="{% static 'css/login.css' %}">
+
+	<script src="https://use.fontawesome.com/f0f0f6086b.js"></script>
+</head>
+<body>
+
+	<div class="row">
+		<div class="col-12">
+			<div class="panel_log_banner">
+				<div class="error_ban">
+					<i class="fa fa-times-circle"></i>Authentication Error
+				</div>
+				<div class="container">
+					<div class="col col-xl-4 col-lg-4 col-md-3 d-none d-md-inline">
+						<span style="opacity: 0;">.</span>
+					</div>
+					<div class="col col-xl-4 col-lg-4 col-md-6">
+						<div class="panel_log">
+							<!-- <div class="log_ban">
+								<img src="{% static '/img/logo.png' %}" id="log_img">
+							</div> -->
+							<div class="log_ban">
+								<span class="log_ban_text">
+									Dashboard Login
+								</span>
+							</div>
+							<hr style="width:100%; float:left;">
+							<form method="POST" action="">
+								{% csrf_token %}
+								<div class="col col-xl-12 col-lg-12">
+									<div class="fields">
+										<label class="label"><span>User Name<font style="color: red;">*</font></span></label>
+										<input type="text" class="form-control inputs" name="user_name" id="user_name">
+									</div>
+								</div>
+								<div class="col col-xl-12 col-lg-12">
+									<div class="fields">
+										<label class="label"><span>Password<font style="color: red;">*</font></span></label>
+										<input type="password" class="form-control inputs" name="password" id="first_name">
+									</div>
+								</div>
+								<div class="col col-xl-12 col-lg-12">
+									{% if messages %}
+										{% for message in messages %}
+										<input type="hidden" class="msgon" value="{{message}}">
+										{% endfor %}
+									{% endif %}
+									<div class="fields">
+										<button type="submit" class="submit_btn">SUBMIT</button>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+					<div class="col col-xl-4 col-lg-4 col-md-3 d-none d-md-inline">
+						<span style="opacity: 0;">.</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script src="{% static 'js/js_plug/jquery-3.6.0.min.js' %}"></script>
+	<script src="{% static 'js/js_plug/jquery-ui.js' %}"></script>
+	<script src="{% static 'css/bootstrap/bootstrap.bundle.min.js' %}"></script>
+	<script src="{% static 'css/bootstrap/bootstrap.min.js' %}"></script>
+
+	<script>
+		var win_height = $(window).height();
+		$('.panel_log_banner').height(win_height);
+		$('#user_name').focus();
+		$(window).on('load', function(){
+			if($('.msgon').length>0){
+				var msg = $('.msgon').first().val();
+				if(msg=='done'){
+					$('.success_ban').show('slide', {direction: 'right'}, 500);
+					setTimeout(function(){
+						$('.success_ban').hide('slide', {direction: 'right'}, 500);
+					}, 5000);
+				}
+				if(msg=='error'){
+					$('.error_ban').show('slide', {direction: 'right'}, 500);
+					setTimeout(function(){
+						$('.error_ban').hide('slide', {direction: 'right'}, 500);
+					}, 5000);
+				}
+			}
+		});
+	</script>
+</body>
+</html>

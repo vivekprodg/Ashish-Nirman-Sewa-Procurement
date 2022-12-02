@@ -1,0 +1,179 @@
+@font-face {
+  font-family: Georgia;
+  src: url('font/FontsFree-Net-George.ttf');
+}
+@font-face {
+  font-family: PlayfairDisplay-Regular;
+  src: url('font/PlayfairDisplay/PlayfairDisplay-Regular.ttf');
+}
+@font-face {
+  font-family: PlayfairDisplay-Black;
+  src: url('font/PlayfairDisplay/PlayfairDisplay-Black.ttf');
+}
+@font-face {
+  font-family: PlayfairDisplay-Bold;
+  src: url('font/PlayfairDisplay/PlayfairDisplay-Bold.ttf');
+}
+@font-face {
+  font-family: Poppins-Regular;
+  src: url('font/Poppins/Poppins-Regular.ttf');
+}
+@font-face {
+  font-family: Poppins-SemiBold;
+  src: url('font/Poppins/Poppins-SemiBold.ttf');
+}
+/*===================================*/
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins" , sans-serif;
+}
+html, body{
+  padding: 0px;
+  margin: 0px;
+  overflow-x: hidden;
+  font-size: 14px;
+}
+body{
+  background: #eee;
+}
+input, textarea, select{
+  border-color: #008ECC !important;
+}
+textarea:focus, input:focus, select:focus{
+    outline-width:0px !important;
+    outline:none !important;
+    box-shadow: 2px 15px 10px -10px #ddd !important;
+}
+button:focus{
+    outline-width:0px !important;
+    background: #07597d !important;
+    box-shadow: 2px 20px 20px -5px #aaa !important;
+}
+button:hover{
+  box-shadow: 2px 20px 20px -5px #aaa !important;
+}
+.col{
+  float:left;
+}
+.panel_log_banner{
+  width:100%;
+  float:left;
+  background: rgba(0,0,0,.05);
+  position: relative;
+}
+.panel_log{
+  height:inherit;
+  width:100%;
+  float:left;
+  padding: 40px 40px 70px 40px;
+  background: #fff;
+  box-shadow: 0px 0px 10px 0px #ddd;
+  margin-top: 100px;
+}
+.log_ban{
+  height: inherit;
+  width:100%;
+  float:left;
+  text-align: center;
+  margin-bottom: 10px;
+}
+.log_ban_text{
+  width:100%;
+  float:left;
+  font-size: 18px;
+  font-family: PlayfairDisplay-Regular;
+  color:#ff8000;
+}
+.fields{
+  float:left;
+  width:100%;
+  height: auto;
+  margin-bottom: 20px;
+}
+
+.label {
+  line-height:0.1;
+}
+.label span {
+  display: inline-block;
+  position: relative;
+  left:20px;
+  color:#484f52;
+  font-size:15px;
+  padding:0px;
+}
+.label span:before{
+    content: "";
+  position: absolute;
+  height: 10px;
+  border-top: 1px solid #aaa;
+  border-left: 1px solid #aaa;
+  border-top-left-radius:5px;
+  top: 4px;
+  left:-25px;
+  width: 18px;
+}
+/*.label span:after{
+    content: "";
+  position: absolute;
+  height: 5px;
+  border-top: 1px solid #aaa;
+  top: 4px;
+  width: 60px;
+}*/
+.label span:before {
+  right: 100%;
+  margin-right: 15px;
+}
+/*.label span:after {
+  left: 100%;
+  margin-left: 15px;
+}*/
+
+.submit_btn{
+  height: 40px;
+  width: auto;
+  float:left;
+  border: none;
+  background: #1f7ba3;
+  color: #fff;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all .3s ease;
+  border-radius: 5px;
+  padding-left: 30px;
+  padding-right: 30px;
+}
+.submit_btn:hover{
+  background: #07597d;
+}
+
+.error_ban{
+  position: fixed;
+  top:20px;
+  right: 0px;
+  z-index: 99;
+  width: 30%;
+  background: #f7362f;
+  color: #fff;
+  font-size: 16px;
+  padding: 25px 20px;
+  box-shadow: 2px 8px 20px -5px #aaa;
+  display: none;
+}
+.error_ban i{
+  margin-right: 10px;
+  font-size: 20px;
+}
+
+.spinnerr{
+  float:left;
+  color: #008ECC;
+  font-size: 30px;
+  position: relative;
+  top: 5px;
+  display: none;
+}

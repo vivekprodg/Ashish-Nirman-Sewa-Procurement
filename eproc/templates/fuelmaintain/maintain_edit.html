@@ -1,0 +1,896 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/purchase.css' %}?v=1.5">
+<link rel="stylesheet" href="{% static 'css/invoice.css' %}?v=1.5">
+{% endblock %}
+{% block wave %}
+<img src="{% static 'img/back.png' %}" id="backimg">
+{% endblock %}
+{% block content %}
+<div class="col col-xl-2 col-lg-2 d-md-1 d-none d-lg-inline">
+  <span style="opacity: 0;">.</span>
+</div>
+<div class="col col-xl-8 col-lg-8 col-md-10">
+  <div class="predefine1">
+    <div class="head">
+      <span class="head1">Maintainance Entry</span>
+      <span class="head2">Edit maintainance details</span>
+    </div>
+    <div class="prebody" id="formbody">
+      <input type="hidden" id="jnum" value="{{item.purchase_order_number}}">
+      <input type="hidden" id="djorder" value="{{item.jorder}}">
+      <input type="hidden" id="dgjorder" value="{{item.gjorder}}">
+      <input type="hidden" id="dvtype" value="{{item.vehicle_type}}">
+      <input type="hidden" id="vnum" value="{{item.vehicle_number}}">
+      <input type="hidden" id="dvtypeid" value="{{item.vehicle_type_id}}">
+      <input type="hidden" id="dnumtype" value="{{item.number_type}}">
+      <input type="hidden" id="kilnum" value="{{item.kilometer}}">
+      <input type="hidden" id="probnum" value="{{item.problem_category}}">
+      <input type="hidden" id="pcnum" value="{{item.problem_subcategory}}">
+      <input type="hidden" id="descnum" value="{{item.narration}}">
+      <input type="hidden" id="vennum" value="{{item.supplier_id}}">
+      <!-- <input type="hidden" id="defaultbill" value="{{item.bill_type}}"> -->
+      <form method="POST" action="/edit-maintainance-entry/" id="MaintainanceForm" autocomplete="off" name="MaintainanceForm">
+        {% csrf_token %}
+        <input type="hidden" name="entry_id" value="{{item.id}}">
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>Entry Date<font style="color: red;">*</font></span></label>
+            <input type="text" class="form-control inputs" name="date" id="date" value="{{item.entry_date}}">
+          </div>
+        </div>
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>Invoice Date<font style="color: red;">*</font></span></label>
+            <input type="text" class="form-control inputs" name="invoice_date" id="invoice_date" value="{{item.bill_date}}">
+          </div>
+        </div>
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>Maintainance Number<font style="color: red;">*</font></span></label>
+            <input type="text" class="form-control inputs" name="maintain_number" id="maintain_number" value="{{item.maintain_number}}" readonly>
+          </div>
+        </div>
+        {% for c in ivoice %}
+        <input type="hidden" class="pvoice" value="{{c}}">
+        {% endfor %}
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>Invoice Number<font style="color: red;">*</font></span></label>
+            <input type="text" class="form-control inputs" name="invoice" id="invoice" value="{{item.bill_number}}">
+            <span class="already_error bill_e">Entry with this invoice number already exists!</span>
+          </div>
+        </div>
+        <!-- <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>Invoice Type<font style="color: red;">*</font></span></label>
+            <select class="form-control inputs" name="bill_type" id="bill_type">
+              <option value="" disabled selected>Choose invoice type</option>
+              <option value="Plain Bill">Plain Bill</option>
+              <option value="Pan Bill">Pan Bill</option>
+              <option value="VAT Bill">VAT Bill</option>
+            </select>
+          </div>
+        </div>
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>Supplier<font style="color: red;">*</font></span></label>
+            <select class="form-control inputs" name="supplier" id="supplier">
+              <option value="" disabled selected>Choose supplier</option>
+              {% for c in supplier_dash %}
+              <option value="{{c.id}}">{{c.name}}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div> -->
+
+        {% for vehi, range in vehis %}
+        {% for v in vehi %}
+        <input type="hidden" id="vh{{v.url}}" name="{{v.chasis_number}}" data="{{v.engine_number}}" value="{{v.vehicle_number}}">
+        <input type="hidden" id="vhc{{v.chasis_url}}" name="{{v.vehicle_number}}" data="{{v.engine_number}}" value="{{v.chasis_number}}">
+        <input type="hidden" id="vhe{{v.engine_url}}" name="{{v.chasis_number}}" data="{{v.vehicle_number}}" value="{{v.engine_number}}">
+        {% endfor %}
+        {% endfor %}
+
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            {% for d in v_type %}
+            <input type="hidden" id="vtypename{{d.id}}" value="{{d.type_name}}">
+            {% endfor %}
+            <label class="label"><span>Vehicle Type</span></label>
+            <input type="hidden" name="vehicle_type" id="vtype" value="{{item.vehicle_type}}">
+            <input type="hidden" name="vehicle_type_id" id="vtypeidd" value="{{item.vehicle_type_id}}">
+            <select id="vehicle_type" class="form-control inputs" disabled>
+              <option value="" disabled selected>Choose vehicle type</option>
+              {% for d in v_type %}
+              <option value="{{d.id}}">{{d.type_name}}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        <input type="hidden" name="vehiclee" id="vehicle_confirm" value="{{item.vehicle_number}}">
+        <input type="hidden" name="num_type" id="num_type" value="{{item.number_type}}">
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>Vehicle/Chasis/Engine Number</span></label>
+            {% for vehi, range in vehis %}
+            <div class="fields vehicles" id="vehitypenumid{{vehi.0.vehicle_type_id}}">
+              <select id="vehi_number{{vehi.0.vehicle_type_id}}" class="form-control inputs vchoice" disabled>
+                <option value="" disabled selected>Choose vehicle number</option>
+                {% for d in vehi %}
+                <option value="{{d.vehicle_number}}">{{d.vehicle_number}}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="fields vehicles" id="vehitypechasisid{{vehi.0.vehicle_type_id}}">
+              <select id="vehi_chasis{{vehi.0.vehicle_type_id}}" class="form-control inputs vchoice" disabled>
+                <option value="" disabled selected>Choose chasis number</option>
+                {% for d in vehi %}
+                <option value="{{d.chasis_number}}">{{d.chasis_number}}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="fields vehicles" id="vehitypeengineid{{vehi.0.vehicle_type_id}}">
+              <select id="vehi_engine{{vehi.0.vehicle_type_id}}" class="form-control inputs vchoice" disabled>
+                <option value="" disabled selected>Choose engine number</option>
+                {% for d in vehi %}
+                <option value="{{d.engine_number}}">{{d.engine_number}}</option>
+                {% endfor %}
+              </select>
+            </div>
+            {% endfor  %}
+          </div>
+          <div class="fields fcheck">
+            <span id="ch_check"><input type="checkbox" id="chasis_check" disabled>Chasis Number</span>
+            <span id="en_check"><input type="checkbox" id="engine_check" disabled>Engine Number</span>
+          </div>
+          <div class="fields vehidet">
+            <table class="table table-bordered table-hover">
+              <tbody>
+                <tr>
+                  <td>Vehicle Number</td>
+                  <td id="vehidetnum"></td>
+                </tr>
+                <tr>
+                  <td>Chasis Number</td>
+                  <td id="vehidetchasis"></td>
+                </tr>
+                <tr>
+                  <td>Engine Number</td>
+                  <td id="vehidetengine"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>KM Run of Vehicle<font style="color: red;">*</font></span></label>
+            <div class="input-group">
+              <input type="number" name="kilometer" id="kilometer" class="form-control inputs" step='.01' value="{{item.kilometer}}">
+              <div class="input-group-append">
+                <div class="input-group-text">KM</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>Servicing Hour<font style="color: red;">*</font></span></label>
+            <div class="input-group">
+              <input type="number" name="hour" id="hour" class="form-control inputs" step='.01' value="{{item.hour}}">
+              <div class="input-group-append">
+                <div class="input-group-text">Hr</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>Problem Category</span></label>
+            <select class="form-control inputs" name="problem" id="problem">
+              <option value="" disabled selected>Choose problem</option>
+              {% for c in problem %}
+              <option value="{{c.name}}">{{c.name}}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        <div class="col col-xl-6 col-lg-6">
+          <input type="hidden" name="subproblem" id="subprobval" value="{{item.problem_subcategory}}">
+          {% for submat, range in sub_material %}
+          <div class="fields psubcat" id="pdisplay{{submat.0.problem_url}}">
+            <label class="label"><span>Problem Sub Category</span></label>
+            <select class="form-control inputs problemsel" id="subproblem{{submat.0.problem_url}}">
+              <option value="" disabled selected>Choose problem sub category</option>
+              {% for c in submat %}
+              <option value="{{c.name}}">{{c.name}}</option>
+              {% endfor %}
+            </select>
+          </div>
+          {% endfor %}
+        </div>
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>Narration</span></label>
+            <textarea class="form-control" name="narrat" id="narrat" rows="6">{{item.narration}}</textarea>
+          </div>
+        </div>
+
+        {% for igood, range in igoods %}
+        {% for i in igood %}
+        <input type="hidden" class="gooid{{igood.0.pvn}}" value="{{igood.0.pvn}}{{i.id}}" data="{{igood.0.pvn}}">
+        <input type="hidden" id="item{{igood.0.pvn}}{{i.id}}" value="{{i.item}}">
+        <input type="hidden" id="alias{{igood.0.pvn}}{{i.id}}" value="{{i.alias}}">
+        <input type="hidden" id="itemid{{igood.0.pvn}}{{i.id}}" value="{{i.item_id}}">
+        <input type="hidden" id="uom{{igood.0.pvn}}{{i.id}}" value="{{i.uom}}">
+        <input type="hidden" id="qty{{igood.0.pvn}}{{i.id}}" value="{{i.quantity}}">
+        <input type="hidden" id="rate{{igood.0.pvn}}{{i.id}}" value="{{i.rate}}">
+        <input type="hidden" id="disamt{{igood.0.pvn}}{{i.id}}" value="{{i.discount_amt}}">
+        <input type="hidden" id="disper{{igood.0.pvn}}{{i.id}}" value="{{i.discount_per}}">
+        <input type="hidden" id="amt{{igood.0.pvn}}{{i.id}}" value="{{i.amount}}">
+        {% endfor %}
+        {% endfor %}
+        {% for i in mitm %}
+        <input type="hidden" class="gooid{{i.pvn}}" value="{{i.pvn}}{{i.id}}" data="{{i.pvn}}">
+        <input type="hidden" id="item{{i.pvn}}{{i.id}}" value="{{i.item_name}}">
+        <input type="hidden" id="alias{{i.pvn}}{{i.id}}" value="{{i.alias}}">
+        <input type="hidden" id="itemid{{i.pvn}}{{i.id}}" value="{{i.item_id}}">
+        <input type="hidden" id="uom{{i.pvn}}{{i.id}}" value="{{i.uom}}">
+        <input type="hidden" id="qty{{i.pvn}}{{i.id}}" value="{{i.quantity}}">
+        <input type="hidden" id="rate{{i.pvn}}{{i.id}}" value="{{i.rate}}">
+        <input type="hidden" id="disamt{{i.pvn}}{{i.id}}" value="{{i.discount_amt}}">
+        <input type="hidden" id="disper{{i.pvn}}{{i.id}}" value="{{i.discount_per}}">
+        <input type="hidden" id="amt{{i.pvn}}{{i.id}}" value="{{i.amount}}">
+        {% endfor %}
+
+        {% for itra, range in itrans %}
+        {% for i in itra %}
+        <input type="hidden" class="ggooid{{itra.0.grn}}" value="{{itra.0.grn}}{{i.id}}" data="{{itra.0.grn}}">
+        <input type="hidden" id="gitem{{itra.0.grn}}{{i.id}}" value="{{i.item}}">
+        <input type="hidden" id="galias{{itra.0.grn}}{{i.id}}" value="{{i.alias}}">
+        <input type="hidden" id="gitemid{{itra.0.grn}}{{i.id}}" value="{{i.item_id}}">
+        <input type="hidden" id="guom{{itra.0.grn}}{{i.id}}" value="{{i.uom}}">
+        <input type="hidden" id="gqty{{itra.0.grn}}{{i.id}}" value="{{i.quantity}}">
+        {% endfor %}
+        {% endfor %}
+
+        {% for i in gmm %}
+        <input type="hidden" class="ggooid{{i.pvn}}" value="{{i.pvn}}{{i.id}}" data="{{i.pvn}}">
+        <input type="hidden" id="gitem{{i.pvn}}{{i.id}}" value="{{i.item_name}}">
+        <input type="hidden" id="galias{{i.pvn}}{{i.id}}" value="{{i.alias}}">
+        <input type="hidden" id="gitemid{{i.pvn}}{{i.id}}" value="{{i.item_id}}">
+        <input type="hidden" id="guom{{i.pvn}}{{i.id}}" value="{{i.uom}}">
+        <input type="hidden" id="gqty{{i.pvn}}{{i.id}}" value="{{i.quantity}}">
+        {% endfor %}
+
+        {% for p in purinvoice %}
+        <input type="hidden" id="puriamt{{p.voucher_number}}" value="{{p.total}}">
+        <input type="hidden" id="puridamt{{p.voucher_number}}" value="{{p.discount_amt}}">
+        <input type="hidden" id="puridper{{p.voucher_number}}" value="{{p.discount_per}}">
+        <input type="hidden" id="purivat{{p.voucher_number}}" value="{{p.vat}}">
+        {% endfor %}
+
+        {% for p in porder %}
+        <input type="hidden" id="po{{p.purchase_number}}" value="{{p.purchase_number}}" data="{{p.po_vehi}}">
+        {% endfor %}
+        {% for p in porder %}
+        <input type="hidden" id="povehi{{p.purchase_number}}" value="{{p.vehicle_number}}" data="{{p.vehicle_type}}" name="{{p.number_type}}" data-ab="{{p.vehicle_type_id}}">
+        {% endfor %}
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>Purchase Order Number<font style="color: red;">*</font></span></label>
+            <div class="fields" style="border: 1px solid #ddd; padding: 10px 20px;" id="checkblock">
+              <span id="yjobcheck"><input type="checkbox" id="yesjob"> Yes</span>
+              <span id="njobcheck"><input type="checkbox" id="nojob"> No</span>
+              <input type="hidden" name="jorder" id="jorder" value="">
+            </div>
+            <div class="fields">
+              <input type="text" name="jobnumber" id="jobnumber" class="form-control inputs jnumber" placeholder="Enter PO number" value="{{item.purchase_order_number}}">
+              <!-- <span class="help_text">Enter PO number and press enter</span> -->
+              <span class="already_error porder_e">Please provide valid/approved PO number</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>Internal Transfer GRN<font style="color: red;">*</font></span></label>
+            <div class="fields" style="border: 1px solid #ddd; padding: 10px 20px;" id="gcheckblock">
+              <span id="gyjobcheck"><input type="checkbox" id="gyesjob"> Yes</span>
+              <span id="gnjobcheck"><input type="checkbox" id="gnojob"> No</span>
+              <input type="hidden" name="gjorder" id="gjorder" value="">
+            </div>
+            <div class="fields" id="gjdis">
+              <input type="text" name="gjobnumber" id="gjobnumber" class="form-control inputs" placeholder="Enter transfer GRN">
+              <span class="help_text">Enter transfer GRN and press enter</span>
+              <!-- <span class="already_error porder_eg">Please provide valid/approved GRN</span> -->
+            </div>
+          </div>
+        </div>
+
+        <div class="col col-xl-6 col-lg-6">
+          {% for ps, range in psupa %}
+          <div class="fields pvnselban" id="pvnselban{{ps.0.purchase_order_number}}">
+            <label class="label"><span>Purchase Voucher Number</span></label>
+            <select class="form-control inputs pvnsel" id="pvnsel{{ps.0.purchase_order_number}}">
+              <option value="" disabled selected>Choose voucher number</option>
+              {% for c in ps %}
+              <option value="{{c.voucher_number}}">{{c.voucher_number}}</option>
+              {% endfor %}
+            </select>
+          </div>
+          {% endfor %}
+        </div>
+        <div class="col col-xl-12">
+          <div class="grncol">
+            {% for bill, range in bills %}
+            {% if bill.0.pvn %}
+            <div class="coldiv grd{{bill.0.pvn}}" id="colrec{{bill.0.pvn}}{{forloop.counter}}">
+              <span class="coldes">{{bill.0.pvn}}</span>
+              <button type="button" class="colbtn" name="{{bill.0.pvn}}" data="{{bill.0.pvn}}{{forloop.counter}}"><i class="fa fa-times"></i></button>
+            </div>
+            {% endif %}
+            {% endfor %}
+            {% for gmitm, range in gmitms %}
+            {% if gmitm.0.pvn %}
+            <div class="coldiv grd{{gmitm.0.pvn}}" id="colrec{{gmitm.0.pvn}}{{forloop.counter}}">
+              <span class="coldes">{{gmitm.0.pvn}}</span>
+              <button type="button" class="gcolbtn" name="{{gmitm.0.pvn}}" data="{{gmitm.0.pvn}}{{forloop.counter}}"><i class="fa fa-times"></i></button>
+            </div>
+            {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+
+        {% for bill, range in bills %}
+        {% if bill.0.pvn %}
+        <input type="hidden" class="pvntab" value="{{bill.0.pvn}}">
+        {% endif %}
+        {% endfor %}
+
+        <div class="col col-xl-12">
+          <div class="pvnshowtable table-responsive">
+            <table class="table table-bordered table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">Voucher Number</th>
+                  <th scope="col">Invoice Number</th>
+                  <th scope="col">Invoice Type</th>
+                  <th scope="col">Supplier</th>
+                  <th scope="col">Sub Total</th>
+                  <th scope="col">Discount</th>
+                  <th scope="col">VAT</th>
+                  <th scope="col">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for p in purinvoice %}
+                <tr class="pvndet" id="pvndet{{p.voucher_number}}">
+                  <td>{{p.voucher_number}}</td>
+                  <td>{{p.invoice_number}}</td>
+                  <td>{{p.invoice_type}}</td>
+                  <td>{{p.supplier_name}}</td>
+                  <td>Rs {{p.sub_total}}</td>
+                  <td>Rs {{p.discount_amt}}({{p.discount_per}}%)</td>
+                  <td>{{p.vat}}</td>
+                  <td>{{p.total}}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="col col-12">
+          <div class="goods table-responsive">
+            <div class="loading">
+              <div class="loadcontent">
+                Loading....
+              </div>
+            </div>
+                  <span class="maintainhead">
+                    Purchase Items:
+                    <button type="button" id="additem" class="mainbtn">+ ADD ITEMS</button>
+                  </span>
+                  <div class="hidden_inputs">
+                    {% for b in minv %}
+                    <input type="hidden" name="pvnval" class="pvnval" id="pval{{b.voucher_number}}" value="{{b.voucher_number}}">
+                    <input type="hidden" class="tamt" id="tamt{{b.voucher_number}}" value="{{b.total}}">
+                    <input type="hidden" class="pvnamt" value="{{b.total}}">
+                    {% endfor %}
+                    {% for bill, range in bills %}
+                    <input type="hidden" class="irecon" value="{{forloop.counter}}">
+                    {% for b in bill %}
+                    {% if b.pvn %}
+                    <input type="hidden" class="irec{{b.pvn}}{{forloop.parentloop.counter}}" value="{{b.pvn}}{{forloop.counter}}" data="{{forloop.counter}}">
+                    <input type="hidden" name="itemadd" id="itemad{{b.pvn}}{{forloop.counter}}" value="{{b.pvn}}{{forloop.counter}}">
+                    <input type="hidden" name="ipvn{{b.pvn}}{{forloop.counter}}" id="ipvn{{b.pvn}}{{forloop.counter}}" value="{{b.pvn}}">
+                    <input type="hidden" name="inameid{{b.pvn}}{{forloop.counter}}" id="inameid{{b.pvn}}{{forloop.counter}}" value="{{b.item_id}}">
+                    <input type="hidden" name="iname{{b.pvn}}{{forloop.counter}}" id="iname{{b.pvn}}{{forloop.counter}}" value="{{b.item_name}}">
+                    <input type="hidden" name="ialias{{b.pvn}}{{forloop.counter}}" id="ialias{{b.pvn}}{{forloop.counter}}" value="{{b.alias}}">
+                    <input type="hidden" name="iuom{{b.pvn}}{{forloop.counter}}" id="iuom{{b.pvn}}{{forloop.counter}}" value="{{b.uom}}">
+                    <input type="hidden" name="iqty{{b.pvn}}{{forloop.counter}}" id="iqty{{b.pvn}}{{forloop.counter}}" value="{{b.quantity}}">
+                    <input type="hidden" name="irate{{b.pvn}}{{forloop.counter}}" id="irate{{b.pvn}}{{forloop.counter}}" value="{{b.rate}}">
+                    <input type="hidden" name="iamt{{b.pvn}}{{forloop.counter}}" id="iamt{{b.pvn}}{{forloop.counter}}" value="{{b.amount}}">
+                    <input type="hidden" name="idisamt{{b.pvn}}{{forloop.counter}}" id="idisamt{{b.pvn}}{{forloop.counter}}" value="{{b.discount_amt}}">
+                    <input type="hidden" name="idisper{{b.pvn}}{{forloop.counter}}" id="idisper{{b.pvn}}{{forloop.counter}}" value="{{b.discount_per}}">
+                    {% endif %}
+                    {% endfor %}
+                    {% endfor %}
+
+                    {% for gmitm, range in gmitms %}
+                    <input type="hidden" class="girecon" value="{{forloop.counter}}">
+                    <input type="hidden" name="gpvnval" class="gpvnval" id="gpval{{gmitm.0.pvn}}" value="{{gmitm.0.pvn}}">
+                    {% for b in gmitm %}
+                    {% if b.itnn == 'yes' %}
+                    <input type="hidden" class="girec{{b.pvn}}{{forloop.parentloop.counter}}" value="{{b.pvn}}{{forloop.counter}}" data="{{forloop.counter}}">
+                    <input type="hidden" name="gitemadd" id="gitemad{{b.pvn}}{{forloop.counter}}" value="{{b.pvn}}{{forloop.counter}}">
+                    <input type="hidden" name="gipvn{{b.pvn}}{{forloop.counter}}" id="gipvn{{b.pvn}}{{forloop.counter}}" value="{{b.pvn}}">
+                    <input type="hidden" name="ginameid{{b.pvn}}{{forloop.counter}}" id="ginameid{{b.pvn}}{{forloop.counter}}" value="{{b.item_id}}">
+                    <input type="hidden" name="giname{{b.pvn}}{{forloop.counter}}" id="giname{{b.pvn}}{{forloop.counter}}" value="{{b.item_name}}">
+                    <input type="hidden" name="gialias{{b.pvn}}{{forloop.counter}}" id="gialias{{b.pvn}}{{forloop.counter}}" value="{{b.alias}}">
+                    <input type="hidden" name="giuom{{b.pvn}}{{forloop.counter}}" id="giuom{{b.pvn}}{{forloop.counter}}" value="{{b.uom}}">
+                    <input type="hidden" name="giqty{{b.pvn}}{{forloop.counter}}" id="giqty{{b.pvn}}{{forloop.counter}}" value="{{b.quantity}}">
+                    {% endif %}
+                    {% endfor %}
+                    {% endfor %}
+
+                    {% for b in bill %}
+                    {% if b.pvn %}
+                    {% else %}
+                    <input type="hidden" name="itemadd" id="itemad{{forloop.counter}}" value="{{forloop.counter}}">
+                    <input type="hidden" name="exitemadd" id="exitemad{{forloop.counter}}" value="{{forloop.counter}}">
+                    <input type="hidden" name="iid{{forloop.counter}}" id="iid{{forloop.counter}}" value="{{b.item_id}}">
+                    <input type="hidden" name="iname{{forloop.counter}}" id="iname{{forloop.counter}}" value="{{b.item_name}}">
+                    <input type="hidden" name="ialias{{forloop.counter}}" id="ialias{{forloop.counter}}" value="{{b.alias}}">
+                    <input type="hidden" name="iuom{{forloop.counter}}" id="iuom{{forloop.counter}}" value="{{b.uom}}">
+                    <input type="hidden" name="iqty{{forloop.counter}}" id="iqty{{forloop.counter}}" value="{{b.quantity}}">
+                    <input type="hidden" name="irate{{forloop.counter}}" id="irate{{forloop.counter}}" value="{{b.rate}}">
+                    <input type="hidden" name="iamt{{forloop.counter}}" id="iamt{{forloop.counter}}" value="{{b.amount}}">
+                    <input type="hidden" name="idisamt{{forloop.counter}}" id="idisamt{{forloop.counter}}" value="{{b.discount_amt}}">
+                    <input type="hidden" name="idisper{{forloop.counter}}" id="idisper{{forloop.counter}}" value="{{b.discount_per}}">
+                    <input type="hidden" class="bill_amount" value="{{b.amount}}">
+                    {% endif %}
+                    {% endfor %}
+                    {% for b in bill_count %}
+                    <input type="hidden" class="bill_count" value="{{b}}">
+                    {% endfor %}
+
+                    {% for b in gmm %}
+                    <input type="hidden" class="gbill_count" value="{{b.id}}">
+                    {% endfor %}
+                  </div>
+                  <table class="table table-bordered table-hover" id="MaintainanceTable">
+                    <thead>
+                      <tr>
+                        <th scope="col">Action</th>
+                        <th scope="col">Items</th>
+                        <th scope="col">UOM</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">Rate</th>
+                        <th scope="col">Discount</th>
+                        <th scope="col" class="ltd">Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for bill, range in bills %}
+                      {% for b in bill %}
+                      {% if b.pvn %}
+                      <tr id="itemrow{{b.pvn}}{{forloop.counter}}">
+                        <td>{{b.pvn}}</td>
+                        <td>{{b.item_name}}({{b.alias}})</td>
+                        <td>{{b.uom}}</td>
+                        <td>{{b.quantity}}</td>
+                        <td>{{b.rate}}</td>
+                        <td>{{b.discount_amt}} ({{b.discount_per}}%)</td>
+                        <td class="ltd">{{b.amount}}</td>
+                      </tr>
+                      {% else %}
+                      {% endif %}
+                      {% endfor %}
+                      {% endfor %}
+
+                      {% for gmitm, range in gmitms %}
+                      {% for b in gmitm %}
+                      {% if b.itnn == 'yes' %}
+                      <tr id="gitemrow{{b.pvn}}{{forloop.counter}}">
+                        <td>{{b.pvn}}</td>
+                        <td>{{b.item_name}}({{b.alias}})</td>
+                        <td>{{b.uom}}</td>
+                        <td>{{b.quantity}}</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td class="ltd">0</td>
+                      </tr>
+                      {% endif %}
+                      {% endfor %}
+                      {% endfor %}
+
+                      {% for b in bill %}
+                      {% if b.pvn %}
+                      {% else %}
+                      <tr id="itemrow{{forloop.counter}}">
+                        <td>
+                          <button type="button" class="edititem" id="eitem{{forloop.counter}}" data="{{forloop.counter}}"><i class="far fa-edit"></i></button>
+                          <button type="button" class="delitem" id="ditem{{forloop.counter}}" data="{{forloop.counter}}"><i class="far fa-trash-alt"></i></button>
+                        </td>
+                        <td>{{b.item_name}}({{b.alias}})</td>
+                        <td>{{b.uom}}</td>
+                        <td>{{b.quantity}}</td>
+                        <td>{{b.rate}}</td>
+                        <td>{{b.discount_amt}} ({{b.discount_per}}%)</td>
+                        <td class="ltd">{{b.amount}}</td>
+                      </tr>
+                      {% endif %}
+                      {% endfor %}
+                    </tbody>
+                    <tfoot class="tfoot2">
+                      <tr class="boldrow">
+                        <td colspan="7" style="text-align: center;">No items</td>
+                        
+                      </tr>
+                    </tfoot>
+                    <tfoot class="tfoot">
+                      <tr>
+                        <td colspan="7" style="border:none;"></td>
+                      </tr>
+                      <tr>
+                        <td colspan="7" style="border:none;"></td>
+                      </tr>
+                      <tr class="boldrow table-sm">
+                        <td colspan="6">Sub Total</td>
+                        <td>
+                          <div class="input-group">
+                            <div class="input-group-append">
+                              <div class="input-group-text">NPR</div>
+                            </div>
+                            <input type="number" name="subtotal" id="subtotal" class="form-control" step='.01' value="{{item.sub_total}}" readonly>
+                          </div>
+                        </td>
+                      </tr>
+                      <!-- <tr class="boldrow table-sm">
+                        <td colspan="6">Discount</td>
+                        <td>
+                          <div class="input-group">
+                            <div class="input-group-append">
+                              <div class="input-group-text">NPR</div>
+                            </div>
+                            <input type="number" name="discount2" id="discount2" class="form-control" step='.01' value="{{item.discount_amt}}">
+                          </div>
+                          <div class="input-group" id="dis1">
+                            <input type="number" name="discount1" id="discount1" class="form-control" step='.01' value="{{item.discount_per}}">
+                            <div class="input-group-append">
+                              <div class="input-group-text">%</div>
+                            </div>
+                          </div>
+                        </td>
+                      </tr> -->
+                      <tr class="boldrow table-sm">
+                        <td colspan="6">Labour Charge</td>
+                        <td>
+                          <div class="input-group">
+                            <div class="input-group-append">
+                              <div class="input-group-text">NPR</div>
+                            </div>
+                            <input type="number" name="labour" id="labour" class="form-control" step='.01' value="{{item.labour_charge}}">
+                          </div>
+                        </td>
+                      </tr>
+                      <!-- <tr class="boldrow table-sm">
+                        <td colspan="6">Vat</td>
+                        <td>
+                          <div class="input-group">
+                            <div class="input-group-append">
+                              <div class="input-group-text">NPR</div>
+                            </div>
+                            <input type="number" name="vat" id="vat" class="form-control" step='.01' value="{{item.vat}}" readonly>
+                          </div>
+                        </td>
+                      </tr> -->
+                      <tr class="boldrow table-sm">
+                        <td colspan="6">Total Amount</td>
+                        <td>
+                          <div class="input-group">
+                            <div class="input-group-append">
+                              <div class="input-group-text">NPR</div>
+                            </div>
+                            <input type="number" name="total" id="total" class="form-control" step='.01' value="{{item.total}}" readonly>
+                          </div>
+                        </td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+        </div>
+
+        <div class="col col-xl-12 col-lg-12">
+          {% if messages %}
+            {% for message in messages %}
+            <input type="hidden" class="msgon" value="{{message}}">
+            {% endfor %}
+          {% endif %}
+          <div class="fields">
+            <button type="submit" class="submit_btn">SUBMIT</button><i class="fa fa-spinner fa-spin mx-2 spinner" id="spinner1"></i>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<div class="col col-xl-2 col-lg-2 d-md-1 d-none d-lg-inline">
+  <span style="opacity: 0;">.</span>
+</div>
+
+<!---item pop over-------------------->
+
+<div class="edit_popupbanner">
+  <div class="col col-xl-3 col-lg-3 col-md-1 d-none d-md-inline">
+    <span style="opacity: 0;">.</span>
+  </div>
+  <div class="col col-xl-6 col-lg-6 col-md-10">
+    <div class="predefine1" id="edit_popup">
+      <div class="edithead">
+        Add Item <i class="fa fa-times" id="close_edit"></i>
+      </div>
+      <div class="prebody editbody">
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>Stock Category<font style="color: red;">*</font></span></label>
+            <select class="selectpicker form-control inputs" name="category" id="category" data-live-search="true">
+              <option value="" disabled selected>Choose category</option>
+              {% for c in stock_cat %}
+              <option value="{{c.name}}">{{c.name}}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        <div class="col col-xl-6 col-lg-6">
+          {% for pss, range in psupaa %}
+          <div class="fields subcatshow" id="subcatshow{{pss.0.cat_url}}">
+            <label class="label"><span>Stock Sub Category<font style="color: red;">*</font></span></label>
+            <select class="selectpicker form-control inputs subcategory" id="subcategory{{pss.0.cat_url}}" data-live-search="true">
+              <option value="" disabled selected>Choose category</option>
+              {% for c in pss %}
+              <option value="{{c.name}}">{{c.name}}</option>
+              {% endfor %}
+            </select>
+          </div>
+          {% endfor %}
+          <input type="hidden" name="subcategory" id="subcatval">
+        </div>
+        <div class="col col-xl-6 col-lg-6">
+          {% for i in item_real %}
+          <input type="hidden" id="ini{{i.id}}" data="{{i.uom}}" value="{{i.item}}" name="{{i.alias}}">
+          {% endfor %}
+          {% for i in item_real %}
+          <input type="hidden" class="itemclass" data="{{i.item}}" value="{{i.id}}">
+          {% endfor %}
+          {% for i in pitem %}
+          <input type="hidden" class="pitm{{i.pon}}" data="{{i.item}}" value="{{i.item_id}}" name="{{i.alias}}">
+          {% endfor %}
+          {% for isel, range in itemsel %}
+          <div class="fields itemshow" id="itemshow{{isel.0.main_url}}">
+            <label class="label"><span>Item<font style="color: red;">*</font></span></label>
+            <select class="selectpicker form-control inputs item" id="item{{isel.0.main_url}}" data-live-search="true">
+              <option value="" disabled selected>Choose item</option>
+              {% for c in isel %}
+              <option value="{{c.id}}">{{c.item}} ({{c.alias}})</option>
+              {% endfor %}
+            </select>
+          </div>
+          {% endfor %}
+          <input type="hidden" name="item" id="itemm" readonly>
+          <input type="hidden" name="itemname" id="itemname" readonly>
+          <input type="hidden" name="itemalias" id="itemalias" readonly>
+        </div>
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>UOM<font style="color: red;">*</font></span></label>
+            <input type="text" class="form-control inputs" name="itemuom" id="itemuom" readonly>
+            <!-- <select class="form-control inputs" name="uom" id="uom">
+              <option value="" disabled selected>Choose UOM</option>
+              {% for c in uom_dash %}
+              <option value="{{c.uom}}">{{c.uom}}</option>
+              {% endfor %}
+            </select> -->
+          </div>
+        </div>
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>Quantity<font style="color: red;">*</font></span></label>
+            <input type="number" class="form-control inputs" name="itemqty" id="itemqty" step=".01">
+          </div>
+        </div>
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>Rate<font style="color: red;">*</font></span></label>
+            <div class="input-group">
+              <div class="input-group-append">
+                <div class="input-group-text">NPR</div>
+              </div>
+              <input type="number" name="itemrate" id="itemrate" class="form-control" step='.01' value="0">
+            </div>
+          </div>
+        </div>
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>Discount<font style="color: red;">*</font></span></label>
+            <div class="input-group" id="dis1">
+              <input type="number" name="discount1" id="discount_per" class="form-control" step='.01' value="0">
+              <div class="input-group-append">
+                <div class="input-group-text">%</div>
+              </div>
+            </div>
+            <div class="input-group">
+              <div class="input-group-append">
+                <div class="input-group-text">NPR</div>
+              </div>
+              <input type="number" id="discount_amt" class="form-control" step='.01' value="0">
+            </div>
+          </div>
+        </div>
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>Amount<font style="color: red;">*</font></span></label>
+            <div class="input-group">
+              <div class="input-group-append">
+                <div class="input-group-text">NPR</div>
+              </div>
+              <input type="number" name="itemamount" id="itemamount" class="form-control" step='.01' value="0" readonly>
+            </div>
+          </div>
+        </div>
+        <div class="col col-xl-12 col-lg-12">
+          <div class="fields">
+            <button type="submit" class="submit_btn" id="additembtn">ADD</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col col-xl-3 col-lg-3 col-md-1 d-none d-md-inline">
+    <span style="opacity: 0;">.</span>
+  </div>
+</div>
+
+<div class="edit_popupbanner1">
+  <div class="col col-xl-3 col-lg-3 col-md-1 d-none d-md-inline">
+    <span style="opacity: 0;">.</span>
+  </div>
+  <div class="col col-xl-6 col-lg-6 col-md-10">
+    <div class="predefine1" id="edit_popup1">
+      <div class="edithead">
+        Edit Item <i class="fa fa-times" id="close_edit1"></i>
+      </div>
+      <div class="prebody editbody">
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>Stock Category<font style="color: red;">*</font></span></label>
+            <select class="selectpicker form-control inputs" name="category" id="editcategory" data-live-search="true">
+              <option value="" disabled selected>Choose category</option>
+              {% for c in stock_cat %}
+              <option value="{{c.name}}">{{c.name}}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        <div class="col col-xl-6 col-lg-6">
+          {% for pss, range in psupaa %}
+          <div class="fields editsubcatshow" id="editsubcatshow{{pss.0.cat_url}}">
+            <label class="label"><span>Stock Sub Category<font style="color: red;">*</font></span></label>
+            <select class="selectpicker form-control inputs editsubcategory" id="editsubcategory{{pss.0.cat_url}}" data-live-search="true">
+              <option value="" disabled selected>Choose category</option>
+              {% for c in pss %}
+              <option value="{{c.name}}">{{c.name}}</option>
+              {% endfor %}
+            </select>
+          </div>
+          {% endfor %}
+          <input type="hidden" name="subcategory" id="editsubcatval">
+        </div>
+        <div class="col col-xl-6 col-lg-6">
+          {% for i in item_real %}
+          <input type="hidden" id="eini{{i.id}}" data="{{i.uom}}" value="{{i.item}}" name="{{i.alias}}">
+          {% endfor %}
+          {% for i in item_real %}
+          <input type="hidden" class="eitemclass" data="{{i.item}}" value="{{i.id}}">
+          {% endfor %}
+          {% for i in pitem %}
+          <input type="hidden" class="epitm{{i.pon}}" data="{{i.item}}" value="{{i.item_id}}" name="{{i.alias}}">
+          {% endfor %}
+          <input type="hidden" id="dfaultid">
+          {% for isel, range in itemsel %}
+          <div class="fields edititemshow" id="edititemshow{{isel.0.main_url}}">
+            <label class="label"><span>Item<font style="color: red;">*</font></span></label>
+            <select class="selectpicker form-control inputs edititemm" id="edititem{{isel.0.main_url}}" data-live-search="true" disabled>
+              <option value="" disabled selected>Choose item</option>
+              {% for c in isel %}
+              <option value="{{c.id}}">{{c.item}} ({{c.alias}})</option>
+              {% endfor %}
+            </select>
+          </div>
+          {% endfor %}
+          <input type="hidden" name="edititem" id="edititem" readonly>
+          <input type="hidden" name="itemnameedit" id="itemnameedit" readonly>
+          <input type="hidden" name="edititemalias" id="edititemalias" readonly>
+        </div>
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>UOM<font style="color: red;">*</font></span></label>
+            <input type="text" class="form-control inputs" name="itemuomedit" id="itemuomedit" readonly>
+            <!-- <select class="form-control inputs" name="uom" id="uom">
+              <option value="" disabled selected>Choose UOM</option>
+              {% for c in uom_dash %}
+              <option value="{{c.uom}}">{{c.uom}}</option>
+              {% endfor %}
+            </select> -->
+          </div>
+        </div>
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>Quantity<font style="color: red;">*</font></span></label>
+            <input type="number" class="form-control inputs" name="itemqtyedit" id="itemqtyedit" step=".01">
+          </div>
+        </div>
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>Rate<font style="color: red;">*</font></span></label>
+            <div class="input-group">
+              <div class="input-group-append">
+                <div class="input-group-text">NPR</div>
+              </div>
+              <input type="number" name="itemrateedit" id="itemrateedit" class="form-control" step='.01' value="0" readonly>
+            </div>
+          </div>
+        </div>
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>Discount<font style="color: red;">*</font></span></label>
+            <div class="input-group" id="editdis1">
+              <input type="number" name="discount1" id="editdiscount_per" class="form-control" step='.01' value="0">
+              <div class="input-group-append">
+                <div class="input-group-text">%</div>
+              </div>
+            </div>
+            <div class="input-group">
+              <div class="input-group-append">
+                <div class="input-group-text">NPR</div>
+              </div>
+              <input type="number" id="editdiscount_amt" class="form-control" step='.01' value="0">
+            </div>
+          </div>
+        </div>
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <input type="hidden" id="dfaultamount">
+            <label class="label"><span>Amount<font style="color: red;">*</font></span></label>
+            <div class="input-group">
+              <div class="input-group-append">
+                <div class="input-group-text">NPR</div>
+              </div>
+              <input type="number" name="itemamountedit" id="itemamountedit" class="form-control" step='.01' value="0" readonly>
+            </div>
+          </div>
+        </div>
+        <div class="col col-xl-12 col-lg-12">
+          <div class="fields">
+            <button type="submit" class="submit_btn" id="additemeditbtn">UPDATE</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col col-xl-3 col-lg-3 col-md-1 d-none d-md-inline">
+    <span style="opacity: 0;">.</span>
+  </div>
+</div>
+
+
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'js/maintainance_edit.js' %}?v=2.1"></script>
+{% endblock %}

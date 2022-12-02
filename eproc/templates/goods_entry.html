@@ -1,0 +1,319 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/purchase.css' %}">
+<link rel="stylesheet" href="{% static 'css/goods.css' %}">
+{% endblock %}
+{% block wave %}
+<img src="{% static 'img/back.png' %}" id="backimg">
+{% endblock %}
+{% block content %}
+<div class="col col-xl-2 col-lg-2 d-md-1 d-none d-lg-inline">
+	<span style="opacity: 0;">.</span>
+</div>
+<div class="col col-xl-8 col-lg-8 col-md-10">
+	<div class="predefine1">
+		<div class="head">
+			<span class="head1">Goods Receive Note Entry</span>
+			<span class="head2">Enter new goods receive entry details</span>
+		</div>
+		<div class="prebody" id="formbody">
+			<form method="POST" action="/add-goods/" id="GoodsForm" autocomplete="off" name="GoodsForm">
+				{% csrf_token %}
+				<div class="col col-xl-6 col-lg-6">
+					<div class="fields">
+						<label class="label"><span>Date<font style="color: red;">*</font></span></label>
+						<input type="text" class="form-control inputs" name="date" id="date">
+					</div>
+				</div>
+				<div class="col col-xl-6 col-lg-6">
+					<div class="fields">
+						<label class="label"><span>GRN Number<font style="color: red;">*</font></span></label>
+						<input type="text" class="form-control inputs" name="grn" id="grn" value="GRN{{grn}}" readonly>
+						<input type="hidden" name="grn_count" id="grn_count" value="{{grn}}">
+					</div>
+				</div>
+				{% for c in gchallan %}
+				<input type="hidden" class="gchallan" value="{{c}}">
+				{% endfor %}
+				<div class="col col-xl-6 col-lg-6">
+					<div class="fields">
+						<label class="label"><span>Challan Number</span></label>
+						<input type="text" class="form-control inputs" name="challan" id="challan">
+						<span class="already_error challan_e">Entry with this challan number already exists!</span>
+					</div>
+				</div>
+				{% for c in gbill %}
+				<input type="hidden" class="gbill" value="{{c}}">
+				{% endfor %}
+				<div class="col col-xl-6 col-lg-6">
+					<div class="fields">
+						<label class="label"><span>Bill Number</span></label>
+						<input type="text" class="form-control inputs" name="bill" id="bill">
+						<span class="already_error bill_e">Entry with this bill number already exists!</span>
+					</div>
+				</div>
+				<!-- <div class="col col-xl-6 col-lg-6">
+					<div class="fields">
+						<label class="label"><span>Location<font style="color: red;">*</font></span></label>
+						<select class="form-control inputs" name="location" id="location">
+							<option value="" disabled selected>Choose location</option>
+							{% for c in location_dash %}
+							<option value="{{c.location_name}}">{{c.location_name}}</option>
+							{% endfor %}
+						</select>
+					</div>
+				</div> -->
+				<div class="col col-xl-6 col-lg-6">
+					<div class="fields">
+						<label class="label"><span>Supplier<font style="color: red;">*</font></span></label>
+						<select class="form-control inputs" name="supplier" id="supplier">
+							<option value="" disabled selected>Choose supplier</option>
+							{% for c in supplier_dash %}
+							<option value="{{c.id}}">{{c.name}}</option>
+							{% endfor %}
+						</select>
+					</div>
+				</div>
+				<div class="col col-xl-6 col-lg-6">
+					<div class="fields">
+						<label class="label"><span>Vehicle Number</span></label>
+						<input type="text" class="form-control inputs" name="vehicle" id="vehicle">
+					</div>
+				</div>
+				
+
+				<div class="hidden_inputs"></div>
+
+				<div class="col col-12">
+					<div class="goods">
+		              <span class="maintainhead">
+		                Add Goods Received:
+		                <button type="button" id="additem" class="mainbtn">+ ADD ITEMS</button>
+		              </span>
+		              <table class="table table-bordered table-hover" id="ItemTable">
+		                <thead>
+		                  <tr>
+		                    <th scope="col">Action</th>
+		                    <th scope="col">Items</th>
+		                    <th scope="col">UOM</th>
+		                    <th scope="col">Quantity</th>
+		                    <th scope="col">Inspection Remarks</th>
+		                  </tr>
+		                </thead>
+		                <tbody>
+		                  
+		                </tbody>
+		                <tfoot class="tfoot2">
+		                  <tr class="boldrow">
+		                    <td colspan="5" style="text-align: center;">No items</td>
+		                    
+		                  </tr>
+		                </tfoot>
+		                <!-- tfoot class="tfoot">
+		                  <tr>
+		                    <td colspan="5" style="border:none;"></td>
+		                  </tr>
+		                  <tr>
+		                    <td colspan="5" style="border:none;"></td>
+		                  </tr>
+		                  <tr class="boldrow table-sm">
+		                    <td colspan="4">Sub Total</td>
+		                    <td>
+		                      <div class="input-group">
+		                        <div class="input-group-append">
+		                          <div class="input-group-text">NPR</div>
+		                        </div>
+		                        <input type="number" name="subtotal" id="subtotal" class="form-control" step='.01' value="0" readonly>
+		                      </div>
+		                    </td>
+		                  </tr>
+		                  <tr class="boldrow table-sm">
+		                    <td colspan="4">Labour Charge</td>
+		                    <td>
+		                      <div class="input-group">
+		                        <div class="input-group-append">
+		                          <div class="input-group-text">NPR</div>
+		                        </div>
+		                        <input type="number" name="labour" id="labour" class="form-control" step='.01' value="0">
+		                      </div>
+		                    </td>
+		                  </tr>
+		                  <tr class="boldrow table-sm">
+		                    <td colspan="4">Vat</td>
+		                    <td>
+		                      <div class="input-group">
+		                        <div class="input-group-append">
+		                          <div class="input-group-text">NPR</div>
+		                        </div>
+		                        <input type="number" name="vat" id="vat" class="form-control" step='.01' value="0" readonly>
+		                      </div>
+		                    </td>
+		                  </tr>
+		                  <tr class="boldrow table-sm">
+		                    <td colspan="4">Total Amount</td>
+		                    <td>
+		                      <div class="input-group">
+		                        <div class="input-group-append">
+		                          <div class="input-group-text">NPR</div>
+		                        </div>
+		                        <input type="number" name="total" id="total" class="form-control" step='.01' value="0" readonly>
+		                      </div>
+		                    </td>
+		                  </tr>
+		                </tfoot> -->
+		              </table>
+		            </div>
+				</div>
+
+				<div class="col col-xl-12 col-lg-12">
+					{% if messages %}
+						{% for message in messages %}
+						<input type="hidden" class="msgon" value="{{message}}">
+						{% endfor %}
+					{% endif %}
+					<div class="fields">
+						<button type="submit" class="submit_btn">SUBMIT</button><i class="fa fa-spinner fa-spin mx-2 spinner" id="spinner1"></i>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<div class="col col-xl-2 col-lg-2 d-md-1 d-none d-lg-inline">
+	<span style="opacity: 0;">.</span>
+</div>
+
+<!---item pop over-------------------->
+
+<div class="edit_popupbanner">
+	<div class="col col-xl-3 col-lg-3 col-md-1 d-none d-md-inline">
+		<span style="opacity: 0;">.</span>
+	</div>
+	<div class="col col-xl-6 col-lg-6 col-md-10">
+		<div class="predefine1" id="edit_popup">
+			<div class="edithead">
+				Add goods <i class="fa fa-times" id="close_edit"></i>
+			</div>
+			<div class="prebody editbody">
+				<div class="col col-xl-6 col-lg-6">
+					{% for i in item_dash %}
+					<input type="hidden" id="ini{{i.id}}" data="{{i.uom}}" value="{{i.item}}">
+					{% endfor %}
+					<div class="fields">
+						<label class="label"><span>Item<font style="color: red;">*</font></span></label>
+						<select class="form-control inputs" name="item" id="item">
+							<option value="" disabled selected>Choose item</option>
+							{% for c in item_dash %}
+							<option value="{{c.id}}">{{c.item}}</option>
+							{% endfor %}
+						</select>
+						<input type="hidden" name="itemname" id="itemname" readonly>
+					</div>
+				</div>
+				<div class="col col-xl-6 col-lg-6">
+					<div class="fields">
+						<label class="label"><span>UOM<font style="color: red;">*</font></span></label>
+						<input type="text" class="form-control inputs" name="uom" id="uom" readonly>
+						<!-- <select class="form-control inputs" name="uom" id="uom">
+							<option value="" disabled selected>Choose UOM</option>
+							{% for c in uom_dash %}
+							<option value="{{c.uom}}">{{c.uom}}</option>
+							{% endfor %}
+						</select> -->
+					</div>
+				</div>
+				<div class="col col-xl-6 col-lg-6">
+					<div class="fields">
+						<label class="label"><span>Quantity<font style="color: red;">*</font></span></label>
+						<input type="number" class="form-control inputs" name="qty" id="qty" step=".01">
+					</div>
+				</div>
+				<div class="col col-xl-6 col-lg-6">
+					<div class="fields">
+						<label class="label"><span>Inspection Remarks</span></label>
+						<input type="text" class="form-control inputs" name="remark" id="remark">
+					</div>
+				</div>
+				<div class="col col-xl-12 col-lg-12">
+					<div class="fields">
+						<button type="submit" class="submit_btn" id="additembtn">ADD</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col col-xl-3 col-lg-3 col-md-1 d-none d-md-inline">
+		<span style="opacity: 0;">.</span>
+	</div>
+</div>
+
+<div class="edit_popupbanner1">
+	<div class="col col-xl-3 col-lg-3 col-md-1 d-none d-md-inline">
+		<span style="opacity: 0;">.</span>
+	</div>
+	<div class="col col-xl-6 col-lg-6 col-md-10">
+		<div class="predefine1" id="edit_popup1">
+			<div class="edithead">
+				Edit goods <i class="fa fa-times" id="close_edit1"></i>
+			</div>
+			<div class="prebody editbody">
+				<div class="col col-xl-6 col-lg-6">
+					{% for i in item_dash %}
+					<input type="hidden" id="eini{{i.id}}" data="{{i.uom}}" value="{{i.item}}">
+					{% endfor %}
+					<input type="hidden" id="dfaultid" readonly>
+					<div class="fields">
+						<label class="label"><span>Item<font style="color: red;">*</font></span></label>
+						<select class="form-control inputs" name="edititem" id="edititem">
+							<option value="" disabled selected>Choose item</option>
+							{% for c in item_dash %}
+							<option value="{{c.id}}">{{c.item}}</option>
+							{% endfor %}
+						</select>
+						<input type="hidden" name="edititemname" id="edititemname" readonly>
+					</div>
+				</div>
+				<div class="col col-xl-6 col-lg-6">
+					<div class="fields">
+						<label class="label"><span>UOM<font style="color: red;">*</font></span></label>
+						<input type="text" class="form-control inputs" name="edituom" id="edituom" readonly>
+						<!-- <select class="form-control inputs" name="uom" id="uom">
+							<option value="" disabled selected>Choose UOM</option>
+							{% for c in uom_dash %}
+							<option value="{{c.uom}}">{{c.uom}}</option>
+							{% endfor %}
+						</select> -->
+					</div>
+				</div>
+				<div class="col col-xl-6 col-lg-6">
+					<div class="fields">
+						<label class="label"><span>Quantity<font style="color: red;">*</font></span></label>
+						<input type="number" class="form-control inputs" name="editqty" id="editqty" step=".01">
+					</div>
+				</div>
+				<div class="col col-xl-6 col-lg-6">
+					<div class="fields">
+						<label class="label"><span>Inspection Remarks</span></label>
+						<input type="text" class="form-control inputs" name="editremark" id="editremark">
+					</div>
+				</div>
+				<div class="col col-xl-12 col-lg-12">
+					<div class="fields">
+						<button type="submit" class="submit_btn" id="additemeditbtn">UPDATE</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col col-xl-3 col-lg-3 col-md-1 d-none d-md-inline">
+		<span style="opacity: 0;">.</span>
+	</div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'js/goods.js' %}"></script>
+{% endblock %}

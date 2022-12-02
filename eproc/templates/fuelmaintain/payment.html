@@ -1,0 +1,303 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/report.css' %}?v=1.2">
+{% endblock %}
+{% block wave %}
+<img src="{% static 'img/back.png' %}" id="backimg">
+{% endblock %}
+{% block content %}
+
+<div class="col col-xl-12 col-lg-12 col-md-12">
+  <div class="predefine1">
+    <div class="head">
+      <span class="head1">Credit Payment</span>
+      <span class="head2">View the payments in detail</span>
+    </div>
+		<div class="report_head_banner">
+        <div class="report_title">
+          Credit Payment
+        </div>
+        <div class="report_subtitle">
+          Choose Supplier/Vendor
+        </div>
+        <div class="report_content">
+          <div class="report_select">
+            <input type="hidden" id="rid" value="{{rid}}">
+            <select class="form-control inputs" id="reservesel" onchange="location = this.value;">
+              <option value="" disabled selected>Select reserviour</option>
+              {% for r in supplier_dash %}
+              <option value="/reserviour-session/{{r.id}}/">{{r.name}}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+      </div>
+      {% if session != 0 %}
+      <div class="prebody">
+        <div class="tranheader">
+          <div class="col col-xl-12 col-lg-12">
+            <span class="headtext1">{{reserve_name}}</span>
+          </div>
+          <div class="col col-xl-6 col-lg-6 col-md-6" style="padding: 0px;">
+            <div class="tranhead">
+              {% if purchasee %}
+              <span class="headtext">Last issued purchase bill >><button type="button" class="detailbtn">VIEW DETAILS</button></span>
+              {% else %}
+              <span class="headtext">No purchase bill issued for this reserviour yet</span>
+              {% endif %}
+              <span class="headtext">Total Credit Transaction: <font style="color:#fcb06d;">{{grand|floatformat:2|intcomma}} ltrs</font></span>
+              <span class="headtext">Total Cash Transaction: <font style="color:#fcb06d;">{{consumption|floatformat:2|intcomma}} ltrs</font></span>
+            </div>
+          </div>
+          <div class="col col-xl-6 col-lg-6 col-md-6" style="padding: 0px;">
+            <div class="tranhead2">
+              <span class="headtext">Total credit paid till date: <font style="color:#fcb06d;">{% if total_fuel.quantity__sum %}{{total_fuel.quantity__sum|floatformat:2|intcomma}} ltrs {% else %}0 ltr{% endif %}</font> </span>
+            </div>
+          </div>
+        </div>
+        <div class="tranbody table-responsive" id="formbody">
+          <div class="tranhead">
+            <div class="col col-xl-6 col-lg-6 col-md-6" style="padding: 0px;">
+              <div class="rescontent1">
+                Credit Transaction Records
+              </div>
+            </div>
+            <div class="col col-xl-6 col-lg-6 col-md-6" style="padding: 0px;">
+              <!-- <span class="report_head3">
+                <form method="POST" action="{% url 'reserviour_report_pdf' %}" target="_blank">
+                  {% csrf_token %}
+                  <input type="hidden" name="rid" value="{{rid}}">
+                  <button type="submit" class="export_pdf_btn">PRINT PDF</button>
+                </form>
+              </span> -->
+            </div>
+          </div>
+          {% if record %}
+          <table class="table table-bordered table-hover" id="creditTable">
+            <thead>
+              <tr>
+                <th scope="col">Entry Date</th>
+                <th scope="col">Maintainance Number</th>
+                <th scope="col">Vehicle Type</th>
+                <th scope="col">Vehicle Number</th>
+                <th scope="col">Servicing Hour</th>
+                <th scope="col">Payment Days</th>
+                <th scope="col">Site</th>
+                <th scope="col">Entry By</th>
+                <th scope="col">Total Amount</th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for c in fuel_consump %}
+              <tr>
+                <td>{{c.entry_date}}</td>
+                <td>{{c.maintain_number}}</td>
+                <td>{{c.vehicle_type}}</td>
+                <td>{{c.vehicle_number}} ({{c.number_type}})</td>
+                <td>{{c.hour}}</td>
+                <td>{{c.day}}</td>
+                <td>{{c.user_site}}</td>
+                <td>{{c.entry_by}}</td>
+                <td>{{c.total}}</td>
+                <td><button type="button" class="edititem" id="eitem{{forloop.counter}}" data="{{forloop.counter}}"><i class="far fa-edit"></i></button></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <span class="notran">No records availble</span>
+        {% endif %}
+        </div>
+      </div>
+      {% endif %}
+	</div>
+</div>
+{% if session != 0 %}
+
+<div class="edit_popupbanner">
+  <div class="col col-xl-3 col-lg-3 col-md-1 d-none d-md-inline">
+    <span style="opacity: 0;">.</span>
+  </div>
+  <div class="col col-xl-6 col-lg-6 col-md-10">
+    <div id="edit_popup">
+      <div class="edithead">
+        Purchase Bill Detail<i class="fa fa-times" id="closep_pop"></i>
+      </div>
+      <div class="jobcontent">
+        <div class="col col-12">
+          <div class="jcontent" style="margin-bottom:15px;">
+            {% if purchasee.status == 'approved' %}
+            <button type="button" class="job_sta_btn1"><i class="fas fa-check-circle mx-1"></i>APPROVED</button>
+            {% endif %}
+          </div>
+        </div>
+        <div class="col col-xl-6 col-lg-6 col-md-6">
+          <div class="jobcontent1">
+
+            <div class="jcontent">
+              <span class="jc1">
+                Date
+              </span>
+              <span class="jc2">
+                {{purchasee.entry_date}}
+              </span>
+            </div>
+            <div class="jcontent">
+              <span class="jc1">
+                Purchase Bill Number
+              </span>
+              <span class="jc2">
+                {{purchasee.purchase_bill_number}}
+              </span>
+            </div>
+            <div class="jcontent">
+              <span class="jc1">
+                Purchase Order Number
+              </span>
+              <span class="jc2">
+                {{purchasee.purchase_order_number}}
+              </span>
+            </div>
+            <div class="jcontent">
+              <span class="jc1">
+                Purchase Order Date
+              </span>
+              <span class="jc2">
+                {{purchasee.po_entry_date}}
+              </span>
+            </div>
+            <div class="jcontent">
+              <span class="jc1">
+                Invoice Number
+              </span>
+              <span class="jc2">
+                {% if purchase.invoice_number %}
+                {{purchasee.invoice_number}}
+                {% else %}
+                none
+                {% endif %}
+              </span>
+            </div>
+            <div class="jcontent">
+              <span class="jc1">
+                Issuing Site
+              </span>
+              <span class="jc2">
+                {{purchasee.issuing_site}}
+              </span>
+            </div>
+            <div class="jcontent">
+              <span class="jc1">
+                Reserviour
+              </span>
+              <span class="jc2">
+                {{purchasee.reserviour}}
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="col col-xl-6 col-lg-6 col-md-6">
+          <div class="jobcontent1">
+            <div class="jcontent">
+              <span class="jc1">
+                Quantity
+              </span>
+              <span class="jc2">
+                {{purchasee.quantity}} ltrs
+              </span>
+            </div>
+            <div class="jcontent">
+              <span class="jc1">
+                Rate
+              </span>
+              <span class="jc2">
+                Rs {{purchasee.rate|intcomma}} 
+              </span>
+            </div>
+            {% if purchasee.vat %}
+            <div class="jcontent">
+              <span class="jc1">
+                Vat
+              </span>
+              <span class="jc2">
+                Rs {{purchasee.vat|intcomma}}
+              </span>
+            </div>
+            {% endif %}
+            <div class="jcontent">
+              <span class="jc1">
+                Amount
+              </span>
+              <span class="jc2">
+                Rs {{purchasee.amount|intcomma}} 
+              </span>
+            </div>
+            <div class="jcontent">
+              <span class="jc1">
+                Location
+              </span>
+              <span class="jc2">
+                {% if purchasee.location %}
+                {{purchasee.location}}
+                {% else %}
+                none
+                {% endif %}
+              </span>
+            </div>
+            <div class="jcontent">
+              <span class="jc1">
+                Purchase Location
+              </span>
+              <span class="jc2">
+                {{purchasee.purchase_location}}
+              </span>
+            </div>
+            <div class="jcontent">
+              <span class="jc1">
+                Entry By
+              </span>
+              <span class="jc2">
+                {{purchasee.entry_by}}
+              </span>
+            </div>
+            <div class="jcontent">
+              <span class="jc1">
+                Purchase Order Status
+              </span>
+              <span class="jc2">
+                {{purchasee.po_status}}
+              </span>
+            </div>
+          </div>
+        </div>
+        <!-- <div class="col col-xl-12 col-lg-12 col-md-12">
+          <div class="button_banner">
+            {% if a.status == 'pending' %}
+            <a href="/fuel-purchase-order-edit/{{a.id}}/"><button type="button" class="job_btn">EDIT</button></a>
+            <a href="/delete-fuel-purchase-order/{{a.id}}/"><button type="button" class="job_btn">DELETE</button></a>
+            <a href="/approve-fuel-purchase-order/{{a.id}}/"><button type="button" class="job_appr_btn">APPROVE</button></a>
+            {% endif %}
+            {% if a.status == 'approved' %}
+            <a href="/cancel-fuel-purchase-order/{{a.id}}/"><button type="button" class="job_can_btn">CANCEL</button></a>
+            
+            {% endif %}
+            
+          </div>
+        </div> -->
+      </div>
+    </div>
+  </div>
+  <div class="col col-xl-3 col-lg-3 col-md-1 d-none d-md-inline">
+    <span style="opacity: 0;">.</span>
+  </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block js %}
+<script src="{% static '/js/reserviour_report.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/purchase.css' %}?v=1.3">
+<link rel="stylesheet" href="{% static 'css/goods.css' %}?v=1.3">
+{% endblock %}
+
+
+{% block wave %}
+<img src="{% static 'img/back.png' %}" id="backimg">
+{% endblock %}
+{% block content %}
+<div class="col col-xl-2 col-lg-2 d-md-1 d-none d-lg-inline">
+  <span style="opacity: 0;">.</span>
+</div>
+<div class="col col-xl-8 col-lg-8 col-md-10">
+  <div class="predefine1">
+    <div class="head">
+      <span class="head1">Fuel Internal Transfer</span>
+      <span class="head2">Enter new transfer details</span>
+    </div>
+    <div class="prebody" id="formbody">
+      <form method="POST" action="/issue-fuel-transfer/" id="FuelTransfer" autocomplete="off" name="FuelTransfer">
+        {% csrf_token %}
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>Date<font style="color: red;">*</font></span></label>
+            <input type="text" name="date" id="date" class="form-control inputs">
+          </div>
+        </div>
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>Fuel Transfer Number<font style="color: red;">*</font></span></label>
+            <input type="text" name="fuel_number" id="fuel_number" class="form-control inputs" value="FTN{{newpon}}" readonly>
+            <input type="hidden" name="pon" id="pon" value="{{newpon}}">
+          </div>
+        </div>
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>From Reserviour<font style="color: red;">*</font></span></label>
+            <select class="form-control inputs" name="freserviour" id="freserviour">
+              <option value="" disabled selected>Choose reserviour</option>
+              {% for c in reserve %}
+              <option value="{{c.name}}">{{c.name}}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>To Reserviour<font style="color: red;">*</font></span></label>
+            <select class="form-control inputs" name="treserviour" id="treserviour">
+              <option value="" disabled selected>Choose reserviour</option>
+              {% for c in reserve %}
+              <option value="{{c.name}}">{{c.name}}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>Fuel Type<font style="color: red;">*</font></span></label>
+            <select class="form-control inputs" name="fuel_type" id="fuel_type">
+              <option value="" disabled selected>Choose fuel</option>
+              {% for c in f_type %}
+              <option value="{{c.name}}">{{c.name}}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>Quantity</span></label>
+            <div class="input-group">
+              <input type="number" name="quantity" id="quantity" class="form-control inputs" step='.01'>
+              <div class="input-group-append">
+                <div class="input-group-text">ltrs</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>Narration</span></label>
+            <textarea class="form-control" name="narrat" id="narrat" rows="6"></textarea>
+          </div>
+        </div>
+
+        <div class="col col-xl-12 col-lg-12">
+          {% if messages %}
+            {% for message in messages %}
+            <input type="hidden" class="msgon" value="{{message}}">
+            {% endfor %}
+          {% endif %}
+          <div class="fields">
+            <button type="submit" class="submit_btn">SUBMIT</button><i class="fa fa-spinner fa-spin mx-2 spinner" id="spinner1"></i>
+          </div>
+        </div>
+        
+      </form>
+    </div>
+  </div>
+</div>
+<div class="col col-xl-2 col-lg-2 d-md-1 d-none d-lg-inline">
+  <span style="opacity: 0;">.</span>
+</div>
+
+
+{% endblock %}
+
+{% block js %}
+<script src="{% static '/js/fueltransfer.js' %}?v=1.0"></script>
+{% endblock %}

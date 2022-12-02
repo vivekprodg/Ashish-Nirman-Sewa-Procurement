@@ -1,0 +1,61 @@
+from django.db import models
+from datetime import date, datetime as dt
+
+
+class UserDetail(models.Model):
+	user_id = models.IntegerField(default=0)
+	user_name = models.CharField(max_length=100)
+	first_name = models.CharField(max_length=100)
+	last_name = models.CharField(max_length=100)
+	email = models.CharField(max_length=255)
+	site = models.CharField(default='', max_length=255)
+	role = models.CharField(max_length=255)
+	status = models.CharField(max_length=255, default='')
+	active_status = models.CharField(max_length=255, default='yes', blank=True, null=True)
+	datetime = models.DateTimeField(default=dt.now, blank=True, null=True)
+	date = models.DateField(default=date.today, blank=True, null=True)
+
+
+class OperationPermission(models.Model):
+	main_admin = models.CharField(max_length=255, default='no')
+	main_staff = models.CharField(max_length=255, default='no')
+	site_admin = models.CharField(max_length=255, default='no')
+	site_staff = models.CharField(max_length=255, default='no')
+	title = models.CharField(max_length=255, default='')
+	description = models.CharField(max_length=255, default='no')
+	url = models.CharField(max_length=255, default='', blank=True, null=True)
+	url1 = models.CharField(max_length=255, default='', blank=True, null=True)
+	url2 = models.CharField(max_length=255, default='', blank=True, null=True)
+	url3 = models.CharField(max_length=255, default='', blank=True, null=True)
+	url4 = models.CharField(max_length=255, default='', blank=True, null=True)
+	url5 = models.CharField(max_length=255, default='', blank=True, null=True)
+	url6 = models.CharField(max_length=255, default='', blank=True, null=True)
+	url7 = models.CharField(max_length=255, default='', blank=True, null=True)
+	url8 = models.CharField(max_length=255, default='', blank=True, null=True)
+	url9 = models.CharField(max_length=255, default='', blank=True, null=True)
+	url10 = models.CharField(max_length=255, default='', blank=True, null=True)
+	url_name = models.CharField(max_length=255, default='')
+	url_name1 = models.CharField(max_length=255, default='', blank=True, null=True)
+	url_name2 = models.CharField(max_length=255, default='', blank=True, null=True)
+	url_name3 = models.CharField(max_length=255, default='', blank=True, null=True)
+	url_name4 = models.CharField(max_length=255, default='', blank=True, null=True)
+	url_name5 = models.CharField(max_length=255, default='', blank=True, null=True)
+	url_name6 = models.CharField(max_length=255, default='', blank=True, null=True)
+	url_name7 = models.CharField(max_length=255, default='', blank=True, null=True)
+	url_name8 = models.CharField(max_length=255, default='', blank=True, null=True)
+	url_name9 = models.CharField(max_length=255, default='', blank=True, null=True)
+	url_name10 = models.CharField(max_length=255, default='', blank=True, null=True)
+	url_name11 = models.CharField(max_length=255, default='', blank=True, null=True)
+
+
+class NotificationPermission(models.Model):
+	main_admin = models.CharField(max_length=255, default='no')
+	main_staff = models.CharField(max_length=255, default='no')
+	site_admin = models.CharField(max_length=255, default='no')
+	site_staff = models.CharField(max_length=255, default='no')
+	description = models.CharField(max_length=255, default='no')
+	url = models.CharField(max_length=255, default='')
+	url1 = models.CharField(max_length=255, default='', blank=True, null=True)
+	url2 = models.CharField(max_length=255, default='', blank=True, null=True)
+	url3 = models.CharField(max_length=255, default='', blank=True, null=True)
+	url4 = models.CharField(max_length=255, default='', blank=True, null=True)

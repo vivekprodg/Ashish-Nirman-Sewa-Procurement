@@ -1,0 +1,326 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/purchase.css' %}?v=1.4">
+<link rel="stylesheet" href="{% static 'css/invoice.css' %}?v=1.5">
+{% endblock %}
+{% block wave %}
+<img src="{% static 'img/back.png' %}" id="backimg">
+{% endblock %}
+{% block content %}
+<div class="col col-xl-2 col-lg-2 d-none d-lg-inline">
+	<span style="opacity: 0;">.</span>
+</div>
+<div class="col col-xl-8 col-lg-8">
+	<div class="predefine1 stockdefine">
+		<div class="head">
+			<span class="head1">Maintainance Detail</span>
+			<span class="head2">View maintainance details</span>
+		</div>
+		<div class="prebody">
+			{% if messages %}
+				{% for message in messages %}
+				<input type="hidden" class="msgon" value="{{message}}">
+				{% endfor %}
+			{% endif %}
+			<div class="col col-xl-12 col-lg-12">
+				<div class="partupper">
+					<a href="/edit-maintainance/{{item.id}}/"><button type="button" class="sup_edit"><i class="far fa-edit"></i></button></a>
+					<button type="button" class="sup_delete" data="{{item.id}}"><i class="far fa-trash-alt"></i></button>
+
+					<form method="POST" action="/print-maintainance-detail/" target="_blank">
+						{% csrf_token %}
+						<input type="hidden" name="jid" value="{{item.id}}">
+						<button type="submit" class="submit_btn print_btn">PRINT PDF</button>
+					</form>
+				</div>
+			</div>
+			<div class="col col-xl-6 col-lg-6 col-md-6">
+				<div class="partcontent">
+					<div class="fields">
+						<span class="part_label">Entry Date</span>
+						<span class="part_value">{{item.entry_date}}</span>
+					</div>
+					<div class="fields">
+						<span class="part_label">Invoice Date</span>
+						<span class="part_value">{{item.bill_date}}</span>
+					</div>
+					<div class="fields">
+						<span class="part_label">Maintainance Number</span>
+						<span class="part_value">{{item.maintain_number}}</span>
+					</div>
+					<div class="fields">
+						<span class="part_label">Invoice Number</span>
+						<span class="part_value">{{item.bill_number}}</span>
+					</div>
+					<div class="fields">
+						<span class="part_label">Purchase Order Number</span>
+						<span class="part_value">
+						{% if item.purchase_order_number %}{{item.purchase_order_number}}{% else %} none {% endif %}</span>
+					</div>
+					<!-- <div class="fields">
+						<span class="part_label">Invoice Type</span>
+						<span class="part_value">{{item.bill_type}}</span>
+					</div> -->
+					<div class="fields">
+						<span class="part_label">Vehicle Type</span>
+						<span class="part_value">{{item.vehicle_type}}</span>
+					</div>
+					<div class="fields">
+						<span class="part_label">Vehicle Number</span>
+						<span class="part_value">{{item.vehicle_number}} ({{item.number_type}})</span>
+					</div>
+					<!-- <div class="fields">
+						<span class="part_label">Supplier Name</span>
+						<span class="part_value">{{item.supplier_name}}</span>
+					</div>
+					<div class="fields">
+						<span class="part_label">Supplier Address</span>
+						<span class="part_value">{{item.supplier_address}}</span>
+					</div>
+					<div class="fields">
+						<span class="part_label">Supplier Contact</span>
+						<span class="part_value">{{item.supplier_contact}}</span>
+					</div> -->
+				</div>
+			</div>
+			<div class="col col-xl-6 col-lg-6 col-md-6">
+				<div class="partcontent">
+					<div class="fields">
+						<span class="part_label">KM run of vehicle</span>
+						<span class="part_value">{{item.kilometer}}</span>
+					</div>
+					{% if a.problem_category %}
+					<div class="fields">
+						<span class="part_label">Problem Category</span>
+						<span class="part_value">{{item.problem_category}}</span>
+					</div>
+					{% endif %}
+					{% if a.problem_subcategory %}
+					<div class="fields">
+						<span class="part_label">Problem Sub Category</span>
+						<span class="part_value">{{item.problem_subcategory}}</span>
+					</div>
+					{% endif %}
+					<div class="fields">
+						<span class="part_label">Servicing Hour</span>
+						<span class="part_value">{{item.hour}}</span>
+					</div>
+					<!-- <div class="fields">
+						<span class="part_label">Transaction Type</span>
+						<span class="part_value">{{item.transaction_type}} {% if item.transaction_type == 'credit' %}(Payment duration is {{item.day}} day){% endif %}</span>
+					</div> -->
+					<div class="fields">
+						<span class="part_label">entry_by</span>
+						<span class="part_value">{{item.entry_by}}</span>
+					</div>
+					<div class="fields">
+						<span class="part_label">Site</span>
+						<span class="part_value">{{item.user_site}}</span>
+					</div>
+					<div class="fields">
+						<span class="part_label">Narration</span>
+						<span class="part_value">
+							{% if item.narration %}
+							{{item.narration|linebreaks}}
+							{% else %}
+							none
+							{% endif %}
+						</span>
+					</div>
+				</div>
+			</div>
+
+			{% if minvoice %}
+			<div class="col col-xl-12 col-lg-12">
+				<span class="maintainhead">
+                    Invoice Details
+                </span>
+				<div class="partcontent table-responsive">
+					<table class="table table-bordered table-hover" id="InvoiceDetailTable">
+						<thead>
+							<tr>
+								<th scope="col">Voucher Number</th>
+								<th scope="col">Invoice Number</th>
+								<th scope="col">Invoice Type</th>
+								<th scope="col">Supplier</th>
+								<th scope="col">Sub Total</th>
+								<th scope="col">Discount</th>
+								<th scope="col">VAT</th>
+								<th scope="col">Total</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for s in minvoice %}
+							<tr>
+								<td>{{s.voucher_number}}</td>
+								<td>{{s.invoice_number}}</td>
+								<td>{{s.invoice_type}}({{s.alias}})</td>
+								<td>{{s.supplier}}</td>
+								<td>{{s.sub_total|intcomma}}</td>
+								<td>{{s.discount_amt|intcomma}} ({{s.discount_per}}%)</td>
+								<td>{{s.vat|intcomma}}</td>
+								<td>{{s.total|intcomma}}</td>
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+			{% endif %}
+
+			<div class="col col-xl-12 col-lg-12">
+				<span class="maintainhead">
+                    Maintenance Items
+                </span>
+				<div class="partcontent table-responsive">
+					<table class="table table-bordered table-hover" id="InvoiceDetailTable">
+						<thead>
+						  <tr>
+						  	<th scope="col">Associate PO</th>
+						  	<th scope="col">Associate Invoice</th>
+						  	<th scope="col">Item</th>
+							<th scope="col">UOM</th>
+							<th scope="col">Quantity</th>
+							<th scope="col">Rate</th>
+							<th scope="col">Discount</th>
+							<th scope="col" class="ltd">Amount</th>
+						  </tr>
+						</thead>
+						<tbody>
+							{% for s in sgoods %}
+							<tr>
+								<td>{{s.purchase_id}}</td>
+								<td>{{s.pvn}}</td>
+								<td>{{s.item_name}}({{s.alias}})</td>
+								<td>{{s.uom}}</td>
+								<td>{{s.quantity}}</td>
+								<td>{{s.rate}}</td>
+								<td>{{s.discount_amt}} ({{s.discount_per}}%)</td>
+								<td class="ltd">{{s.amount|intcomma}}</td>
+							</tr>
+							{% endfor %}
+						</tbody>
+						<tfoot class="tff">
+							<tr>
+								<td colspan="8" style="border:none;"></td>
+							</tr>
+							<tr>
+								<td colspan="8" style="border:none;"></td>
+							</tr>
+							<tr class="boldrow table-sm">
+								<td colspan="7">Sub Total</td>
+								<td>
+									<div class="input-group">
+										<div class="input-group-append">
+											<div class="input-group-text">NPR</div>
+										</div>
+										<input type="number" name="subtotal" id="subtotal" class="form-control" step='.01' value="{{item.sub_total}}" readonly>
+									</div>
+								</td>
+							</tr>
+							<!-- <tr class="boldrow table-sm">
+								<td colspan="6">Discount</td>
+								<td>
+									<div class="input-group">
+										<div class="input-group-append">
+											<div class="input-group-text">NPR</div>
+										</div>
+										<input type="number" name="discount2" id="discount2" class="form-control" step='.01' value="{{item.discount_amt}}" readonly>
+									</div>
+									<div class="input-group" id="dis1">
+										<input type="number" name="discount1" id="discount1" class="form-control" step='.01' value="{{item.discount_per}}" readonly>
+										<div class="input-group-append">
+											<div class="input-group-text">%</div>
+										</div>
+									</div>
+								</td>
+							</tr> -->
+							<tr class="boldrow table-sm">
+								<td colspan="7">Labour Charge</td>
+								<td>
+									<div class="input-group">
+										<div class="input-group-append">
+											<div class="input-group-text">NPR</div>
+										</div>
+										<input type="number" name="labour" id="labour" class="form-control" step='.01' value="{{item.labour_charge}}" readonly>
+									</div>
+								</td>
+							</tr>
+							<!-- <tr class="boldrow table-sm">
+								<td colspan="6">Vat</td>
+								<td>
+									<div class="input-group">
+										<div class="input-group-append">
+											<div class="input-group-text">NPR</div>
+										</div>
+										<input type="number" name="vat" id="vat" class="form-control" step='.01' value="{{item.vat}}" readonly>
+									</div>
+								</td>
+							</tr> -->
+							<tr class="boldrow table-sm">
+								<td colspan="7">Total Amount</td>
+								<td>
+									<div class="input-group">
+										<div class="input-group-append">
+											<div class="input-group-text">NPR</div>
+										</div>
+										<input type="number" name="total" id="total" class="form-control" step='.01' value="{{item.total}}" readonly>
+									</div>
+								</td>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+<div class="col col-xl-1 col-lg-1 d-none d-lg-inline">
+	<span style="opacity: 0;">.</span>
+</div>
+
+<!-- po up deletion ------------------->
+
+<div class="del_popupbanner">
+	<div class="col col-xl-4 col-lg-4 col-md-3 d-none d-md-inline">
+		<span style="opacity: 0;">.</span>
+	</div>
+	<div class="col col-xl-4 col-lg-4 col-md-6">
+
+		<div class="predefine1" id="del_popup">
+			Record will be deleted. Do you wish to continue?
+
+			<form method="POST" action="/delete-maintainance/">
+				{% csrf_token %}
+				<input type="hidden" name="sid" id="sid">
+				<button type="submit" class="del_btn">Yes</button>
+				<button type="button" class="del_btn" id="cancel_btn">No</button>
+			</form>
+		</div>
+	</div>
+	<div class="col col-xl-4 col-lg-4 col-md-3 d-none d-md-inline">
+		<span style="opacity: 0;">.</span>
+	</div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+<script>
+	$('.sup_delete').click(function(){
+		$('.del_popupbanner').fadeIn();
+		var idstr = $(this).attr("data");
+		$('#sid').val(idstr);
+		$('#del_popup').css({"transform": "scale(1)", "-webkit-transform": "scale(1)", "-moz-transform": "scale(1)"});
+	});
+	$('#cancel_btn').on('click', function(){
+		$('#sid').val('');
+		$('#del_popup').css({"transform": "scale(.1)", "-webkit-transform": "scale(.1)", "-moz-transform": "scale(.1)"});
+		$('.del_popupbanner').fadeOut();
+	});
+</script>
+{% endblock %}

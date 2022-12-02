@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/sale_dash.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="col col-xl-6 col-lg-6 col-md-6">
+	<div class="predefine1">
+		<div class="head">
+			<span class="head1">Manage Sales and Budget</span>
+			<span class="head2">Add new stocks for items</span>
+		</div>
+		<div class="prebody">
+			<a href="{% url 'out_sales' %}"><div class="component">
+				<div class="compcover"></div>
+				<div class="compcontent">
+					<span class="comp1"><i class="fas fa-money-check-alt"></i>Out Sale Entry</span>
+					<span class="comp2">New entry for out sales</span>
+				</div>
+			</div></a>
+			<div class="component" id="popit">
+				<div class="compcover"></div>
+				<div class="compcontent">
+					<span class="comp1"><i class="fas fa-file-invoice-dollar"></i>Budget/Estimate Entry</span>
+					<span class="comp2">Add new budget/estimate for entry</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="col col-xl-6 col-lg-6 col-md-6">
+	<div class="predefine2">
+		<div class="wavediv">
+			
+		</div>
+		<div class="wavecontent">
+			<a href="/sales-display/"><div class="wavecount">
+				<div class="wnumber">
+					{{s_item}}
+				</div>
+				<div class="wtext">
+					<span class="wtext1">Sales Entry</span>
+					<span class="wtext2">Total sales in system</span>
+				</div>
+			</div></a>
+			<div class="wavecount">
+				<div class="wnumber">
+					0
+				</div>
+				<div class="wtext">
+					<span class="wtext1">Budget Estimate</span>
+					<span class="wtext2">Total estimates in system</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="del_popupbanner">
+	<div class="col col-xl-4 col-lg-4 col-md-3 d-none d-md-inline">
+		<span style="opacity: 0;">.</span>
+	</div>
+	<div class="col col-xl-4 col-lg-4 col-md-6">
+
+		<div class="predefine1" id="del_popup">
+			Sorry! this module is under development
+
+	
+				
+				<!-- <input type="hidden" name="sid" id="sid"> -->
+				<!-- <button type="submit" class="del_btn">Yes</button> -->
+				<button type="button" class="del_btn" id="cancel_btn">Cancel</button>
+
+		</div>
+	</div>
+	<div class="col col-xl-4 col-lg-4 col-md-3 d-none d-md-inline">
+		<span style="opacity: 0;">.</span>
+	</div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+	$('#popit').click(function(){
+		$('.del_popupbanner').fadeIn();
+		$('#del_popup').css({"transform": "scale(1)", "-webkit-transform": "scale(1)", "-moz-transform": "scale(1)"});
+	});
+	$('#cancel_btn').on('click', function(){
+		$('#del_popup').css({"transform": "scale(.1)", "-webkit-transform": "scale(.1)", "-moz-transform": "scale(.1)"});
+		$('.del_popupbanner').fadeOut();
+	});
+</script>
+
+{% endblock %}

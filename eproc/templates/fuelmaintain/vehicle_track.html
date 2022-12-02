@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/purchase.css' %}?v=1.3">
+<link rel="stylesheet" href="{% static 'css/goods.css' %}?v=1.4">
+{% endblock %}
+
+
+{% block wave %}
+<img src="{% static 'img/back.png' %}" id="backimg">
+{% endblock %}
+{% block content %}
+<div class="col col-xl-2 col-lg-2 d-md-1 d-none d-lg-inline">
+  <span style="opacity: 0;">.</span>
+</div>
+<div class="col col-xl-8 col-lg-8 col-md-10">
+  <div class="predefine1">
+    <div class="head">
+      <span class="head1">Add Vehicle Movement</span>
+      <span class="head2">Enter new vehicle movement detail</span>
+    </div>
+    <div class="prebody" id="formbody">
+      <form method="POST" action="/add-move/" id="VehicleForm" autocomplete="off" name="VehicleForm">
+        {% csrf_token %}
+        {% for vehi, range in vehis %}
+        {% for v in vehi %}
+        <input type="hidden" id="vh{{v.url}}" name="{{v.chasis_number}}" data="{{v.engine_number}}" value="{{v.vehicle_number}}">
+        <input type="hidden" id="vhc{{v.chasis_url}}" name="{{v.vehicle_number}}" data="{{v.engine_number}}" value="{{v.chasis_number}}">
+        <input type="hidden" id="vhe{{v.engine_url}}" name="{{v.chasis_number}}" data="{{v.vehicle_number}}" value="{{v.engine_number}}">
+        {% endfor %}
+        {% endfor %}
+
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>Date<font style="color: red;">*</font></span></label>
+            <input type="text" class="form-control inputs" name="date" id="date">
+          </div>
+        </div>
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>Movement Number<font style="color: red;">*</font></span></label>
+            <input type="text" class="form-control inputs" name="mid" id="mid" value="VM{{newpei}}" readonly>
+            <input type="hidden" name="mcount" id="mcount" value="{{newpei}}" readonly>
+          </div>
+        </div>
+        
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            {% for d in v_type %}
+            <input type="hidden" id="vtypename{{d.id}}" value="{{d.type_name}}">
+            {% endfor %}
+            <label class="label"><span>Vehicle Type<font style="color: red;">*</font></span></label>
+            <input type="hidden" name="vehicle_type" id="vtype">
+            <input type="hidden" name="vehicle_type_id" id="vtypeidd">
+            <select id="vehicle_type" class="form-control inputs">
+              <option value="" disabled selected>Choose vehicle type</option>
+              {% for d in v_type %}
+              <option value="{{d.id}}">{{d.type_name}}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        <input type="hidden" name="vehicle" id="vehicle_confirm">
+        <input type="hidden" name="num_type" id="num_type">
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>Vehicle/Chasis/Engine Number<font style="color: red;">*</font></span></label>
+            {% for vehi, range in vehis %}
+            <div class="fields vehicles inputs" id="vehitypenumid{{vehi.0.vehicle_type_id}}">
+              <select id="vehi_number{{vehi.0.vehicle_type_id}}" class="form-control inputs vchoice">
+                <option value="" disabled selected>Choose vehicle number</option>
+                {% for d in vehi %}
+                <option value="{{d.vehicle_number}}">{{d.vehicle_number}}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="fields vehicles inputs" id="vehitypechasisid{{vehi.0.vehicle_type_id}}">
+              <select id="vehi_chasis{{vehi.0.vehicle_type_id}}" class="form-control inputs vchoice">
+                <option value="" disabled selected>Choose chasis number</option>
+                {% for d in vehi %}
+                <option value="{{d.chasis_number}}">{{d.chasis_number}}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="fields vehicles inputs" id="vehitypeengineid{{vehi.0.vehicle_type_id}}">
+              <select id="vehi_engine{{vehi.0.vehicle_type_id}}" class="form-control inputs vchoice">
+                <option value="" disabled selected>Choose engine number</option>
+                {% for d in vehi %}
+                <option value="{{d.engine_number}}">{{d.engine_number}}</option>
+                {% endfor %}
+              </select>
+            </div>
+            {% endfor  %}
+          </div>
+          <div class="fields fcheck">
+            <span id="ch_check"><input type="checkbox" id="chasis_check">Chasis Number</span>
+            <span id="en_check"><input type="checkbox" id="engine_check">Engine Number</span>
+          </div>
+          <div class="fields vehidet">
+            <table class="table table-bordered table-hover">
+              <tbody>
+                <tr>
+                  <td>Vehicle Number</td>
+                  <td id="vehidetnum"></td>
+                </tr>
+                <tr>
+                  <td>Chasis Number</td>
+                  <td id="vehidetchasis"></td>
+                </tr>
+                <tr>
+                  <td>Engine Number</td>
+                  <td id="vehidetengine"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>From Site<font style="color: red;">*</font></span></label>
+            <input type="text" class="form-control inputs" name="issue_locate" id="issue_locate" value="{{u_site}}" readonly>
+          </div>
+        </div>
+
+        <div class="col col-xl-6 col-lg-6">
+            <div class="fields">
+              <label class="label"><span>To Site</span></label>
+              <select class="form-control inputs" name="site" id="site">
+                <option value="" disabled selected>Choose site</option>
+                {% for c in site_dash %}
+                <option value="{{c.name}}">{{c.name}}</option>
+                {% endfor %}
+              </select>
+              <input type="hidden" name="itemname" id="itemname" readonly>
+            </div>
+          </div>
+
+        <div class="col col-xl-12 col-lg-12">
+          {% if messages %}
+            {% for message in messages %}
+            <input type="hidden" class="msgon" value="{{message}}">
+            {% endfor %}
+          {% endif %}
+          <div class="fields">
+            <button type="submit" class="submit_btn">SUBMIT</button><i class="fa fa-spinner fa-spin mx-2 spinner" id="spinner1"></i>
+          </div>
+        </div>
+        
+      </form>
+    </div>
+  </div>
+</div>
+<div class="col col-xl-2 col-lg-2 d-md-1 d-none d-lg-inline">
+  <span style="opacity: 0;">.</span>
+</div>
+
+
+{% endblock %}
+
+{% block js %}
+<script src="{% static '/js/vehicle_move.js' %}?v=1.1"></script>
+{% endblock %}

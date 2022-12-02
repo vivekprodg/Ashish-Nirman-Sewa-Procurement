@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/purchase.css' %}?v=1.3">
+{% endblock %}
+{% block content %}
+<div class="col col-xl-6 col-lg-6 col-md-6">
+	<div class="predefine1">
+		<div class="head">
+			<span class="head1">Manage Orders</span>
+			<span class="head2">Add new entries for purchase orders</span>
+		</div>
+		<div class="prebody">
+			<a href="{% url 'purchase_order' %}"><div class="component">
+				<div class="compcover"></div>
+				<div class="compcontent">
+					<span class="comp1"><i class="fas fa-money-check"></i>Purchase Order</span>
+					<span class="comp2">Issue purchase order</span>
+				</div>
+			</div></a>
+			<a href="{% url 'ashish_purchase_invoice' %}"><div class="component">
+				<div class="compcover"></div>
+				<div class="compcontent">
+					<span class="comp1"><i class="fas fa-money-check-alt"></i>Purchase Invoice Entry</span>
+					<span class="comp2">Entry for purhase invoice entry</span>
+				</div>
+			</div></a>
+			<a href="{% url 'ashish_goods_entry' %}"><div class="component">
+				<div class="compcover"></div>
+				<div class="compcontent">
+					<span class="comp1"><i class="fas fa-cookie-bite"></i>Goods Receive Entry</span>
+					<span class="comp2">Entry for goods receive note entry</span>
+				</div>
+			</div></a>
+			<a href="{% url 'damage_product' %}"><div class="component">
+				<div class="compcover"></div>
+				<div class="compcontent">
+					<span class="comp1"><i class="fas fa-exclamation-circle"></i>Damage Stock Entry</span>
+					<span class="comp2">Entry for damage stocks</span>
+				</div>
+			</div></a>
+			<a href="{% url 'return_product' %}"><div class="component">
+				<div class="compcover"></div>
+				<div class="compcontent">
+					<span class="comp1"><i class="fas fa-cube"></i>Return Stock Entry</span>
+					<span class="comp2">Entry for return stocks</span>
+				</div>
+			</div></a>
+		</div>
+	</div>
+</div>
+<div class="col col-xl-6 col-lg-6 col-md-6">
+	<div class="predefine2">
+		<div class="wavediv">
+			
+		</div>
+		<div class="wavecontent">
+			<!-- <a href="/quotation-display/"><div class="wavecount">
+				<div class="wnumber">
+					{{quo}}
+				</div>
+				<div class="wtext">
+					<span class="wtext1">Quotations</span>
+					<span class="wtext2">All quotation entries</span>
+				</div>
+			</div></a> -->
+			<a href="/purchase-order-display/"><div class="wavecount">
+				<div class="wnumber">
+					{{pur}}
+				</div>
+				<div class="wtext">
+					<span class="wtext1">Purchase Order</span>
+					<span class="wtext2">Total purchase orders</span>
+				</div>
+			</div></a>
+			<a href="{% url 'goods_display' %}"><div class="wavecount ashish_comp">
+				<div class="wnumber">
+					{{goo}}
+				</div>
+				<div class="wtext">
+					<span class="wtext1">Good Receive Note</span>
+					<span class="wtext2">Total good received entry in system</span>
+				</div>
+			</div></a>
+			<a href="{% url 'invoice_display' %}"><div class="wavecount ashish_comp">
+				<div class="wnumber">
+					{{invoi}}
+				</div>
+				<div class="wtext">
+					<span class="wtext1">Invoice Entry</span>
+					<span class="wtext2">Total purchase invoice entry in system</span>
+				</div>
+			</div></a>
+			<a href="{% url 'ashish_goods_display' %}"><div class="wavecount">
+				<div class="wnumber">
+					{{goo}}
+				</div>
+				<div class="wtext">
+					<span class="wtext1">Good Receive Note</span>
+					<span class="wtext2">Total good received entry in system</span>
+				</div>
+			</div></a>
+			<a href="{% url 'ashish_invoice_display' %}"><div class="wavecount">
+				<div class="wnumber">
+					{{invoi}}
+				</div>
+				<div class="wtext">
+					<span class="wtext1">Invoice Entry</span>
+					<span class="wtext2">Total purchase invoice entry in system</span>
+				</div>
+			</div></a>
+			<a href="{% url 'damage_display' %}"><div class="wavecount">
+				<div class="wnumber">
+					{{dm}}
+				</div>
+				<div class="wtext">
+					<span class="wtext1">Damage Entry</span>
+					<span class="wtext2">Total damage stock entry</span>
+				</div>
+			</div></a>
+			<a href="{% url 'return_display' %}"><div class="wavecount">
+				<div class="wnumber">
+					{{rm}}
+				</div>
+				<div class="wtext">
+					<span class="wtext1">Return Entry</span>
+					<span class="wtext2">Total return stock entry</span>
+				</div>
+			</div></a>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block js %}
+
+{% endblock %}

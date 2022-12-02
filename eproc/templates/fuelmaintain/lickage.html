@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/purchase.css' %}?v=1.3">
+<link rel="stylesheet" href="{% static 'css/goods.css' %}?v=1.4">
+{% endblock %}
+
+
+{% block wave %}
+<img src="{% static 'img/back.png' %}" id="backimg">
+{% endblock %}
+{% block content %}
+<div class="col col-xl-2 col-lg-2 d-md-1 d-none d-lg-inline">
+  <span style="opacity: 0;">.</span>
+</div>
+<div class="col col-xl-8 col-lg-8 col-md-10">
+  <div class="predefine1">
+    <div class="head">
+      <span class="head1">Fuel Leakage Entry</span>
+      <span class="head2">Enter new fuel leakage details</span>
+    </div>
+    <div class="prebody" id="formbody">
+      <form method="POST" action="/add-leakage/" id="LickageForm" autocomplete="off" name="LickageForm">
+        {% csrf_token %}
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>Date<font style="color: red;">*</font></span></label>
+            <input type="text" name="date" id="date" class="form-control inputs">
+          </div>
+        </div>
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>Leakage Number<font style="color: red;">*</font></span></label>
+            <input type="text" class="form-control inputs" name="consump_number" id="consump_number" value="LCK{{newpei}}" readonly>
+            <input type="hidden" name="pvn_count" id="pvn_count" value="{{newpei}}">
+          </div>
+        </div>
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>Fuel Type<font style="color: red;">*</font></span></label>
+            <select class="form-control inputs" name="fuel_type" id="fuel_type">
+              <option value="" disabled selected>Choose fuel type</option>
+              {% for c in f_type %}
+              <option value="{{c.name}}">{{c.name}}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        {% for r in reserve %}
+        <input type="hidden" id="reserve{{r.id}}" value="{{r.name}}">
+        {% endfor %}
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <input type="hidden" id="reserviour_name" name="reserviour_name">
+            <label class="label"><span>Reserviour<font style="color: red;">*</font></span></label>
+            <select class="form-control inputs" name="reserviour" id="reserviour">
+              <option value="" disabled selected>Choose reserviour</option>
+              {% for c in reserve %}
+              <option value="{{c.id}}">{{c.name}}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>Quantity</span></label>
+            <div class="input-group">
+              <input type="number" name="quantity" id="quantity" class="form-control inputs" step='.01'>
+              <div class="input-group-append">
+                <div class="input-group-text">ltrs</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col col-xl-12 col-lg-12">
+          {% if messages %}
+            {% for message in messages %}
+            <input type="hidden" class="msgon" value="{{message}}">
+            {% endfor %}
+          {% endif %}
+          <div class="fields">
+            <button type="submit" class="submit_btn">SUBMIT</button><i class="fa fa-spinner fa-spin mx-2 spinner" id="spinner1"></i>
+          </div>
+        </div>
+        
+      </form>
+    </div>
+  </div>
+</div>
+<div class="col col-xl-2 col-lg-2 d-md-1 d-none d-lg-inline">
+  <span style="opacity: 0;">.</span>
+</div>
+
+
+{% endblock %}
+
+{% block js %}
+<script src="{% static '/js/lickage.js' %}?v=1.0"></script>
+{% endblock %}

@@ -1,0 +1,583 @@
+.predefine1{
+  width:100%;
+  float:left;
+  height: auto;
+  background: #fff;
+  box-shadow: 0px 0px 10px 0px #ddd;
+  border-radius: 5px;
+  padding: 0px 20px 120px 20px;
+}
+
+.head{
+  width:100%;
+  float:left;
+  height: auto;
+  position: relative;
+  top: -20px;
+  text-align: left;
+  background-image:linear-gradient(rgba(250,128,5,.8), rgba(250,128,5,.8)),url(../img/block1.jpg);
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  box-shadow: 2px 20px 20px -5px #ddd; 
+  padding: 10px 20px;
+  border-radius: 5px;
+}
+.head1{
+  float:left;
+  width: 100%;
+  color: #fff;
+  font-size: 19px;
+}
+.head2{
+  float:left;
+  width: 100%;
+  color: #ddd;
+  font-size: 14px;
+}
+
+.prebody{
+  float:left;
+  width:100%;
+  height: auto;
+  margin-top: 20px;
+}
+.component{
+  float: left;
+  width:60%;
+  height: auto;
+  border: 1px solid #008ECC;
+  padding: 10px 20px;
+  border-radius: 5px;
+  position: relative;
+  cursor: pointer;
+  transition: all .3s ease;
+  margin-bottom: 15px;
+}
+.compcover{
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 0;
+  background: #008ECC;
+  z-index: 6;
+  border-radius: 5px;
+  transition: all .3s ease;
+}
+.compcontent{
+  float:left;
+  width:100%;
+  height: auto;
+  position: relative;
+  z-index: 7;
+}
+.comp1{
+  float:left;
+  width:100%;
+  font-size: 16px;
+  color: #484f52; 
+  transition: all .3s ease;
+}
+.comp1 i{
+  margin-right: 5px;
+  font-size: 14px;
+}
+.comp2{
+  float:left;
+  width:100%;
+  font-size: 14px;
+  color: #787b7d; 
+  margin-top: 5px;
+  transition: all .3s ease;
+}
+.component:hover{
+  border-color: transparent;
+}
+.component:hover .comp1{
+  color: #eee;
+}
+.component:hover .comp2{
+  color: #ddd;
+}
+.component:hover .compcover{
+  height:100%;
+}
+
+.spinner{
+  float:left;
+  color: #008ECC;
+  font-size: 30px;
+  position: relative;
+  top: 5px;
+  display: none;
+}
+
+#messageblock{
+  padding: 3px 0px;
+  margin:0px;
+  font-size: 14px;
+
+}
+
+.errorcolor{
+  border: 1.1px solid red !important;
+}
+
+/*-------wave-----------------*/
+#backimg{
+  position: fixed;
+  top: 50px;
+  left: -100px;
+}
+
+.predefine2{
+  width:100%;
+  float:left;
+  height: auto;
+  background: #fff;
+  box-shadow: 0px 0px 10px 0px #ddd;
+  border-radius: 5px;
+  position: relative;
+  overflow: hidden;
+}
+.wavediv {
+  position: absolute;
+  top: -810px;
+  left:-250px;
+  display: flex;
+  align-items: center;
+  width: 1200px;
+  height: 2000px;
+ /* border-radius: 50%;*/
+  background: linear-gradient(rgba(250,128,5,.8) 50%, #fff 0),url(../img/block1.jpg);
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  transform: rotateZ(20deg);
+  z-index: 6;
+}
+.wavediv:before, .wavediv:after{
+  flex: 1;
+  height: 30%;
+  border-radius: 50%;
+  background: linear-gradient(rgba(250,128,5,.8) 50%, rgba(250,128,5,.8) 50%),url(../img/block1.jpg);
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  content: "";
+}
+.wavediv:before{
+  height: 50%;
+}
+.wavediv:after {
+  background: #fff;
+}
+
+.wavecontent{
+  float:left;
+  width:100%;
+  height: auto;
+  position: relative;
+  z-index: 7;
+  padding: 80px 20px 150px 20px;
+}
+.wavecount{
+  width:65%;
+  min-height: 110px;
+  margin: 0px auto;
+  padding: 20px 20px;
+  background: #008ECC; 
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+.wnumber{
+  float:left;
+  width:35%;
+  font-size: 40px;
+  color: #eee;
+  text-align: center;
+  font-family: Georgia;
+}
+.wtext{
+  float:left;
+  width:65%;
+}
+.wtext1{
+  float:left;
+  width:100%;
+  font-size: 20px;
+  color: #fff;
+}
+.wtext2{
+  float:left;
+  width:100%;
+  font-size: 15px;
+  color: #ddd;
+}
+.wavefoot{
+  position: relative;
+  z-index: 9;
+  float:left;
+  width:100%;
+  height: auto;
+  padding: 10px 20px;
+}
+
+/* ======================= */
+
+/* supplier css */
+
+/*#formbody{
+  border: 1px solid #ddd;
+  padding: 20px;
+}*/
+
+.fields{
+  float:left;
+  width:100%;
+  height: auto;
+  margin-bottom: 20px;
+}
+
+.label {
+  line-height:0.1;
+}
+.label span {
+  display: inline-block;
+  position: relative;
+  left:20px;
+  color:#484f52;
+  font-size:15px;
+  padding:0px;
+}
+.label span:before{
+    content: "";
+  position: absolute;
+  height: 10px;
+  border-top: 1px solid #aaa;
+  border-left: 1px solid #aaa;
+  border-top-left-radius:5px;
+  top: 4px;
+  left:-25px;
+  width: 18px;
+}
+/*.label span:after{
+    content: "";
+  position: absolute;
+  height: 5px;
+  border-top: 1px solid #aaa;
+  top: 4px;
+  width: 60px;
+}*/
+.label span:before {
+  right: 100%;
+  margin-right: 15px;
+}
+/*.label span:after {
+  left: 100%;
+  margin-left: 15px;
+}*/
+
+.submit_btn{
+  height: 40px;
+  width: auto;
+  float:left;
+  border: none;
+  background: #1f7ba3;
+  color: #fff;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all .3s ease;
+  border-radius: 5px;
+  padding-left: 30px;
+  padding-right: 30px;
+}
+.submit_btn:hover{
+  background: #07597d;
+}
+.viewall{
+  float:right;
+}
+
+.sup_edit,.sup_delete{
+  border:none;
+  background:none;
+  float:left;
+  cursor: pointer;
+  margin-right: 5px;
+  font-size: 15px;
+}
+.sup_edit:focus,
+.sup_delete:focus{
+  background: none !important;
+}
+
+.sup_delete i{
+  color: #fa4670;
+}
+.sup_edit i{
+  color: #913cfa;
+}
+
+#SupplierTable thead{
+  background: #1f7ba3;
+  color: #fff;
+}
+#SupplierTable thead th{
+  font-weight: normal;
+}
+
+/* ============================= */
+
+/*===========location css =============== */
+
+.block{
+  float:left;
+  width:100%;
+  height: auto;
+  margin-bottom: 5px;
+
+}
+.subpblock{
+  padding: 0px 20px;
+
+}
+.subblock1{
+  float:left;
+  color: rgba(0,0,0,.8);
+  font-size: 14px;
+  text-transform: capitalize;
+}
+.subblock1 i{
+  font-size: 10px;
+  margin-right: 5px;
+}
+#subpicon{
+  font-size: 8px;
+}
+.subblock2{
+  float:right;
+}
+#displaybody{
+  border: 1px solid #ddd;
+  padding: 10px 20px;
+}
+
+
+/*===============================================*/
+
+/*=======edit popup================*/
+
+.edit_popupbanner,
+.del_popupbanner,
+.cre_popupbanner{
+  position: fixed;
+  top: 0px;
+  left:0px;
+  height: 100%;
+  width:100%;
+  z-index: 9;
+  background: rgba(0,0,0,.1);
+  overflow-y: scroll;
+  display: none;
+}
+#edit_popup{
+  margin-top: 110px;
+  margin-bottom: 50px;
+  box-shadow: none !important;
+  padding: 0px;
+  -webkit-transform: scale(.1);
+  -moz-transform: scale(.1);
+  transform: scale(.1);
+  -webkit-transition: all .3s ease;
+  -moz-transition: all .3s ease;
+  transition: all .3s ease;
+}
+#del_popup{
+  margin-top: 150px;
+  margin-bottom: 50px;
+  box-shadow: none !important;
+  padding: 50px;
+  text-align:center;
+  color: #484f52;
+  font-size: 14px;
+  -webkit-transform: scale(.1);
+  -moz-transform: scale(.1);
+  transform: scale(.1);
+  -webkit-transition: all .3s ease;
+  -moz-transition: all .3s ease;
+  transition: all .3s ease;
+}
+#cre_popup{
+  margin-top: 110px;
+  margin-bottom: 50px;
+  box-shadow: none !important;
+  padding: 0px;
+  -webkit-transform: scale(.1);
+  -moz-transform: scale(.1);
+  transform: scale(.1);
+  -webkit-transition: all .3s ease;
+  -moz-transition: all .3s ease;
+  transition: all .3s ease;
+}
+#del_popup form{
+  margin-top: 20px;
+}
+.editbody{
+  padding: 20px 20px 50px 20px;
+}
+.crebody{
+  padding: 20px 30px 50px 30px;
+  text-align: center;
+}
+.edithead{
+  float:left;
+  width:100%;
+  height: auto;
+  padding: 10px 20px;
+  color: #fff;
+  background: #1f7ba3;
+}
+.edithead i{
+  float:right;
+  font-size: 20px;
+  cursor: pointer;
+}
+#close_cre i{
+  float:right;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.del_btn{
+  height: 30px;
+  width: 120px;
+  border: none;
+  background: #1f7ba3;
+  color: #fff;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all .3s ease;
+  border-radius: 5px;
+  margin-top: 5px;
+}
+
+/*====================================*/
+
+/*==========site css ================*/
+
+.admincheck{
+  float:left;
+  width:100%;
+  font-size: 15px;
+  color: #484f52;
+
+}
+#adcheck{
+  height: 20px;
+  width: 20px;
+  margin-right: 4px;
+  position: relative;
+  top: 4px;
+}
+
+/*=========================*/
+
+#paysup{
+  height: 40px;
+  width: auto;
+  float:right;
+  border: none;
+  background: #1f7ba3;
+  color: #fff;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all .3s ease;
+  border-radius: 5px;
+  padding-left: 30px;
+  padding-right: 30px;
+}
+#paysup:hover{
+  background: #07597d;
+}
+.spinner_cre{
+  color: #008ECC;
+  font-size: 30px;
+  position: relative;
+  top: 10px;
+  display: none;
+  text-align: center;
+}
+
+.suphead{
+  float:left;
+  width:100%;
+  height: auto;
+  font-size: 26px;
+  text-align: center;
+  padding: 20px 10px; 
+  color: #008ECC;
+  text-transform: capitalize;
+  font-family: PlayfairDisplay-Regular;
+}
+.summary{
+  float:left;
+  width:100%;
+  height: auto;
+  border: 1px solid #ddd;
+  padding: 20px;
+  background: #eee;
+}
+.summa1,
+.summa2{
+  float:left;
+  width:100%;
+  height: auto;
+}
+.headtext{
+  float:left;
+  width:100%;
+  font-size: 16px;
+  color: #484f52;
+}
+.print_btn,
+#addpay{
+  float:right;
+  margin-left: 10px;
+}
+.paylog{
+  float:left;
+  width:100%;
+  height: auto;
+  padding: 20px 0px;
+}
+
+.notran{
+  float:left;
+  width: 100%;
+  padding: 30px 0px;
+  text-align: center;
+  font-size: 14px;
+  color: #008ECC;
+}
+#cqcheck,
+#cacheck{
+  float:left;
+  font-size: 14px;
+  color: rgba(0,0,0,.8);
+  margin-right: 15px;
+  cursor: pointer;
+}
+#chq,
+#cash{
+  height: 18px;
+  width: 18px;
+  position: relative;
+  top: 3px;
+  cursor: pointer;
+}
+#creditTable thead{
+  background: #ddd;
+  color: rgba(0,0,0,.8);
+}

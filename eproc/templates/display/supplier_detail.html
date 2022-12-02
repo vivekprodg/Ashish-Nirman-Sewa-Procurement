@@ -1,0 +1,261 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/predefine.css' %}?v=1.3">
+{% endblock %}
+{% block wave %}
+<img src="{% static 'img/back.png' %}" id="backimg">
+{% endblock %}
+{% block content %}
+<div class="col col-xl-1 col-lg-1 d-none d-lg-inline">
+	<span style="opacity: 0;">.</span>
+</div>
+<div class="col col-xl-10 col-lg-10">
+	<div class="predefine1">
+		<div class="head">
+			<span class="head1">Suppliers</span>
+			<span class="head2">View and Manage supplier's details</span>
+		</div>
+		{% if messages %}
+			{% for message in messages %}
+			<input type="hidden" class="msgon" value="{{message}}">
+			{% endfor %}
+		{% endif %}
+		<div class="prebody table-responsive">
+			{% if supplier_dash %}
+			{% for s in supplier_dash %}
+			<input type="hidden" id="name{{s.id}}" value="{{s.name}}">
+			<input type="hidden" id="add{{s.id}}" value="{{s.address}}">
+			<input type="hidden" id="pan{{s.id}}" value="{{s.pan_number}}">
+			<input type="hidden" id="land{{s.id}}" value="{{s.landline}}">
+			<input type="hidden" id="cat{{s.id}}" value="{{s.suppliers_category}}">
+			<input type="hidden" id="p1{{s.id}}" value="{{s.person_one}}">
+			<input type="hidden" id="p1email{{s.id}}" value="{{s.person_one_email}}">
+			<input type="hidden" id="p1mob{{s.id}}" value="{{s.person_one_mobile}}">
+			<input type="hidden" id="p2{{s.id}}" value="{{s.person_two}}">
+			<input type="hidden" id="p2email{{s.id}}" value="{{s.person_two_email}}">
+			<input type="hidden" id="p2mob{{s.id}}" value="{{s.person_two_mobile}}">
+			<input type="hidden" id="open{{s.id}}" value="{{s.opening}}">
+			{% endfor %}
+			<div class="search_banner">
+				<button type="button" id="paysup">VIEW CREDIT PAYMENTS</button>
+			</div>
+			<table class="table table-bordered table-hover" id="SupplierTable">
+				<thead>
+				  <tr>
+					<th scope="col">Name</th>
+					<th scope="col">Address</th>
+					<th scope="col">Pan Number</th>
+					<th scope="col">Landline</th>
+					<th scope="col">Category</th>
+					<th scope="col">Opening Credit (Rs)</th>
+					<th scope="col">Contact Person1</th>
+					<th scope="col">Person1 Email</th>
+					<th scope="col">Person1 Mobile</th>
+					<th scope="col">Contact Person2</th>
+					<th scope="col">Person2 Email</th>
+					<th scope="col">Person2 Mobile</th>
+					<th scope="col">Action</th>
+				  </tr>
+				</thead>
+				<tbody>
+					{% for s in supplier_dash %}
+					<tr>
+						<td>{{s.name}}</td>
+						<td>{{s.address}}</td>
+						<td>{{s.pan_number}}</td>
+						<td>{{s.landline}}</td>
+						<td>{{s.suppliers_category}}</td>
+						<td>{{s.opening}}</td>
+						<td>{{s.person_one}}</td>
+						<td>{{s.person_one_email}}</td>
+						<td>{{s.person_one_mobile}}</td>
+						<td>{{s.person_two}}</td>
+						<td>{{s.person_two_email}}</td>
+						<td>{{s.person_two_mobile}}</td>
+						<td>
+							<button type="button" class="sup_edit" data="{{s.id}}"><i class="far fa-edit"></i></button>
+							<button type="button" class="sup_delete" data="{{s.id}}"><i class="far fa-trash-alt"></i></button>
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+			{% else %}
+			<span class="no_content">
+				No suppliers found
+			</span>
+			{% endif %}
+		</div>
+	</div>
+</div>
+<div class="col col-xl-1 col-lg-1 d-none d-lg-inline">
+	<span style="opacity: 0;">.</span>
+</div>
+
+<!-- pop up for edition ------>
+
+<div class="edit_popupbanner">
+	<div class="col col-xl-3 col-lg-3 col-md-1 d-none d-md-inline">
+		<span style="opacity: 0;">.</span>
+	</div>
+	<div class="col col-xl-6 col-lg-6 col-md-10">
+		<div class="predefine1" id="edit_popup">
+			<div class="edithead">
+				Edit Supplier <i class="fa fa-times" id="close_edit"></i>
+			</div>
+			<div class="prebody editbody" id="formbody">
+				<form method="POST" action="/edit-supplier/" id="SupplierEditForm" autocomplete="off" name="SupplierEditForm">
+					{% csrf_token %}
+					<input type="hidden" id="suid" name="suid">
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>Supplier Name<font style="color: red;">*</font></span></label>
+							<input type="text" class="form-control inputs" name="name" id="name">
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>Address<font style="color: red;">*</font></span></label>
+							<input type="text" class="form-control inputs" name="address" id="address">
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>Pan Number</span></label>
+							<input type="text" class="form-control inputs" name="pan" id="pan">
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>Landline Number<font style="color: red;">*</font></span></label>
+							<input type="text" class="form-control inputs" name="landline" id="landline">
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>Category<font style="color: red;">*</font></span></label>
+							<select class="form-control inputs" name="category" id="category">
+								<option value="" disabled selected>Choose Category</option>
+								{% for c in category_dash %}
+								<option value="{{c.name}}">{{c.name}}</option>
+								{% endfor %}
+							</select>
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>Contact Person 1</span></label>
+							<input type="text" class="form-control inputs" name="person1" id="person1">
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>Person1 Email</span></label>
+							<input type="email" class="form-control inputs" name="person1email" id="person1email">
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>Person1 Mobile</span></label>
+							<input type="number" class="form-control inputs" name="person1contact" id="person1contact">
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>Contact Person 2</span></label>
+							<input type="text" class="form-control inputs" name="person2" id="person2">
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>Person2 Email</span></label>
+							<input type="email" class="form-control inputs" name="person2email" id="person2email">
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>Person2 Mobile</span></label>
+							<input type="number" class="form-control inputs" name="person2contact" id="person2contact">
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>Opening Credit<font style="color: red;">*</font></span></label>
+							<div class="input-group">
+								<div class="input-group-append">
+									<div class="input-group-text">NPR</div>
+								</div>
+								<input type="number" name="opening" id="opening" class="form-control inputs" step='.01' value="0">
+							</div>
+						</div>
+					</div>
+					<div class="col col-xl-12 col-lg-12">
+						<div class="fields">
+							<button type="submit" class="submit_btn">SAVE</button><i class="fa fa-spinner fa-spin mx-2 spinner" id="spinner1"></i>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div class="col col-xl-3 col-lg-3 col-md-1 d-none d-md-inline">
+		<span style="opacity: 0;">.</span>
+	</div>
+</div>
+
+<!-- po up deletion ------------------->
+
+<div class="del_popupbanner">
+	<div class="col col-xl-4 col-lg-4 col-md-3 d-none d-md-inline">
+		<span style="opacity: 0;">.</span>
+	</div>
+	<div class="col col-xl-4 col-lg-4 col-md-6">
+
+		<div class="predefine1" id="del_popup">
+			Supplier will be deleted. Do you wish to continue?
+
+			<form method="POST" action="/delete-supplier/">
+				{% csrf_token %}
+				<input type="hidden" name="sid" id="sid">
+				<button type="submit" class="del_btn">Yes</button>
+				<button type="button" class="del_btn" id="cancel_btn">No</button>
+			</form>
+		</div>
+	</div>
+	<div class="col col-xl-4 col-lg-4 col-md-3 d-none d-md-inline">
+		<span style="opacity: 0;">.</span>
+	</div>
+</div>
+
+<div class="cre_popupbanner">
+	<div class="col col-xl-4 col-lg-4 col-md-3 d-none d-md-inline">
+		<span style="opacity: 0;">.</span>
+	</div>
+	<div class="col col-xl-4 col-lg-4 col-md-6">
+		<div class="predefine1" id="cre_popup">
+			<div class="edithead">
+				Choose supplier to view credit payment details <i class="fa fa-times" id="close_cre"></i>
+			</div>
+			<div class="prebody crebody">
+				<select class="form-control inputs" id="selsup" onchange="location = this.value;">
+					<option value="" disabled selected>Choose supplier</option>
+					{% for c in supplier_dash %}
+					<option value="/credit-detail/{{c.id}}/">{{c.name}}</option>
+					{% endfor %}
+				</select>
+				<i class="fa fa-spinner fa-spin mx-2 spinner_cre" id="spinner_cre"></i>
+			</div>
+		</div>
+	</div>
+	<div class="col col-xl-4 col-lg-4 col-md-3 d-none d-md-inline">
+		<span style="opacity: 0;">.</span>
+	</div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'js/supplier.js' %}?v=1.4"></script>
+{% endblock %}

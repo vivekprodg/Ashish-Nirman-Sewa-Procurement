@@ -1,0 +1,295 @@
+{% load humanize %}
+<html>
+<head>
+  <title>Report</title>
+  <style>
+    *{
+      color:#000;
+      padding:5px 10px;
+      margin:0px;
+    }
+    body{
+        padding: 0px;
+        margin: 0px;
+        counter-reset: Serial;
+    }
+    @page {
+        size: A4;
+        margin: 2cm;
+    }
+    .report_subbanner1{
+      float: left;
+      width: 100%;
+      height: inherit;
+    }
+    .report_head1{
+      float:left;
+      width: 100%;
+      font-size: 17px;
+      color: #000;
+      text-align:center;
+    }
+    .report_subbanner1 pre{
+      font-size: 14px;
+      font-family: verdana;
+    }
+    table{
+      border: 1px solid #ddd;
+      padding: 0px;
+      margin:0px;
+    }
+    .table1 td{
+      text-align:left;
+      font-size: 14px;
+      padding: 2px;
+    }
+    .table2 td{
+      text-align:left;
+      font-size: 14px;
+      padding: 3px 2px 1.7px 5px;
+    }
+    .table2 th{
+      text-align:left;
+      font-size: 13px;
+    }
+    .td1{
+      font-weight: bold;
+    }
+    .boldrow td{
+      font-weight: bold;
+      color: #505152 !important;
+    }
+    .boldrow td .input-group{
+      width: 200px;
+      float:right;
+      height: 35px !important;
+    }
+    .boldrow td .input-group .input-group-text{
+      font-size: 14px !important;
+    }
+  </style>
+</head>
+<body>
+<div style="width: 100%; float:left;">
+  <div class="report_subbanner1">
+    <iframe class="report_head1" style="color: #000; font-size: 19px;">
+      Ashish Nirman Sewa
+    </iframe><br>
+    <iframe class="report_head1" style="font-size: 13px; color: rgba(0,0,0,.8);">
+      Kathmandu
+    </iframe>
+    <div class="report_head1">
+      Maintainance Invoice Details
+    </div>
+
+  </div>
+  <br>
+  <table class="table1" style="width:50%; float:left;">
+    <tbody>
+      <tr>
+        <td class="td1">Entry Date</td>
+        <td>{{a.entry_date}}</td>
+      </tr>
+      <tr>
+        <td class="td1">Invoice Date</td>
+        <td>{{a.bill_date}}</td>
+      </tr>
+      <tr>
+        <td class="td1">Maintainance Number</td>
+        <td>{{a.maintain_number}}</td>
+      </tr>
+      <tr>
+        <td class="td1">Invoice Number</td>
+        <td>{{a.bill_number}}</td>
+      </tr>
+      <tr>
+        <td class="td1">Purchase Order Number</td>
+        <td>
+          {% if a.purchase_order_number %}
+          {{a.purchase_order_number}}</td>
+          {% else %}
+          none
+          {% endif %}
+      </tr>
+      <!-- <tr>
+        <td class="td1">Invoice Type</td>
+        <td>{{a.bill_type}}</td>
+      </tr> -->
+      <!-- <tr>
+        <td class="td1">Supplier Name</td>
+        <td>{{a.supplier_name}}</td>
+      </tr>
+      <tr>
+        <td class="td1">Supplier Address</td>
+        <td>{{a.supplier_address}}</td>
+      </tr>
+      <tr>
+        <td class="td1">Supplier Contact</td>
+        <td>{{a.supplier_contact}}</td>
+      </tr> -->
+      <tr>
+        <td class="td1">Vehicle Type</td>
+        <td>{{a.vehicle_type}}</td>
+      </tr>
+      <tr>
+        <td class="td1">Vehicle Number</td>
+        <td>{{a.vehicle_number}}({{a.number_type}})</td>
+      </tr>
+      <tr>
+        <td class="td1">KM run of vehicle</td>
+        <td>{{a.kilometer}}</td>
+      </tr>
+      {% if a.problem_category %}
+      <tr>
+        <td class="td1">Problem Category</td>
+        <td>{{a.problem_category}}</td>
+      </tr>
+      {% endif %}
+      {% if a.problem_subcategory %}
+      <tr>
+        <td class="td1">Supplier Contact</td>
+        <td>{{a.problem_subcategory}}</td>
+      </tr>
+      {% endif %}
+      <tr>
+        <td class="td1">Servicing Hour</td>
+        <td>{{a.hour}}</td>
+      </tr>
+      <!-- <tr>
+        <td class="td1">Transaction Type</td>
+        <td>{{a.transaction_type}} {% if a.transaction_type == 'credit' %}(Payment duration is {{a.day}} day){% endif %}</td>
+      </tr> -->
+      <tr>
+        <td class="td1">Entry By</td>
+        <td>{{a.entry_by}}</td>
+      </tr>
+      <tr>
+        <td class="td1">Site</td>
+        <td>{{a.user_site}}</td>
+      </tr>
+      <tr>
+        <td class="td1">Narration</td>
+        <td>
+          {% if a.narration %}
+          {{a.narration|linebreaks}}
+          {% else %}
+          none
+          {% endif %}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <br><br>
+  {% if minvoice %}
+  <font style="font-size: 14px; font-weight: bold;">Invoice Details:</font>
+  <br>
+  <table class="table2">
+    <thead>
+      <tr>
+      <th scope="col">Voucher Number</th>
+      <th scope="col">Invoice Number</th>
+      <th scope="col">Invoice Type</th>
+      <th scope="col">Supplier</th>
+      <th scope="col">Sub Total</th>
+      <th scope="col">Discount</th>
+      <th scope="col">VAT</th>
+      <th scope="col">Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for t in minvoice %}
+        <tr>
+          <td>{{t.voucher_number}}</td>
+          <td>{{t.invoice_number}}</td>
+          <td>{{t.invoice_type}}</td>
+          <td>{{t.supplier}}</td>
+          <td>{{t.sub_total}}</td>
+          <td>{{t.discount_amt}} ({{t.discount_per}}%)</td>
+          <td>{{t.vat}}</td>
+          <td>{{t.total}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+  </table>
+  <br><br>
+  {% endif %}
+  <font style="font-size: 14px; font-weight: bold;">Maintenance Items:</font>
+  <br>
+  <table class="table2">
+    <thead>
+      <tr>
+      <th scope="col">Associate PO</th>
+      <th scope="col">Associate Invoice</th>
+      <th scope="col">Item</th>
+      <th scope="col">UOM</th>
+      <th scope="col">Quantity</th>
+      <th scope="col">Rate</th>
+      <th scope="col">Discount</th>
+      <th scope="col" style="text-align: right;">Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for t in igoods %}
+        <tr>
+          {% if t.purchase_id %}
+          <td>{{t.purchase_id}}</td>
+          {% else %}
+          <td>none</td>
+          {% endif %}
+          {% if t.pvn %}
+          <td>{{t.pvn}}</td>
+          {% else %}
+          <td>none</td>
+          {% endif %}
+          <td>{{t.item_name}}<br>({{t.alias}})</td>
+          <td>{{t.uom}}</td>
+          <td>{{t.quantity}}</td>
+          <td>{{t.rate}}</td>
+          <td>{{t.discount_amt}} ({{t.discount_per}}%)</td>
+          <td style="text-align: right;">{{t.amount}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    <tfoot>
+      <tr>
+      <td colspan="8" style="border:none;"></td>
+      </tr>
+      <tr>
+      <td colspan="8" style="border:none;"></td>
+      </tr>
+      <tr class="boldrow table-sm">
+      <td colspan="7">Sub Total</td>
+      <td>
+        Rs {{a.sub_total|intcomma}}
+      </td>
+      </tr>
+      <!-- <tr class="boldrow table-sm">
+      <td colspan="7">Discount</td>
+      <td>
+        Rs {{a.discount_amt|intcomma}} ({{a.discount_per}} %)
+      </td>
+      </tr> -->
+      <tr class="boldrow table-sm">
+      <td colspan="7">Labour Charge</td>
+      <td>
+        Rs {{a.labour_charge|intcomma}}
+      </td>
+      </tr>
+      <!-- <tr class="boldrow table-sm">
+      <td colspan="7">Vat</td>
+      <td>
+        Rs {{a.vat|intcomma}}
+      </td>
+      </tr> -->
+      <tr class="boldrow table-sm">
+      <td colspan="7">Total Amount</td>
+      <td>
+        Rs {{a.total|intcomma}}
+      </td>
+      </tr>
+    </tfoot>
+  </table>
+
+</div>
+</body>
+</html>

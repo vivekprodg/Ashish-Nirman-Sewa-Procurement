@@ -1,0 +1,84 @@
+{% extends 'dash_base.html' %}
+{% load static %}
+
+{% block title%}
+  <title>Dashboard - AONE</title>
+{% endblock %}
+{% block css %}
+  <style>
+    #dashboard_link9{
+      background: #2b2e4a;
+    }
+  </style>
+
+  <link rel="stylesheet" href="{% static '/css/party2.css' %}?version=1.1">
+{% endblock %}
+
+
+{% block head_title %}
+Problem Category
+{% endblock %}
+{% block content %}
+
+<div class="main_container">
+    <div class="col col-1"></div>
+    <div class="col col-xl-10 col-lg-10 col-md-10">
+    	<div class="material_banner">
+    		<div class="ban_head">
+	          Problem List
+	          <a href="{% url 'problem_category' %}"><button type="button" id="allw_dis">ADD NEW</button></a>
+	        </div>
+	        <div class="allowance_display">
+	        	{% if party %}
+	        	<table class="table table-bordered" id="allowanceTable">
+	              <thead>
+	                <tr>
+	                  <th scope="col">Problem Name</th>
+	                  <th scope="col">Action</th>
+	                  <th scope="col" id="clac">Close</th>
+	                </tr>
+	              </thead>
+	              <tbody>
+	              	{% for a in party %}
+	              	<tr id="arow{{a.id}}">
+	              		<td>{{a.name}}</td>
+	              		<td><button type="button" class="allw_action" id="{{a.id}}">UPDATE</button></td>
+	              	</tr>
+	              	<tr class="arowhide" id="arowh{{a.id}}">
+	              		<form method="POST" action="/update-problem/">
+	              			{% csrf_token %}
+		              		<td>
+		              			<input type="hidden" id="rec{{a.id}}" name="fid" value="{{a.id}}">
+		              			<input type="hidden" id="def{{a.id}}" name="default" value="{{a.problem_url}}">
+		              			<input type="hidden" id="url{{a.id}}" name="url">
+		              			<input type="hidden" id="defn{{a.id}}" name="defname" value="{{a.name}}">
+		              			<input type="text" name="name" class="form-control updatename" id="{{a.id}}" value="{{a.name}}">
+		              		</td>
+		              		<td>
+		              			<button type="submit" class="allw_save" id="{{a.id}}">SAVE</button>
+		              		</td>
+		              		<td>
+		              			<i class="fas fa-times close_allw" id="{{a.id}}"></i>
+		              		</td>
+	              		</form>
+	              	</tr>
+	              	{% endfor %}
+	              </tbody>
+          		</table>
+          		{% else %}
+          		<span class="not_found">
+	                No problem list found
+	            </span>
+              {% endif %}
+	        </div>
+    	</div>
+    </div>
+    <div class="col col-1"></div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+<script src="{% static '/js/problem.js' %}?version=1.1"></script>
+
+{% endblock %}

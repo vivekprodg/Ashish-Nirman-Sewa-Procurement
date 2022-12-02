@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/purchase.css' %}">
+<link rel="stylesheet" href="{% static 'css/quotation.css' %}">
+{% endblock %}
+{% block wave %}
+<img src="{% static 'img/back.png' %}" id="backimg">
+{% endblock %}
+{% block content %}
+<div class="col col-xl-1 col-lg-1 d-none d-lg-inline">
+	<span style="opacity: 0;">.</span>
+</div>
+<div class="col col-xl-10 col-lg-10">
+	<div class="predefine1 stockdefine">
+		<div class="head">
+			<span class="head1">Search result for "{{search}}"</span>
+			<span class="head2">View and Manage quatation's details</span>
+		</div>
+		<div class="prebody table-responsive">
+			{% if messages %}
+				{% for message in messages %}
+				<input type="hidden" class="msgon" value="{{message}}">
+				{% endfor %}
+			{% endif %}
+			{% if s_goods %}
+			<div class="search_banner">
+				<form method="POST" action="/search-quotation/">
+	        		{% csrf_token %}
+		        	<div class="input-group">
+		        		<input type="text" name="search" class="form-control" value="{{search}}" placeholder="Search records...">
+		        		<div class="input-group-append">
+		        			<button type="submit" class="btn btn-primary" id="find_btn"><i class="fas fa-search"></i></button>
+		        		</div>
+		        	</div>
+	        	</form>
+			</div>
+			<table class="table table-bordered table-hover" id="GoodsTable">
+				<thead>
+				  <tr>
+				  	<th scope="col">Entry Date</th>
+					<th scope="col">Valid Date</th>
+					<th scope="col">Supplier Name</th>
+					<th scope="col">Supplier Address</th>
+					<th scope="col">Supplier Contact</th>
+					<th scope="col">Entry By</th>
+					<th scope="col">Action</th>
+				  </tr>
+				</thead>
+				<tbody>
+					{% for s in s_goods %}
+					<tr>
+						<td>{{s.entry_date}}</td>
+						<td>{{s.valid_date}}</td>
+						<td>{{s.supplier_name}}</td>
+						<td>{{s.supplier_address}}</td>
+						<td>{{s.supplier_contact}}</td>
+						<td>{{s.entry_by}}</td>
+						<td>
+							<a href="/quotation-detail/{{s.id}}/"><button type="button" class="sup_edit eye" data="{{s.id}}"><i class="fas fa-eye"></i></button></a>
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+			{% else %}
+			<span class="no_content">
+				No GRN found
+			</span>
+			{% endif %}
+		</div>
+	</div>
+</div>
+<div class="col col-xl-1 col-lg-1 d-none d-lg-inline">
+	<span style="opacity: 0;">.</span>
+</div>
+
+
+{% endblock %}
+
+{% block js %}
+<script>
+	$(window).on('load', function(){
+		if($('.msgon').length>0){
+			var msg = $('.msgon').first().val();
+			if(msg=='done'){
+				$('.success_ban').show('slide', {direction: 'right'}, 500);
+				setTimeout(function(){
+					$('.success_ban').hide('slide', {direction: 'right'}, 500);
+				}, 5000);
+			}
+			if(msg=='error'){
+				$('.error_ban').show('slide', {direction: 'right'}, 500);
+				setTimeout(function(){
+					$('.error_ban').hide('slide', {direction: 'right'}, 500);
+				}, 5000);
+			}
+		}
+	});
+</script>
+{% endblock %}

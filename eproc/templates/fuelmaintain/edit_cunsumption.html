@@ -1,0 +1,206 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/purchase.css' %}?v=1.3">
+<link rel="stylesheet" href="{% static 'css/goods.css' %}?v=1.4">
+{% endblock %}
+
+
+{% block wave %}
+<img src="{% static 'img/back.png' %}" id="backimg">
+{% endblock %}
+{% block content %}
+<div class="col col-xl-2 col-lg-2 d-md-1 d-none d-lg-inline">
+  <span style="opacity: 0;">.</span>
+</div>
+<div class="col col-xl-8 col-lg-8 col-md-10">
+  <div class="predefine1">
+    <div class="head">
+      <span class="head1">Fuel Consumption Entry</span>
+      <span class="head2">Edit fuel concumption details</span>
+    </div>
+    <div class="prebody" id="formbody">
+      <input type="hidden" id="dvtypeid" value="{{item.vehicle_type_id}}">
+      <input type="hidden" id="dvtype" value="{{item.vehicle_type}}">
+      <input type="hidden" id="dvnum" value="{{item.vehicle_number}}">
+      <input type="hidden" id="dftype" value="{{item.fuel_type}}">
+      <input type="hidden" id="dreserve" value="{{item.reserviour_id}}">
+      <input type="hidden" id="dnumtype" value="{{item.number_type}}">
+      <form method="POST" action="/update-fuel/" id="FuelForm" autocomplete="off" name="FuelForm">
+        {% csrf_token %}
+        <input type="hidden" name="default_reserve" value="{{item.reserviour_id}}">
+        <input type="hidden" name="fid" value="{{item.id}}">
+        <input type="hidden" name="default_quantity" value="{{item.quantity}}">
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>Date<font style="color: red;">*</font></span></label>
+            <input type="text" name="date" id="date" class="form-control inputs" value="{{item.date}}">
+          </div>
+        </div>
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>Consumption Number<font style="color: red;">*</font></span></label>
+            <input type="text" class="form-control inputs" name="consump_number" id="consump_number" value="{{item.consump_number}}" readonly>
+          </div>
+        </div>
+        {% for f in couponlist %}
+        <input type="hidden" class="couponlist" value="{{f}}">
+        {% endfor %}
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>Coupon Number<font style="color: red;">*</font></span></label>
+            <input type="text" name="coupon" id="coupon" class="form-control inputs" value="{{item.coupon_number}}">
+            <span class="already_error coupon_error">Entry with this coupon number already exists!</span>
+          </div>
+        </div>
+        {% for vehi, range in vehis %}
+        {% for v in vehi %}
+        <input type="hidden" id="vh{{v.url}}" name="{{v.chasis_number}}" data="{{v.engine_number}}" value="{{v.vehicle_number}}">
+        <input type="hidden" id="vhc{{v.chasis_url}}" name="{{v.vehicle_number}}" data="{{v.engine_number}}" value="{{v.chasis_number}}">
+        <input type="hidden" id="vhe{{v.engine_url}}" name="{{v.chasis_number}}" data="{{v.vehicle_number}}" value="{{v.engine_number}}">
+        {% endfor %}
+        {% endfor %}
+        {% for d in v_type %}
+        <input type="hidden" id="vtypename{{d.id}}" value="{{d.type_name}}">
+        {% endfor %}
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <input type="hidden" id="vehicle_type_name" name="vehicle_type_name" value="{{item.vehicle_type}}">
+            <label class="label"><span>Vehicle Type<font style="color: red;">*</font></span></label>
+            <select class="form-control inputs" name="vehicle_type" id="vehicle_type">
+              <option value="" disabled selected>Choose vehicle type</option>
+              {% for c in v_type %}
+              <option value="{{c.id}}">{{c.type_name}}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        <input type="hidden" name="vehicle" id="vehicle_confirm" value="{{item.vehicle_number}}">
+        <input type="hidden" name="num_type" id="num_type" value="{{item.number_type}}" value="{{number_type}}">
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>Vehicle/Engine/Chasis Number</span></label>
+            {% for vehi, range in vehis %}
+            <div class="fields vehicles" id="vehitypenumid{{vehi.0.vehicle_type_id}}">
+              <select id="vehi_number{{vehi.0.vehicle_type_id}}" class="form-control vchoice">
+                <option value="" disabled selected>Choose vehicle number</option>
+                {% for d in vehi %}
+                <option value="{{d.vehicle_number}}">{{d.vehicle_number}}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="fields vehicles" id="vehitypechasisid{{vehi.0.vehicle_type_id}}">
+              <select id="vehi_chasis{{vehi.0.vehicle_type_id}}" class="form-control vchoice">
+                <option value="" disabled selected>Choose chasis number</option>
+                {% for d in vehi %}
+                <option value="{{d.chasis_number}}">{{d.chasis_number}}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="fields vehicles" id="vehitypeengineid{{vehi.0.vehicle_type_id}}">
+              <select id="vehi_engine{{vehi.0.vehicle_type_id}}" class="form-control vchoice">
+                <option value="" disabled selected>Choose engine number</option>
+                {% for d in vehi %}
+                <option value="{{d.engine_number}}">{{d.engine_number}}</option>
+                {% endfor %}
+              </select>
+            </div>
+            {% endfor  %}
+          </div>
+          <div class="fields fcheck">
+            <span id="ch_check"><input type="checkbox" id="chasis_check">Chasis Number</span>
+            <span id="en_check"><input type="checkbox" id="engine_check">Engine Number</span>
+          </div>
+          <div class="fields vehidet">
+            <table class="table table-bordered table-hover">
+              <tbody>
+                <tr>
+                  <td>Vehicle Number</td>
+                  <td id="vehidetnum"></td>
+                </tr>
+                <tr>
+                  <td>Chasis Number</td>
+                  <td id="vehidetchasis"></td>
+                </tr>
+                <tr>
+                  <td>Engine Number</td>
+                  <td id="vehidetengine"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>Fuel Type<font style="color: red;">*</font></span></label>
+            <select class="form-control inputs" name="fuel_type" id="fuel_type">
+              <option value="" disabled selected>Choose fuel type</option>
+              {% for c in f_type %}
+              <option value="{{c.name}}">{{c.name}}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        {% for r in reserve %}
+        <input type="hidden" id="reserve{{r.id}}" value="{{r.name}}">
+        {% endfor %}
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <input type="hidden" id="reserviour_name" name="reserviour_name" value="{{item.reserviour_val}}">
+            <label class="label"><span>Reserviour<font style="color: red;">*</font></span></label>
+            <select class="form-control inputs" name="reserviour" id="reserviour">
+              <option value="" disabled selected>Choose reserviour</option>
+              {% for c in reserve %}
+              <option value="{{c.id}}">{{c.name}}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>KM Run of Vehicle</span></label>
+            <div class="input-group">
+              <input type="number" name="kilometer" id="kilometer" class="form-control inputs" step='.01' value="{{item.kilometer}}">
+              <div class="input-group-append">
+                <div class="input-group-text">KM</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col col-xl-6 col-lg-6">
+          <div class="fields">
+            <label class="label"><span>Quantity</span></label>
+            <div class="input-group">
+              <input type="number" name="quantity" id="quantity" class="form-control inputs" step='.01' value="{{item.quantity}}">
+              <div class="input-group-append">
+                <div class="input-group-text">ltrs</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col col-xl-12 col-lg-12">
+          {% if messages %}
+            {% for message in messages %}
+            <input type="hidden" class="msgon" value="{{message}}">
+            {% endfor %}
+          {% endif %}
+          <div class="fields">
+            <button type="submit" class="submit_btn">SUBMIT</button><i class="fa fa-spinner fa-spin mx-2 spinner" id="spinner1"></i>
+          </div>
+        </div>
+        
+      </form>
+    </div>
+  </div>
+</div>
+<div class="col col-xl-2 col-lg-2 d-md-1 d-none d-lg-inline">
+  <span style="opacity: 0;">.</span>
+</div>
+
+
+{% endblock %}
+
+{% block js %}
+<script src="{% static '/js/fuel.js' %}?v=1.5"></script>
+{% endblock %}

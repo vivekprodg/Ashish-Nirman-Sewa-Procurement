@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/material.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="col col-xl-6 col-lg-6 col-md-6">
+	<div class="predefine1">
+		<div class="head">
+			<span class="head1">Add New User</span>
+			<span class="head2">Enter new user details</span>
+		</div>
+		<div class="prebody" id="formbody">
+			<form method="POST" action="/account/register/" id="UserForm" autocomplete="off" name="UserForm">
+				{% csrf_token %}
+				<div class="col col-xl-6 col-lg-6">
+					<div class="fields">
+						<label class="label"><span>User Name<font style="color: red;">*</font></span></label>
+						<input type="text" class="form-control inputs" name="user_name" id="user_name">
+					</div>
+				</div>
+				<div class="col col-xl-6 col-lg-6">
+					<div class="fields">
+						<label class="label"><span>First Name<font style="color: red;">*</font></span></label>
+						<input type="text" class="form-control inputs" name="first_name" id="first_name">
+					</div>
+				</div>
+				<div class="col col-xl-6 col-lg-6">
+					<div class="fields">
+						<label class="label"><span>Last Name<font style="color: red;">*</font></span></label>
+						<input type="text" class="form-control inputs" name="last_name" id="last_name">
+					</div>
+				</div>
+				<div class="col col-xl-6 col-lg-6">
+					<div class="fields">
+						<label class="label"><span>Email<font style="color: red;">*</font></span></label>
+						<input type="email" class="form-control inputs" name="email" id="email">
+					</div>
+				</div>
+				<div class="col col-xl-6 col-lg-6">
+					<div class="fields">
+						<label class="label"><span>Password<font style="color: red;">*</font></span></label>
+						<input type="password" class="form-control inputs" name="password1" id="password1">
+					</div>
+				</div>
+				<div class="col col-xl-6 col-lg-6">
+					<div class="fields">
+						<label class="label"><span>Confirm Password<font style="color: red;">*</font></span></label>
+						<input type="password" class="form-control inputs" name="password2" id="password2">
+					</div>
+				</div>
+				<div class="col col-xl-6 col-lg-6">
+					<div class="fields">
+						<label class="label"><span>Site<font style="color: red;">*</font></span></label>
+						<select class="form-control inputs" name="site" id="site">
+							<option value="" disabled selected>Choose site</option>
+							{% for c in site_dash %}
+							<option value="{{c.name}}">{{c.name}}</option>
+							{% endfor %}
+						</select>
+					</div>
+				</div>
+				<div class="col col-xl-6 col-lg-6">
+					<div class="fields">
+						<label class="label"><span>Role<font style="color: red;">*</font></span></label>
+						<select class="form-control inputs" name="role" id="role">
+							<option value="" disabled selected>Choose role</option>
+							<option value="admin">admin</option>
+							<option value="staff">staff</option>
+						</select>
+					</div>
+				</div>
+
+				<div class="col col-xl-12 col-lg-12">
+					{% if messages %}
+						{% for message in messages %}
+						<input type="hidden" class="msgon" value="{{message}}">
+						{% endfor %}
+					{% endif %}
+					<div class="fields">
+						<button type="submit" class="submit_btn">SUBMIT</button><i class="fa fa-spinner fa-spin mx-2 spinner" id="spinner1"></i>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<div class="col col-xl-6 col-lg-6 col-md-6">
+	<div class="predefine2">
+		<div class="wavediv">
+			
+		</div>
+		<div class="wavecontent">
+			<a href="/account/user-display/"><div class="wavecount">
+				<div class="wnumber">
+					{{mat}}
+				</div>
+				<div class="wtext">
+					<span class="wtext1">Users</span>
+					<span class="wtext2">Total active users in system</span>
+				</div>
+			</div></a>
+			<a href="/account/manage-permissions/"><div class="wavecount">
+				<div class="wnumber">
+					{{opera}}
+				</div>
+				<div class="wtext">
+					<span class="wtext1">Permissions</span>
+					<span class="wtext2">Define User Permissions</span>
+				</div>
+			</div></a>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'js/account.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,138 @@
+{% load humanize %}
+<html>
+<head>
+  <title>Report</title>
+  <style>
+    *{
+      color:#000;
+      padding:5px 10px;
+      margin:0px;
+    }
+    body{
+        padding: 0px;
+        margin: 0px;
+        counter-reset: Serial;
+    }
+    @page {
+        size: A4;
+        margin: 2cm;
+    }
+    .report_subbanner1{
+      float: left;
+      width: 100%;
+      height: inherit;
+    }
+    .report_head1{
+      float:left;
+      width: 100%;
+      font-size: 17px;
+      color: #000;
+      text-align:center;
+    }
+    .report_subbanner1 pre{
+      font-size: 14px;
+      font-family: verdana;
+    }
+    table{
+      border: 1px solid #ddd;
+      padding: 0px;
+      margin:0px;
+    }
+    .table1 td{
+      text-align:left;
+      font-size: 14px;
+      padding: 2px;
+    }
+    .table2 td{
+      text-align:left;
+      font-size: 14px;
+      padding: 3px 2px 1.7px 5px;
+    }
+    .table2 th{
+      text-align:left;
+      font-size: 13px;
+    }
+    .td1{
+      font-weight: bold;
+    }
+    .boldrow td{
+      font-weight: bold;
+      color: #505152 !important;
+    }
+    .boldrow td .input-group{
+      width: 200px;
+      float:right;
+      height: 35px !important;
+    }
+    .boldrow td .input-group .input-group-text{
+      font-size: 14px !important;
+    }
+  </style>
+</head>
+<body>
+<div style="width: 100%; float:left;">
+  <div class="report_subbanner1">
+    <iframe class="report_head1" style="color: #000; font-size: 19px;">
+      Ashish Nirman Sewa
+    </iframe><br>
+    <iframe class="report_head1" style="font-size: 13px; color: rgba(0,0,0,.8);">
+      Kathmandu
+    </iframe>
+    <div class="report_head1">
+      Fuel Consumption Details
+    </div>
+
+  </div>
+  <br>
+  <table class="table1" style="width:50%; float:left;">
+    <tbody>
+      <tr>
+        <td class="td1">Entry Date</td>
+        <td>{{a.date}}</td>
+      </tr>
+      <tr>
+        <td class="td1">Consumption Number</td>
+        <td>{{a.consump_number}}</td>
+      </tr>
+      <tr>
+        <td class="td1">Coupon Number</td>
+        <td>{{a.coupon_number}}</td>
+      </tr>
+      <tr>
+        <td class="td1">Vehicle Type</td>
+        <td>{{a.vehicle_type}}</td>
+      </tr>
+      <tr>
+        <td class="td1">Vehicle Number</td>
+        <td>{{a.vehicle_number}}({{a.number_type}})</td>
+      </tr>
+      <tr>
+        <td class="td1">Fuel Type</td>
+        <td>{{a.fuel_type}}</td>
+      </tr>
+      <tr>
+        <td class="td1">Reserviour</td>
+        <td>{{a.reserviour}}</td>
+      </tr>
+      <tr>
+        <td class="td1">Kilometers</td>
+        <td>{{a.kilometer}}</td>
+      </tr>
+      <tr>
+        <td class="td1">Quantity</td>
+        <td>{{a.quantity}} ltrs</td>
+      </tr>
+      <tr>
+        <td class="td1">Site</td>
+        <td>Rs {{a.user_site}}</td>
+      </tr>
+      <tr>
+        <td class="td1">Entry By</td>
+        <td>{{a.entry_by}}</td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
+</body>
+</html>

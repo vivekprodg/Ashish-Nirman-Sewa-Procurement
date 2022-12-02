@@ -1,0 +1,191 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/predefine.css' %}?v=1.4">
+{% endblock %}
+{% block wave %}
+<img src="{% static 'img/back.png' %}" id="backimg">
+{% endblock %}
+{% block content %}
+<div class="col col-xl-1 col-lg-1 d-none d-lg-inline">
+	<span style="opacity: 0;">.</span>
+</div>
+<div class="col col-xl-10 col-lg-10">
+	<div class="predefine1">
+		<div class="head">
+			<span class="head1">Sites</span>
+			<span class="head2">View and Manage site's details</span>
+		</div>
+		{% if messages %}
+			{% for message in messages %}
+			<input type="hidden" class="msgon" value="{{message}}">
+			{% endfor %}
+		{% endif %}
+		<div class="prebody table-responsive">
+			{% if site_dash %}
+			{% for s in site_dash %}
+			<input type="hidden" id="name{{s.id}}" value="{{s.name}}">
+			<input type="hidden" id="url{{s.id}}" value="{{s.url}}">
+			<input type="hidden" id="address{{s.id}}" value="{{s.address}}">
+			<input type="hidden" id="pan{{s.id}}" value="{{s.pan_number}}">
+			<input type="hidden" id="contact{{s.id}}" value="{{s.contact}}">
+			<input type="hidden" id="role{{s.id}}" value="{{s.role}}">
+			{% endfor %}
+			<table class="table table-bordered table-hover" id="SupplierTable">
+				<thead>
+				  <tr>
+					<th scope="col">Name</th>
+					<th scope="col">Address</th>
+					<th scope="col">Pan Number</th>
+					<th scope="col">Contact</th>
+					<th scope="col">Role</th>
+					<th scope="col">Action</th>
+				  </tr>
+				</thead>
+				<tbody>
+					{% for s in site_dash %}
+					<tr>
+						<td>{{s.name}}</td>
+						<td>{{s.address}}</td>
+						<td>{{s.pan_number}}</td>
+						<td>{{s.contact}}</td>
+						<td>{{s.role}}</td>
+						<td>
+							{% if s.active_status == 'yes' %}
+							<button type="button" class="sup_edit" data="{{s.id}}"><i class="far fa-edit"></i></button>
+							<button type="button" class="sup_delete" data="{{s.id}}"><i class="far fa-trash-alt"></i></button>
+							<button type="button" class="usup_delete" data="{{s.id}}" data-toggle="tooltip" data-placement="bottom" title="Deactivate"><i class="fas fa-ban"></i></button>
+							{% endif %}
+							{% if s.active_status == 'no' %}
+							<button type="button" class="uusup_delete" data="{{s.id}}" data-toggle="tooltip" data-placement="bottom" title="Not Active"><i class="fas fa-ban"></i></button>
+							{% endif %}
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+			{% else %}
+			<span class="no_content">
+				No sites found
+			</span>
+			{% endif %}
+		</div>
+	</div>
+</div>
+<div class="col col-xl-1 col-lg-1 d-none d-lg-inline">
+	<span style="opacity: 0;">.</span>
+</div>
+
+<!-- pop up for edition ------>
+
+<div class="edit_popupbanner">
+	<div class="col col-xl-3 col-lg-3 col-md-1 d-none d-md-inline">
+		<span style="opacity: 0;">.</span>
+	</div>
+	<div class="col col-xl-6 col-lg-6 col-md-10">
+		<div class="predefine1" id="edit_popup">
+			<div class="edithead">
+				Edit Site <i class="fa fa-times" id="close_edit"></i>
+			</div>
+			<div class="prebody editbody" id="formbody">
+				<form method="POST" action="/edit-site/" id="SiteEditForm" autocomplete="off" name="SiteEditForm">
+					{% csrf_token %}
+					<input type="hidden" id="suid" name="suid">
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>Site Name<font style="color: red;">*</font></span></label>
+							<input type="text" class="form-control inputs" name="name" id="name">
+							<input type="hidden" class="form-control inputs" name="url" id="url">
+							<input type="hidden" name="dname" id="dname">
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>Address<font style="color: red;">*</font></span></label>
+							<input type="text" class="form-control inputs" name="address" id="address">
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>Pan Number<font style="color: red;">*</font></span></label>
+							<input type="text" class="form-control inputs" name="pan" id="pan">
+						</div>
+					</div>
+					<div class="col col-xl-6 col-lg-6">
+						<div class="fields">
+							<label class="label"><span>Contact Number<font style="color: red;">*</font></span></label>
+							<input type="text" class="form-control inputs" name="contact" id="contact">
+						</div>
+					</div>
+					<div class="col col-xl-12 col-lg-12">
+						<div class="fields">
+							<span class="admincheck"><input type="checkbox" id="adcheck"> ADMIN SITE</span>
+							<input type="hidden" name="admin_sta" id="admin_sta">
+						</div>
+					</div>
+					<div class="col col-xl-12 col-lg-12">
+						<div class="fields">
+							<button type="submit" class="submit_btn">SAVE</button><i class="fa fa-spinner fa-spin mx-2 spinner" id="spinner1"></i>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div class="col col-xl-3 col-lg-3 col-md-1 d-none d-md-inline">
+		<span style="opacity: 0;">.</span>
+	</div>
+</div>
+
+<!-- po up deletion ------------------->
+
+<div class="del_popupbanner">
+	<div class="col col-xl-4 col-lg-4 col-md-3 d-none d-md-inline">
+		<span style="opacity: 0;">.</span>
+	</div>
+	<div class="col col-xl-4 col-lg-4 col-md-6">
+
+		<div class="predefine1" id="del_popup">
+			Site will be deleted. Do you wish to continue?
+
+			<form method="POST" action="/delete-site/">
+				{% csrf_token %}
+				<input type="hidden" name="sid" id="sid">
+				<button type="submit" class="del_btn">Yes</button>
+				<button type="button" class="del_btn" id="cancel_btn">No</button>
+			</form>
+		</div>
+	</div>
+	<div class="col col-xl-4 col-lg-4 col-md-3 d-none d-md-inline">
+		<span style="opacity: 0;">.</span>
+	</div>
+</div>
+
+<div class="udel_popupbanner">
+	<div class="col col-xl-4 col-lg-4 col-md-3 d-none d-md-inline">
+		<span style="opacity: 0;">.</span>
+	</div>
+	<div class="col col-xl-4 col-lg-4 col-md-6">
+
+		<div class="predefine1" id="udel_popup">
+			Site will be deactivated in the system. Do you wish to continue?
+
+			<form method="POST" action="/deactivate-site/">
+				{% csrf_token %}
+				<input type="hidden" name="sid" id="ssid">
+				<button type="submit" class="del_btn">Yes</button>
+				<button type="button" class="del_btn" id="ucancel_btn">No</button>
+			</form>
+		</div>
+	</div>
+	<div class="col col-xl-4 col-lg-4 col-md-3 d-none d-md-inline">
+		<span style="opacity: 0;">.</span>
+	</div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'js/site.js' %}?v=1.5"></script>
+{% endblock %}
