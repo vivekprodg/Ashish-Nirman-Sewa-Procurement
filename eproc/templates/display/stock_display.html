@@ -23,8 +23,9 @@
 				<input type="hidden" class="msgon" value="{{message}}">
 				{% endfor %}
 			{% endif %}
-			{% if s_item %}
-			{% for s in s_item %}
+			{% for product, range in s_item %}
+			{% if product %}
+			{% for s in product %}
 			<input type="hidden" id="name{{s.id}}" value="{{s.item}}">
 			<input type="hidden" id="url{{s.id}}" value="{{s.url}}">
 			<input type="hidden" id="ali{{s.id}}" value="{{s.alias}}">
@@ -88,7 +89,7 @@
 				  </tr>
 				</thead>
 				<tbody>
-					{% for s in s_item %}
+					{% for s in product %}
 					<tr>
 						<td>{{s.item}}</td>
 						<td>{{s.alias}}</td>
@@ -109,11 +110,35 @@
 					{% endfor %}
 				</tbody>
 			</table>
+			<span class="page_numbers">
+				{% if product.has_other_pages %}
+				<ul class="pagination">
+					{% if product.has_previous %}
+					<li><a href="?page={{ product.previous_page_number }}">&laquo;</a></li>
+					{% else %}
+					<li class="prev_disabled">&laquo;</li>
+					{% endif %}
+					{% for i in product.paginator.page_range %}
+					{% if product.number == i %}
+					<li class="">{{ i }}</li>
+					{% else %}
+					<li><a href="?page={{ i }}">{{ i }}</a></li>
+					{% endif %}
+					{% endfor %}
+					{% if product.has_next %}
+					<li><a href="?page={{ product.next_page_number }}">&raquo;</a></li>
+					{% else %}
+					<li class="next_disabled">&raquo;</li>
+					{% endif %}
+				</ul>
+				{% endif %}
+			</span>
 			{% else %}
 			<span class="no_content">
 				No items found
 			</span>
 			{% endif %}
+			{% endfor %}
 		</div>
 	</div>
 </div>
