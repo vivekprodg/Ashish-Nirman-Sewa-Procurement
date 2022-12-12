@@ -520,6 +520,16 @@ def edit_uom(request):
 			return redirect('manage_uom')
 		else:
 			query = UOM.objects.filter(id=lid).update(uom=name)
+			if name != default_name:
+				Goods.objects.filter(uom=default_name).update(uom=name)
+				InvoiceItem.objects.filter(uom=default_name).update(uom=name)
+				MaterialItem.objects.filter(uom=default_name).update(uom=name)
+				TransferItem.objects.filter(uom=default_name).update(uom=name)
+				InternalGrnItems.objects.filter(uom=default_name).update(uom=name)
+				MaintainanceItem.objects.filter(uom=default_name).update(uom=name)
+				DamageItem.objects.filter(uom=default_name).update(uom=name)
+				ReturnItem.objects.filter(uom=default_name).update(uom=name)
+				InternalDamageItem.objects.filter(uom=default_name).update(uom=name)
 			messages.info(request, 'done')
 			return redirect('manage_uom')
 	else:
@@ -1974,10 +1984,31 @@ def add_stock(request):
 def stock_display(request):
 	u_site = user_site(request)
 	u_status = user_role(request)
+	s_item = []
 	if u_status == 'main_admin' or u_status == 'main_staff':
-		s_item = StockEntry.objects.all()
+		s_it = StockEntry.objects.all()
+		page = request.GET.get('page', 1)
+		paginator = Paginator(s_it, 200)
+		try:
+			product = paginator.page(page)
+		except PageNotAnInteger:
+			product = paginator.page(1)
+		except EmptyPage:
+			product = paginator.page(paginator.num_pages)
+		n = len(product)
+		s_item.append([product, range(1, n)])
 	else:
-		s_item = StockEntry.objects.filter(stock_site=u_site)
+		s_it = StockEntry.objects.filter(stock_site=u_site)
+		page = request.GET.get('page', 1)
+		paginator = Paginator(s_it, 200)
+		try:
+			product = paginator.page(page)
+		except PageNotAnInteger:
+			product = paginator.page(1)
+		except EmptyPage:
+			product = paginator.page(paginator.num_pages)
+		n = len(product)
+		s_item.append([product, range(1, n)])
 	stock_cat = StockCategory.objects.all()
 	uom_dash = UOM.objects.all()
 	site_dash = Site.objects.filter(active_status='yes')
@@ -2146,6 +2177,9 @@ def update_stock_item(request):
 				TransferItem.objects.filter(item_id=sid).update(item=name)
 				InternalGrnItems.objects.filter(item_id=sid).update(item=name)
 				MaintainanceItem.objects.filter(item_id=sid).update(item_name=name)
+				DamageItem.objects.filter(item_id=sid).update(item=name)
+				ReturnItem.objects.filter(item_id=sid).update(item=name)
+				InternalDamageItem.objects.filter(item_id=sid).update(item=name)
 			if alias != dalias:
 				Goods.objects.filter(item_id=sid).update(alias=alias)
 				InvoiceItem.objects.filter(item_id=sid).update(alias=alias)
@@ -2153,6 +2187,9 @@ def update_stock_item(request):
 				TransferItem.objects.filter(item_id=sid).update(alias=alias)
 				InternalGrnItems.objects.filter(item_id=sid).update(alias=alias)
 				MaintainanceItem.objects.filter(item_id=sid).update(alias=alias)
+				DamageItem.objects.filter(item_id=sid).update(alias=alias)
+				ReturnItem.objects.filter(item_id=sid).update(alias=alias)
+				InternalDamageItem.objects.filter(item_id=sid).update(alias=alias)
 			if uom != duom:
 				Goods.objects.filter(item_id=sid).update(uom=uom)
 				InvoiceItem.objects.filter(item_id=sid).update(uom=uom)
@@ -2160,6 +2197,9 @@ def update_stock_item(request):
 				TransferItem.objects.filter(item_id=sid).update(uom=uom)
 				InternalGrnItems.objects.filter(item_id=sid).update(uom=uom)
 				MaintainanceItem.objects.filter(item_id=sid).update(uom=uom)
+				DamageItem.objects.filter(item_id=sid).update(uom=uom)
+				ReturnItem.objects.filter(item_id=sid).update(uom=uom)
+				InternalDamageItem.objects.filter(item_id=sid).update(uom=uom)
 
 			messages.info(request, 'done')
 			return redirect('stock_item_display')
@@ -2236,6 +2276,15 @@ def edit_stock_category(request):
 		default = request.POST.get('default')
 		name = request.POST.get('name')
 		url = request.POST.get('url')
+		urlcol = []
+		stc = StockCategory.objects.get(id=lid)
+		stc_url = stc.url
+		stcs = StockSubCategory.objects.filter(cat_url=stc_url)
+		for s in stcs:
+			stcs_url = s.url
+			murl = str(stc_url)+''+str(stcs_url)
+			nmurl = str(url)+''+str(stcs_url)
+			urlcol.append([murl,nmurl])
 
 		if StockCategory.objects.filter(url=url).exclude(id=lid).exists():
 			messages.info(request, 'error')
@@ -2244,6 +2293,9 @@ def edit_stock_category(request):
 			StockCategory.objects.filter(id=lid).update(name=name, url=url)
 			if StockItem.objects.filter(stock_category=default).exists():
 				StockItem.objects.filter(stock_category=default).update(stock_category=name, cat_url=url)
+				for key, value in urlcol:
+					if StockItem.objects.filter(main_url=key).exists():
+						StockItem.objects.filter(main_url=key).update(main_url=value)
 			if StockEntry.objects.filter(stock_category=default).exists():
 				StockEntry.objects.filter(stock_category=default).update(stock_category=name, cat_url=url)
 			if StockSubCategory.objects.filter(cat_name=default).exists():
@@ -2301,6 +2353,15 @@ def edit_stock_subcategory(request):
 		url = request.POST.get('url')
 		caturl = request.POST.get('caturl')
 		default = request.POST.get('default')
+		urlcol = []
+		stcs = StockSubCategory.objects.get(id=lid)
+		stcs_url = stcs.url
+		stc_url = stcs.cat_url
+		murl = str(stc_url)+''+str(stcs.url)
+		if caturl != stc_url:
+			nmurl = str(caturl)+''+str(url)
+		else:
+			nmurl = str(stc_url)+''+str(url)
 
 		if StockSubCategory.objects.filter(cat_url=caturl, url=url).exclude(id=lid).exists():
 			messages.info(request, 'error')
@@ -2309,6 +2370,8 @@ def edit_stock_subcategory(request):
 			StockSubCategory.objects.filter(id=lid).update(cat_name=cat, cat_url=caturl, name=name, url=url)
 			if StockItem.objects.filter(stock_subcategory=default).exists():
 				StockItem.objects.filter(stock_subcategory=default).update(stock_subcategory=name, subcat_url=url)
+				if StockItem.objects.filter(main_url=murl).exists():
+					StockItem.objects.filter(main_url=murl).update(main_url=nmurl)
 			if StockEntry.objects.filter(stock_subcategory=default).exists():
 				StockEntry.objects.filter(stock_subcategory=default).update(stock_subcategory=name, subcat_url=url)
 			messages.info(request, 'done')
