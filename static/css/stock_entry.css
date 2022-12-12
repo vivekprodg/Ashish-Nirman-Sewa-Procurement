@@ -362,8 +362,3 @@
 .subcatshow{
   display:none;
 }
-
-.pagination{
-  display:block;
-  overflow-x: scroll;
-}
