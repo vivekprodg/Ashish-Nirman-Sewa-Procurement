@@ -2409,15 +2409,15 @@ def material_issue(request):
 	else:
 		mie = mie + 1
 
-	psupa = []
+	ppsupa = []
 	seen = set()
 	seen_add = seen.add
 	tran = PurchaseEntry.objects.values_list('purchase_order_number', flat=True).distinct()
 	ent = [x for x in tran if not (x in seen or seen_add(x))]
 	for r in ent:
-		ps = PurchaseEntry.objects.filter(purchase_order_number=r)
-		n = len(ps)
-		psupa.append([ps, range(1,n)])
+		pss = PurchaseEntry.objects.filter(purchase_order_number=r)
+		pn = len(pss)
+		ppsupa.append([pss, range(1,pn)])
 
 	igoods = []
 	tran = InvoiceItem.objects.values_list('purchaseid', flat=True).distinct()
@@ -2448,7 +2448,7 @@ def material_issue(request):
 		n = len(ps)
 		psupa.append([ps, range(1,n)])
 
-	context = {'psupa': psupa, 'itemsel': itemsel, 'stock_cat': stock_cat, 'psupa': psupa, 'igoods': igoods, 'porder': porder, 'item_real': item_real, 'mie': mie, 'site_dash':site_dash, 'u_site': u_site, 'mat': mat, 'vehicle_dash': vehicle_dash, 'item_dash': item_dash}    
+	context = {'psupa': psupa, 'ppsupa': ppsupa, 'itemsel': itemsel, 'stock_cat': stock_cat, 'psupa': psupa, 'igoods': igoods, 'porder': porder, 'item_real': item_real, 'mie': mie, 'site_dash':site_dash, 'u_site': u_site, 'mat': mat, 'vehicle_dash': vehicle_dash, 'item_dash': item_dash}    
 	return render(request, 'material_issue.html', context)
 
 
