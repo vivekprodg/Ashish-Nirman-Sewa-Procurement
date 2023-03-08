@@ -69,18 +69,18 @@ $('#challan').blur(function(){
 		}
 	});
 });
-$('#bill').blur(function(){
-	var val = $(this).val();
-	gbill = 0;
-	$('.gbill').each(function(){
-		var cha = $(this).val();
-		if(val == cha){
-			gbill = 1;
-			$('#bill').addClass('errorcolor');
-			$('.bill_e').show();
-		}
-	});
-});
+// $('#bill').blur(function(){
+// 	var val = $(this).val();
+// 	gbill = 0;
+// 	$('.gbill').each(function(){
+// 		var cha = $(this).val();
+// 		if(val == cha){
+// 			gbill = 1;
+// 			$('#bill').addClass('errorcolor');
+// 			$('.bill_e').show();
+// 		}
+// 	});
+// });
 $('#porder').blur(function(){
 	var val = $(this).val();
 	val = val.toUpperCase();
