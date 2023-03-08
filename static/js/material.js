@@ -157,7 +157,7 @@ $('#jobnumber').on('keyup', function(){
 				$('#pvnselban'+vv).show();
 			}
 		}else{
-			$('#pvnselban'+vv).show();
+			$('#pvnselban'+val).show();
 		}
 	}
 });
