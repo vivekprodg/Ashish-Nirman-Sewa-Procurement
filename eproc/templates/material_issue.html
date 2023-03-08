@@ -80,6 +80,7 @@
 		        </div>
 		        <div class="col col-xl-6 col-lg-6">
 		          {% for ps, range in psupa %}
+		          {{ps.0.purchase_order_number}}
 		          <div class="fields pvnselban" id="pvnselban{{ps.0.purchase_order_number}}">
 		            <label class="label"><span>Purchase Voucher Number</span></label>
 		            <select class="form-control inputs pvnsel" id="pvnsel{{ps.0.purchase_order_number}}">
