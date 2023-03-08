@@ -2604,15 +2604,15 @@ def material_edit(request, mid):
 		item_real = StockItem.objects.all()
 		site_dash = Site.objects.filter(active_status='yes').exclude(name=u_site)
 
-		psupa = []
+		ppsupa = []
 		seen = set()
 		seen_add = seen.add
 		tran = PurchaseEntry.objects.values_list('purchase_order_number', flat=True).distinct()
 		ent = [x for x in tran if not (x in seen or seen_add(x))]
 		for r in ent:
-			ps = PurchaseEntry.objects.filter(purchase_order_number=r)
-			n = len(ps)
-			psupa.append([ps, range(1,n)])
+			pss = PurchaseEntry.objects.filter(purchase_order_number=r)
+			n = len(pss)
+			ppsupa.append([pss, range(1,n)])
 
 
 		igoods = []
@@ -2646,7 +2646,7 @@ def material_edit(request, mid):
 			n = len(ps)
 			psupa.append([ps, range(1,n)])
 
-		context = {'psupa': psupa, 'itemsel': itemsel, 'stock_cat': stock_cat, 'psupa': psupa, 'porder': porder, 'bills': bills, 'bill':bill, 'igoods': igoods, 'mitm': mitm, 'item': item, 'item_real': item_real, 'site_dash': site_dash, 'u_site': u_site, 'igoods': igoods, 'goods_count': goods_count, 'location_dash': location_dash, 'vehicle_dash': vehicle_dash, 'item_dash': item_dash}    
+		context = {'psupa': psupa, 'ppsupa': ppsupa, 'itemsel': itemsel, 'stock_cat': stock_cat, 'psupa': psupa, 'porder': porder, 'bills': bills, 'bill':bill, 'igoods': igoods, 'mitm': mitm, 'item': item, 'item_real': item_real, 'site_dash': site_dash, 'u_site': u_site, 'igoods': igoods, 'goods_count': goods_count, 'location_dash': location_dash, 'vehicle_dash': vehicle_dash, 'item_dash': item_dash}    
 		return render(request, 'material_edit.html', context)
 	else:
 		return redirect('material_display')

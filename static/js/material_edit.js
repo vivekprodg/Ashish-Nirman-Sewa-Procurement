@@ -178,6 +178,8 @@ $('#jobnumber').on('keyup', function(){
 			}else{
 				$('#pvnselban'+vv).show();
 			}
+		}else{
+			$('#pvnselban'+val).show();
 		}
 	}
 });

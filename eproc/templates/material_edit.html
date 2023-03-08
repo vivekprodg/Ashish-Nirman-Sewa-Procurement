@@ -106,12 +106,12 @@
 		        	</div>
 		        </div>
 		        <div class="col col-xl-6 col-lg-6">
-		          {% for ps, range in psupa %}
-		          <div class="fields pvnselban" id="pvnselban{{ps.0.purchase_order_number}}">
+		          {% for pss, range in ppsupa %}
+		          <div class="fields pvnselban" id="pvnselban{{pss.0.purchase_order_number}}">
 		            <label class="label"><span>Purchase Voucher Number</span></label>
-		            <select class="form-control inputs pvnsel" id="pvnsel{{ps.0.purchase_order_number}}">
+		            <select class="form-control inputs pvnsel" id="pvnsel{{pss.0.purchase_order_number}}">
 		              <option value="" disabled selected>Choose voucher number</option>
-		              {% for c in ps %}
+		              {% for c in pss %}
 		              <option value="{{c.voucher_number}}">{{c.voucher_number}}</option>
 		              {% endfor %}
 		            </select>
@@ -418,5 +418,5 @@
 {% endblock %}
 
 {% block js %}
-<script src="{% static 'js/material_edit.js' %}?v=1.7"></script>
+<script src="{% static 'js/material_edit.js' %}?v=1.8"></script>
 {% endblock %}
