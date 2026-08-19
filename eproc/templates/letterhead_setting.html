@@ -1,0 +1,215 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/predefine.css' %}?v=1.4">
+<style>
+  .letterhead-card {
+    background: #ffffff;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    padding: 16px;
+    margin-bottom: 16px;
+    transition: all 0.2s ease;
+  }
+  .letterhead-card:hover {
+    box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+  }
+  .lh-preview-img {
+    width: 100%;
+    max-height: 120px;
+    object-fit: contain;
+    background: #f8fafc;
+    border: 1px dashed #cbd5e1;
+    border-radius: 6px;
+    padding: 6px;
+    margin-bottom: 10px;
+  }
+  .badge-active {
+    background: #dcfce7;
+    color: #15803d;
+    font-weight: 600;
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 12px;
+  }
+  .badge-inactive {
+    background: #f1f5f9;
+    color: #64748b;
+    font-weight: 600;
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 12px;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="col col-xl-5 col-lg-5 col-md-12">
+  <div class="predefine1">
+    <div class="head">
+      <span class="head1">Upload Official Letterhead</span>
+      <span class="head2">Restricted to Super Admin</span>
+    </div>
+    <div class="prebody" id="formbody">
+      <form method="POST" action="{% url 'upload_letterhead' %}" enctype="multipart/form-data" autocomplete="off">
+        {% csrf_token %}
+        
+        <div class="col col-12">
+          <div class="fields">
+            <label class="label"><span>Letterhead Title<font style="color: red;">*</font></span></label>
+            <input type="text" class="form-control inputs" name="title" value="Ashish Nirman Sewa Official Letterhead" required>
+          </div>
+        </div>
+
+        <div class="col col-12">
+          <div class="fields">
+            <label class="label"><span>Header Image File (PNG/JPEG)<font style="color: red;">*</font></span></label>
+            <input type="file" class="form-control inputs" name="letterhead_image" accept="image/*" required>
+            <small class="text-muted">Recommended resolution: 2480 x 420 px for optimal print clarity.</small>
+          </div>
+        </div>
+
+        <div class="col col-12">
+          <div class="fields">
+            <label class="label"><span>Footer Image File (Optional)</span></label>
+            <input type="file" class="form-control inputs" name="footer_image" accept="image/*">
+          </div>
+        </div>
+
+        <div class="col col-12">
+          <div class="fields">
+            <label class="label"><span>Target Site</span></label>
+            <select class="form-control inputs" name="site">
+              <option value="All Sites" selected>All Sites (Corporate Master)</option>
+              {% for s in sites %}
+              <option value="{{ s.name }}">{{ s.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <div class="col col-xl-6 col-lg-6 col-12">
+          <div class="fields">
+            <label class="label"><span>Header Height (cm)<font style="color: red;">*</font></span></label>
+            <input type="number" step="0.1" class="form-control inputs" name="header_height_cm" value="3.5" required>
+          </div>
+        </div>
+
+        <div class="col col-xl-6 col-lg-6 col-12">
+          <div class="fields">
+            <label class="label"><span>Top Page Margin (cm)<font style="color: red;">*</font></span></label>
+            <input type="number" step="0.1" class="form-control inputs" name="top_margin_cm" value="3.8" required>
+          </div>
+        </div>
+
+        <div class="col col-xl-4 col-lg-4 col-12">
+          <div class="fields">
+            <label class="label"><span>Bottom (cm)</span></label>
+            <input type="number" step="0.1" class="form-control inputs" name="bottom_margin_cm" value="1.5" required>
+          </div>
+        </div>
+
+        <div class="col col-xl-4 col-lg-4 col-12">
+          <div class="fields">
+            <label class="label"><span>Left (cm)</span></label>
+            <input type="number" step="0.1" class="form-control inputs" name="left_margin_cm" value="1.2" required>
+          </div>
+        </div>
+
+        <div class="col col-xl-4 col-lg-4 col-12">
+          <div class="fields">
+            <label class="label"><span>Right (cm)</span></label>
+            <input type="number" step="0.1" class="form-control inputs" name="right_margin_cm" value="1.2" required>
+          </div>
+        </div>
+
+        <div class="col col-12">
+          <div class="fields" style="margin-top: 5px;">
+            <label style="cursor: pointer;">
+              <input type="checkbox" name="is_active" checked> <strong>Set as currently active letterhead</strong>
+            </label>
+          </div>
+        </div>
+
+        <div class="col col-12">
+          <div class="fields">
+            <button type="submit" class="submit_btn" style="width: 100%;">UPLOAD & ACTIVATE</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="col col-xl-7 col-lg-7 col-md-12">
+  <div class="predefine1">
+    <div class="head">
+      <span class="head1">Configured Letterheads</span>
+      <span class="head2">Manage active status & templates</span>
+    </div>
+    <div class="prebody" style="padding-top: 10px;">
+      {% if letterheads %}
+        {% for lh in letterheads %}
+        <div class="letterhead-card">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <div>
+              <strong>{{ lh.title }}</strong> &bull; <small class="text-muted">{{ lh.site }}</small>
+            </div>
+            <div>
+              {% if lh.is_active %}
+                <span class="badge-active"><i class="fas fa-check-circle"></i> ACTIVE</span>
+              {% else %}
+                <span class="badge-inactive">INACTIVE</span>
+              {% endif %}
+            </div>
+          </div>
+
+          {% if lh.letterhead_image %}
+          <img src="{{ lh.letterhead_image.url }}" class="lh-preview-img" alt="Letterhead Banner">
+          {% endif %}
+
+          <div class="d-flex justify-content-between align-items-center text-muted" style="font-size: 11.5px;">
+            <div>
+              <span>Height: <strong>{{ lh.header_height_cm }} cm</strong></span> | 
+              <span>Top Margin: <strong>{{ lh.top_margin_cm }} cm</strong></span> | 
+              <span>Uploaded by: <strong>{{ lh.uploaded_by }}</strong></span>
+            </div>
+            <div>
+              <a href="{% url 'toggle_letterhead' lh.id %}" class="btn btn-sm btn-outline-secondary" style="font-size: 11px;">
+                {% if lh.is_active %}Deactivate{% else %}Make Active{% endif %}
+              </a>
+              <a href="{% url 'delete_letterhead' lh.id %}" class="btn btn-sm btn-outline-danger" style="font-size: 11px;" onclick="return confirm('Are you sure you want to delete this letterhead?');">
+                <i class="far fa-trash-alt"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="no_content">
+          <i class="fas fa-image" style="font-size: 32px; color: #cbd5e1; display: block; margin-bottom: 8px;"></i>
+          No letterheads uploaded yet. Upload your official letterhead on the left.
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+  $(window).on('load', function(){
+    if($('.msgon').length > 0){
+      var msg = $('.msgon').first().val();
+      if(msg == 'done'){
+        $('.success_ban').fadeIn().delay(3500).fadeOut();
+      }
+      if(msg == 'error'){
+        $('.error_ban').fadeIn().delay(3500).fadeOut();
+      }
+    }
+  });
+</script>
+{% endblock %}

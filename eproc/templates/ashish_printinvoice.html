@@ -1,213 +1,210 @@
 {% load humanize %}
+<!DOCTYPE html>
 <html>
 <head>
-  <title>Report</title>
+  <meta charset="utf-8">
+  <title>Purchase Invoice - {{ a.voucher_number }}</title>
   <style>
-    *{
-      color:#000;
-      padding:5px 10px;
-      margin:0px;
-    }
-    body{
-        padding: 0px;
-        margin: 0px;
-        counter-reset: Serial;
-    }
     @page {
-        size: A4;
-        margin: 2cm;
+      size: A4 portrait;
+      margin-top: {% if letterhead %}{{ letterhead.top_margin_cm|default:3.8 }}cm{% else %}2.2cm{% endif %};
+      margin-bottom: {% if letterhead %}{{ letterhead.bottom_margin_cm|default:1.5 }}cm{% else %}1.5cm{% endif %};
+      margin-left: {% if letterhead %}{{ letterhead.left_margin_cm|default:1.2 }}cm{% else %}1.2cm{% endif %};
+      margin-right: {% if letterhead %}{{ letterhead.right_margin_cm|default:1.2 }}cm{% else %}1.2cm{% endif %};
     }
-    .report_subbanner1{
-      float: left;
+    body {
+      font-family: Helvetica, Arial, sans-serif;
+      font-size: 10pt;
+      color: #1f2937;
+      margin: 0;
+      padding: 0;
+    }
+    .letterhead-banner {
       width: 100%;
-      height: inherit;
+      text-align: center;
+      margin-bottom: 12px;
     }
-    .report_head1{
-      float:left;
+    .letterhead-banner img {
       width: 100%;
-      font-size: 17px;
-      color: #000;
-      text-align:center;
+      max-height: {% if letterhead %}{{ letterhead.header_height_cm|default:3.5 }}cm{% else %}3.5cm{% endif %};
     }
-    .report_subbanner1 pre{
-      font-size: 14px;
-      font-family: verdana;
+    .fallback-header {
+      text-align: center;
+      border-bottom: 2px solid #fa8005;
+      padding-bottom: 6px;
+      margin-bottom: 12px;
     }
-    table{
-      border: 1px solid #ddd;
-      padding: 0px;
-      margin:0px;
+    .fallback-header h1 {
+      margin: 0;
+      font-size: 17pt;
+      color: #11101D;
+      text-transform: uppercase;
     }
-    .table1 td{
-      text-align:left;
-      font-size: 14px;
-      padding: 2px;
-    }
-    .table2 td{
-      text-align:left;
-      font-size: 14px;
-      padding: 3px 2px 1.7px 5px;
-    }
-    .table2 th{
-      text-align:left;
-      font-size: 13px;
-    }
-    .td1{
+    .doc-title-box { text-align: center; margin: 6px 0 12px 0; }
+    .doc-title {
+      font-size: 12pt;
       font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #11101D;
+      border-bottom: 1.5px solid #11101D;
+      display: inline-block;
+      padding-bottom: 2px;
     }
-    .boldrow td{
+    .meta-table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
+    .meta-table td { padding: 3px 5px; font-size: 9pt; }
+    .meta-label { font-weight: bold; color: #475569; width: 22%; }
+    .meta-val { width: 28%; color: #0f172a; }
+    .data-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+    .data-table th {
+      background-color: #1f7ba3;
+      color: #ffffff;
+      font-size: 8.5pt;
       font-weight: bold;
-      color: #505152 !important;
+      text-align: left;
+      padding: 5px 6px;
+      border: 1px solid #1f7ba3;
+      text-transform: uppercase;
     }
-    .boldrow td .input-group{
-      width: 200px;
-      float:right;
-      height: 35px !important;
+    .data-table td {
+      font-size: 8.5pt;
+      padding: 4px 6px;
+      border: 1px solid #cbd5e1;
+      color: #1e293b;
     }
-    .boldrow td .input-group .input-group-text{
-      font-size: 14px !important;
+    .data-table tr:nth-child(even) td { background-color: #f8fafc; }
+    .text-center { text-align: center; }
+    .text-right { text-align: right; }
+    .summary-table {
+      width: 45%;
+      float: right;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    .summary-table td {
+      font-size: 9pt;
+      padding: 4px 8px;
+      border: 1px solid #cbd5e1;
+    }
+    .summary-label { font-weight: bold; background: #f8fafc; text-align: left; }
+    .summary-val { text-align: right; font-weight: bold; }
+    .footer-sign-table { width: 100%; margin-top: 30px; border-collapse: collapse; clear: both; }
+    .footer-sign-table td {
+      font-size: 9pt;
+      text-align: center;
+      padding-top: 25px;
+      border-top: 1px dashed #94a3b8;
+      width: 33.33%;
     }
   </style>
 </head>
 <body>
-<div style="width: 100%; float:left;">
-  <div class="report_subbanner1">
-    <iframe class="report_head1" style="color: #000; font-size: 19px;">
-      Ashish Nirmal Sewa
-    </iframe><br>
-    <iframe class="report_head1" style="font-size: 13px; color: rgba(0,0,0,.8);">
-      Kathmandu
-    </iframe>
-    <div class="report_head1">
-      Purchase Invoice Details
-    </div>
 
+  {% if letterhead and letterhead.letterhead_image %}
+  <div class="letterhead-banner">
+    <img src="{{ letterhead.letterhead_image.url }}" alt="Company Letterhead">
   </div>
-  <br>
-  <table class="table1" style="width:50%; float:left;">
-    <tbody>
-      <tr>
-        <td class="td1">Entry Date</td>
-        <td>{{a.entry_date}}</td>
-      </tr>
-      <tr>
-        <td class="td1">Invoice Date</td>
-        <td>{{a.invoice_date}}</td>
-      </tr>
-      <tr>
-        <td class="td1">Voucher Number</td>
-        <td>{{a.voucher_number}}</td>
-      </tr>
-      <tr>
-        <td class="td1">Challan Number</td>
-        <td>{{a.challan_number}}</td>
-      </tr>
-      <tr>
-        <td class="td1">Invoice Number</td>
-        <td>{{a.invoice_number}}</td>
-      </tr>
-      <tr>
-        <td class="td1">Invoice Type</td>
-        <td>{{a.invoice_type}}</td>
-      </tr>
-      <tr>
-        <td class="td1">Transaction Type</td>
-        <td>{{a.transaction_type}} {% if a.transaction_type == 'credit' %}({{a.day}} days){% endif %}</td>
-      </tr>
-      <tr>
-        <td class="td1">Location</td>
-        <td>{{a.location}}</td>
-      </tr>
-      <tr>
-        <td class="td1">Supplier Name</td>
-        <td>{{a.supplier_name}}</td>
-      </tr>
-      <tr>
-        <td class="td1">Supplier Address</td>
-        <td>{{a.supplier_address}}</td>
-      </tr>
-      <tr>
-        <td class="td1">Supplier Contact</td>
-        <td>{{a.supplier_contact}} KM</td>
-      </tr>
-      <!-- <tr>
-        <td class="td1">Vehicle Number</td>
-        <td>{{a.vehicle_number}}</td>
-      </tr> -->
-      <tr>
-        <td class="td1">Entry By</td>
-        <td>{{a.entry_by}}</td>
-      </tr>
-      <tr>
-        <td class="td1">Site</td>
-        <td>{{a.user_site}}</td>
-      </tr>
-    </tbody>
+  {% else %}
+  <div class="fallback-header">
+    <h1>Ashish Nirman Sewa</h1>
+    <p>Procurement & Accounts Division &bull; Kathmandu, Nepal</p>
+  </div>
+  {% endif %}
+
+  <div class="doc-title-box">
+    <span class="doc-title">Purchase Invoice</span>
+  </div>
+
+  <table class="meta-table">
+    <tr>
+      <td class="meta-label">Voucher Number:</td>
+      <td class="meta-val"><strong>{{ a.voucher_number }}</strong></td>
+      <td class="meta-label">Invoice Date:</td>
+      <td class="meta-val">{{ a.invoice_date }}</td>
+    </tr>
+    <tr>
+      <td class="meta-label">PO Number:</td>
+      <td class="meta-val">{{ a.purchase_order_number }}</td>
+      <td class="meta-label">Entry Date:</td>
+      <td class="meta-val">{{ a.entry_date }}</td>
+    </tr>
+    <tr>
+      <td class="meta-label">Invoice Number:</td>
+      <td class="meta-val">{{ a.invoice_number }}</td>
+      <td class="meta-label">Challan Number:</td>
+      <td class="meta-val">{{ a.challan_number }}</td>
+    </tr>
+    <tr>
+      <td class="meta-label">Supplier Name:</td>
+      <td class="meta-val"><strong>{{ a.supplier_name }}</strong></td>
+      <td class="meta-label">Transaction Type:</td>
+      <td class="meta-val">
+        {{ a.transaction_type|upper }} {% if a.transaction_type == 'credit' %}({{ a.day }} Days){% endif %}
+      </td>
+    </tr>
+    <tr>
+      <td class="meta-label">Site:</td>
+      <td class="meta-val">{{ a.user_site }}</td>
+      <td class="meta-label">Prepared By:</td>
+      <td class="meta-val">{{ a.entry_by }}</td>
+    </tr>
   </table>
-  <br><br>
-  <font style="font-size: 14px; font-weight: bold;">Invoice Items:</font>
-  <br>
-  <table class="table2">
+
+  <table class="data-table">
     <thead>
       <tr>
-      <th scope="col">Item</th>
-      <th scope="col">UOM</th>
-      <th scope="col">Quantity</th>
-      <th scope="col">Rate</th>
-      <th scope="col">Original<br> Quantity</th>
-      <th scope="col">Useable<br> Quantity</th>
-      <th scope="col">Damage/<br>Return</th>
-      <th scope="col" style="text-align: right;">Amount</th>
+        <th style="width: 4%;">#</th>
+        <th style="width: 28%;">Item Name</th>
+        <th style="width: 8%;" class="text-center">UOM</th>
+        <th style="width: 10%;" class="text-right">Qty</th>
+        <th style="width: 12%;" class="text-right">Rate</th>
+        <th style="width: 10%;" class="text-right">Useable</th>
+        <th style="width: 12%;" class="text-center">Dmg/Ret</th>
+        <th style="width: 16%;" class="text-right">Amount (NPR)</th>
       </tr>
     </thead>
     <tbody>
       {% for t in igoods %}
-        <tr>
-          <td>{{t.item}}<br>({{t.alias}})</td>
-          <td>{{t.uom}}</td>
-          <td>{{t.quantity}}</td>
-          <td>{{t.rate}}</td>
-          <td>{{t.orig_quantity}}</td>
-          <td>{{t.useable_quantity}}</td>
-          <td>Damage({{t.damage_qty}})/<br> Return({{t.retur_qty}})</td>
-          <td style="text-align: right;">{{t.amount}}</td>
-        </tr>
-        {% endfor %}
+      <tr>
+        <td class="text-center">{{ forloop.counter }}</td>
+        <td><strong>{{ t.item }}</strong> {% if t.alias %}({{ t.alias }}){% endif %}</td>
+        <td class="text-center">{{ t.uom }}</td>
+        <td class="text-right">{{ t.quantity }}</td>
+        <td class="text-right">{{ t.rate|intcomma }}</td>
+        <td class="text-right">{{ t.useable_quantity }}</td>
+        <td class="text-center">D:{{ t.damage_qty }}/R:{{ t.retur_qty }}</td>
+        <td class="text-right"><strong>{{ t.amount|intcomma }}</strong></td>
+      </tr>
+      {% endfor %}
     </tbody>
-    <tfoot>
-      <tr>
-      <td colspan="8" style="border:none;"></td>
-      </tr>
-      <tr>
-      <td colspan="8" style="border:none;"></td>
-      </tr>
-      <tr class="boldrow table-sm">
-      <td colspan="7">Sub Total</td>
-      <td>
-        Rs {{a.sub_total|intcomma}}
-      </td>
-      </tr>
-      <tr class="boldrow table-sm">
-      <td colspan="7">Discount</td>
-      <td>
-        Rs {{a.discount_amt|intcomma}} ({{a.discount_per}} %)
-      </td>
-      </tr>
-      <tr class="boldrow table-sm">
-      <td colspan="7">Vat</td>
-      <td>
-        Rs {{a.vat|intcomma}}
-      </td>
-      </tr>
-      <tr class="boldrow table-sm">
-      <td colspan="7">Total Amount</td>
-      <td>
-        Rs {{a.total|intcomma}}
-      </td>
-      </tr>
-    </tfoot>
   </table>
 
-</div>
+  <table class="summary-table">
+    <tr>
+      <td class="summary-label">Sub Total:</td>
+      <td class="summary-val">NPR {{ a.sub_total|intcomma }}</td>
+    </tr>
+    <tr>
+      <td class="summary-label">Discount ({{ a.discount_per }}%):</td>
+      <td class="summary-val">NPR {{ a.discount_amt|intcomma }}</td>
+    </tr>
+    <tr>
+      <td class="summary-label">VAT:</td>
+      <td class="summary-val">NPR {{ a.vat|intcomma }}</td>
+    </tr>
+    <tr style="background: #e2e8f0;">
+      <td class="summary-label" style="font-size: 10pt;">Grand Total:</td>
+      <td class="summary-val" style="font-size: 10pt; color: #0f172a;">NPR {{ a.total|intcomma }}</td>
+    </tr>
+  </table>
+
+  <table class="footer-sign-table">
+    <tr>
+      <td>Entered By: <strong>{{ a.entry_by }}</strong></td>
+      <td>Accountant Signature</td>
+      <td>Authorized Approval</td>
+    </tr>
+  </table>
+
 </body>
 </html>

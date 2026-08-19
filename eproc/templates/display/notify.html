@@ -1,12 +1,15 @@
-
-<button type="button" id="notify-dropdown" data-toggle="dropdown" aria-haspopup="true"
-	aria-expanded="false">
-	<span id="notification"><i class="far fa-bell"></i></span>
-	<span class="badge" id="badge2">
-		 {% include 'display/noti_count.html' %}
-	</span>
+{% load static %}
+<!-- Top Header Bell Trigger -->
+<button type="button" id="notify-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="System Notifications">
+  <span id="notification"><i class="far fa-bell"></i></span>
+  {% if noti_c > 0 %}
+  <span class="badge" id="badge2">
+    {{ noti_c }}
+  </span>
+  {% endif %}
 </button>
-<div class="dropdown-menu dropdown-menu-right" id="notification_dropdown">
-{% include 'display/noti.html' %}
-</div>
 
+<!-- Dropdown Menu Body -->
+<div class="dropdown-menu dropdown-menu-right" id="notification_dropdown" style="width: 400px; padding: 14px; border-radius: 12px; box-shadow: 0 12px 30px rgba(0,0,0,0.15); border: 1px solid #e2e8f0;">
+  {% include 'display/noti.html' %}
+</div>

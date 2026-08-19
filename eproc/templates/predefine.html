@@ -10,7 +10,7 @@
 	<div class="predefine1">
 		<div class="head">
 			<span class="head1">Initial Setup</span>
-			<span class="head2">Add new data to setup</span>
+			<span class="head2">Add and manage system configurations</span>
 		</div>
 		<div class="prebody">
 			<a href="{% url 'manage_site' %}"><div class="component">
@@ -27,20 +27,6 @@
 					<span class="comp2">Add new suppliers here</span>
 				</div>
 			</div></a>
-			<!-- <a href="{% url 'manage_location' %}"><div class="component">
-				<div class="compcover"></div>
-				<div class="compcontent">
-					<span class="comp1"><i class="fas fa-map-marker-alt"></i>Locations</span>
-					<span class="comp2">Add new locations here</span>
-				</div>
-			</div></a> -->
-			<!-- <a href="{% url 'manage_vehicle' %}"><div class="component">
-				<div class="compcover"></div>
-				<div class="compcontent">
-					<span class="comp1"><i class="fas fa-truck"></i>Vehicles</span>
-					<span class="comp2">Add new vehicles here</span>
-				</div>
-			</div></a> -->
 			<a href="{% url 'manage_supplier_category' %}"><div class="component">
 				<div class="compcover"></div>
 				<div class="compcontent">
@@ -55,6 +41,16 @@
 					<span class="comp2">Add new unit of measure</span>
 				</div>
 			</div></a>
+
+			{% if request.user.is_superuser %}
+			<a href="{% url 'manage_letterhead' %}"><div class="component" style="border-color: #fa8005;">
+				<div class="compcover" style="background: #fa8005;"></div>
+				<div class="compcontent">
+					<span class="comp1"><i class="fas fa-stamp" style="color: #fa8005;"></i>Letterhead Setup</span>
+					<span class="comp2">Upload & configure corporate report letterheads</span>
+				</div>
+			</div></a>
+			{% endif %}
 		</div>
 	</div>
 </div>

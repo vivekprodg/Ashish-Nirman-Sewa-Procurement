@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import user_passes_test
 from django.urls import resolve
 from django.db.models import Q
+from django.views.decorators.csrf import csrf_exempt
 
 from .models import *
 from eproc.models import Site
@@ -22,6 +23,7 @@ def check_staff(user):
 	return user.is_staff
 
 
+@csrf_exempt
 def login_user(request):
 	if request.user.is_staff:
 		return redirect('home')
@@ -239,7 +241,6 @@ def manage_permission(request):
 	site_staff_noti = NotificationPermission.objects.all().order_by('id')
 	context = {'mao': mao, 'mso': mso, 'sao': sao, 'sso': sso, 'main_admin_noti': main_admin_noti, 'main_staff_noti': main_staff_noti, 'site_admin_noti': site_admin_noti, 'site_staff_noti': site_staff_noti}    
 	return render(request, 'permission.html', context)
-
 
 
 @user_access

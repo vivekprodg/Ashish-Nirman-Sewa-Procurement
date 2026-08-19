@@ -1,164 +1,131 @@
 {% load humanize %}
+<!DOCTYPE html>
 <html>
 <head>
-  <title>Report</title>
+  <meta charset="utf-8">
+  <title>Fuel PO - {{ a.purchase_number }}</title>
   <style>
-    *{
-      color:#000;
-      padding:5px 10px;
-      margin:0px;
-    }
-    body{
-        padding: 0px;
-        margin: 0px;
-        counter-reset: Serial;
-    }
     @page {
-        size: A4;
-        margin: 2cm;
+      size: A4 portrait;
+      margin-top: {% if letterhead %}{{ letterhead.top_margin_cm|default:3.8 }}cm{% else %}2.2cm{% endif %};
+      margin-bottom: {% if letterhead %}{{ letterhead.bottom_margin_cm|default:1.5 }}cm{% else %}1.5cm{% endif %};
+      margin-left: {% if letterhead %}{{ letterhead.left_margin_cm|default:1.2 }}cm{% else %}1.2cm{% endif %};
+      margin-right: {% if letterhead %}{{ letterhead.right_margin_cm|default:1.2 }}cm{% else %}1.2cm{% endif %};
     }
-    .report_subbanner1{
-      float: left;
-      width: 100%;
-      height: inherit;
+    body {
+      font-family: Helvetica, Arial, sans-serif;
+      font-size: 11pt;
+      color: #1f2937;
+      margin: 0;
+      padding: 0;
     }
-    .report_head1{
-      float:left;
-      width: 100%;
-      font-size: 17px;
-      color: #000;
-      text-align:center;
-    }
-    .report_subbanner1 pre{
-      font-size: 14px;
-      font-family: verdana;
-    }
-    table{
-      border: 1px solid #ddd;
-      padding: 0px;
-      margin:0px;
-    }
-    .table1 td{
-      text-align:left;
-      font-size: 14px;
-      padding: 2px;
-    }
-    .table2 td{
-      text-align:left;
-      font-size: 14px;
-      padding: 3px 2px 1.7px 5px;
-    }
-    .table2 th{
-      text-align:left;
-      font-size: 13px;
-    }
-    .td1{
+    .letterhead-banner { width: 100%; text-align: center; margin-bottom: 15px; }
+    .letterhead-banner img { width: 100%; max-height: {% if letterhead %}{{ letterhead.header_height_cm|default:3.5 }}cm{% else %}3.5cm{% endif %}; }
+    .fallback-header { text-align: center; border-bottom: 2px solid #fa8005; padding-bottom: 6px; margin-bottom: 15px; }
+    .fallback-header h1 { margin: 0; font-size: 18pt; color: #11101D; text-transform: uppercase; }
+    .doc-title-box { text-align: center; margin: 10px 0 15px 0; }
+    .doc-title {
+      font-size: 13pt;
       font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #11101D;
+      border-bottom: 1.5px solid #11101D;
+      display: inline-block;
+      padding-bottom: 3px;
     }
-    .boldrow td{
-      font-weight: bold;
-      color: #505152 !important;
-    }
-    .boldrow td .input-group{
-      width: 200px;
-      float:right;
-      height: 35px !important;
-    }
-    .boldrow td .input-group .input-group-text{
-      font-size: 14px !important;
+    .meta-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+    .meta-table td { padding: 5px 8px; font-size: 10pt; }
+    .meta-label { font-weight: bold; color: #475569; width: 30%; }
+    .meta-val { width: 70%; color: #0f172a; }
+    .footer-sign-table { width: 100%; margin-top: 40px; border-collapse: collapse; }
+    .footer-sign-table td {
+      font-size: 9.5pt;
+      text-align: center;
+      padding-top: 30px;
+      border-top: 1px dashed #94a3b8;
+      width: 50%;
     }
   </style>
 </head>
 <body>
-<div style="width: 100%; float:left;">
-  <div class="report_subbanner1">
-    <iframe class="report_head1" style="color: #000; font-size: 19px;">
-      Ashish Nirman Sewa
-    </iframe><br>
-    <iframe class="report_head1" style="font-size: 13px; color: rgba(0,0,0,.8);">
-      Kathmandu
-    </iframe>
-    <div class="report_head1">
-      Fuel Purchase Order Details
-    </div>
 
+  {% if letterhead and letterhead.letterhead_image %}
+  <div class="letterhead-banner">
+    <img src="{{ letterhead.letterhead_image.url }}" alt="Company Letterhead">
   </div>
-  <br>
-  <table class="table1" style="width:50%; float:left;">
-    <tbody>
-      <tr>
-        <td class="td1">Entry Date</td>
-        <td>{{a.entry_date}}</td>
-      </tr>
-      <tr>
-        <td class="td1">Purchase Order Number</td>
-        <td>{{a.purchase_number}}</td>
-      </tr>
-      <tr>
-        <td class="td1">Issuing Site</td>
-        <td>{{a.issuing_site}}</td>
-      </tr>
-      <tr>
-        <td class="td1">Reserviour</td>
-        <td>{{a.reserviour}}</td>
-      </tr>
-      <tr>
-        <td class="td1">Fuel Type</td>
-        <td>{{a.fuel_type}}</td>
-      </tr>
-      <tr>
-        <td class="td1">Reserviour</td>
-        <td>{{a.reserviour}}</td>
-      </tr>
-      {% if a.quantity %}
-      <tr>
-        <td class="td1">Quantity</td>
-        <td>{{a.quantity}} ltrs</td>
-      </tr>
-      {% endif %}
-      {% if a.rate %}
-      <tr>
-        <td class="td1">Rate</td>
-        <td>Rs {{a.rate}}</td>
-      </tr>
-      {% endif %}
-      {% if a.amount %}
-      <tr>
-        <td class="td1">Amount</td>
-        <td>Rs {{a.amount}}</td>
-      </tr>
-      {% endif %}
-      <tr>
-        <td class="td1">Status</td>
-        <td>{{a.status}}</td>
-      </tr>
-      {% if a.status == 'approved' %}
-      <tr>
-        <td class="td1">Approved By</td>
-        <td>{{a.approved_by}}</td>
-      </tr>
-      <tr>
-        <td class="td1">Approved Purchase Location</td>
-        <td>{{a.purchase_location}}</td>
-      </tr>
-      {% endif %}
-      {% if a.status == 'cancelled' %}
-      <tr>
-        <td class="td1">Cancelled By</td>
-        <td>{{a.cancelled_by}}</td>
-      </tr>
-      {% endif %}
-      <tr>
-        <td class="td1">Entry By</td>
-        <td>{{a.entry_by}}</td>
-      </tr>
-      <tr>
-        <td class="td1">Narration</td>
-        <td>{{a.narration|linebreaks}}</td>
-      </tr>
-    </tbody>
+  {% else %}
+  <div class="fallback-header">
+    <h1>Ashish Nirman Sewa</h1>
+    <p>Fuel & Energy Procurement Department</p>
+  </div>
+  {% endif %}
+
+  <div class="doc-title-box">
+    <span class="doc-title">Fuel Purchase Order</span>
+  </div>
+
+  <table class="meta-table">
+    <tr>
+      <td class="meta-label">Entry Date:</td>
+      <td class="meta-val">{{ a.entry_date }}</td>
+    </tr>
+    <tr>
+      <td class="meta-label">PO Number:</td>
+      <td class="meta-val"><strong>{{ a.purchase_number }}</strong></td>
+    </tr>
+    <tr>
+      <td class="meta-label">Issuing Site:</td>
+      <td class="meta-val">{{ a.issuing_site }}</td>
+    </tr>
+    <tr>
+      <td class="meta-label">Target Reservoir:</td>
+      <td class="meta-val">{{ a.reserviour }}</td>
+    </tr>
+    <tr>
+      <td class="meta-label">Fuel Type:</td>
+      <td class="meta-val">{{ a.fuel_type }}</td>
+    </tr>
+    <tr>
+      <td class="meta-label">Ordered Quantity:</td>
+      <td class="meta-val"><strong>{{ a.quantity|default:"-" }} Ltrs</strong></td>
+    </tr>
+    <tr>
+      <td class="meta-label">Rate / Liter:</td>
+      <td class="meta-val">NPR {{ a.rate|default:"-" }}</td>
+    </tr>
+    <tr>
+      <td class="meta-label">Total Amount:</td>
+      <td class="meta-val"><strong>NPR {{ a.amount|intcomma|default:"-" }}</strong></td>
+    </tr>
+    <tr>
+      <td class="meta-label">Status:</td>
+      <td class="meta-val"><strong>{{ a.status|upper }}</strong></td>
+    </tr>
+    {% if a.approved_by %}
+    <tr>
+      <td class="meta-label">Approved By:</td>
+      <td class="meta-val">{{ a.approved_by }} (Loc: {{ a.purchase_location }})</td>
+    </tr>
+    {% endif %}
+    <tr>
+      <td class="meta-label">Issued By:</td>
+      <td class="meta-val">{{ a.entry_by }}</td>
+    </tr>
+    {% if a.narration %}
+    <tr>
+      <td class="meta-label">Narration:</td>
+      <td class="meta-val">{{ a.narration|linebreaks }}</td>
+    </tr>
+    {% endif %}
   </table>
 
-</div>
+  <table class="footer-sign-table">
+    <tr>
+      <td>Requested By: <strong>{{ a.entry_by }}</strong></td>
+      <td>Fuel In-Charge / Approving Authority</td>
+    </tr>
+  </table>
+
 </body>
 </html>

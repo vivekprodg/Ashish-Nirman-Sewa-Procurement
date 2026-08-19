@@ -1,161 +1,205 @@
 {% load humanize %}
+<!DOCTYPE html>
 <html>
 <head>
-  <title>Report</title>
+  <meta charset="utf-8">
+  <title>Material Issue - {{ a.mie_number }}</title>
   <style>
-    *{
-      color:#000;
-      padding:5px 10px;
-      margin:0px;
-    }
-    body{
-        padding: 0px;
-        margin: 0px;
-        counter-reset: Serial;
-    }
     @page {
-        size: A4;
-        margin: 2cm;
+      size: A4 portrait;
+      margin-top: {% if letterhead %}{{ letterhead.top_margin_cm|default:3.8 }}cm{% else %}2.2cm{% endif %};
+      margin-bottom: {% if letterhead %}{{ letterhead.bottom_margin_cm|default:1.5 }}cm{% else %}1.5cm{% endif %};
+      margin-left: {% if letterhead %}{{ letterhead.left_margin_cm|default:1.2 }}cm{% else %}1.2cm{% endif %};
+      margin-right: {% if letterhead %}{{ letterhead.right_margin_cm|default:1.2 }}cm{% else %}1.2cm{% endif %};
     }
-    .report_subbanner1{
-      float: left;
+    body {
+      font-family: Helvetica, Arial, sans-serif;
+      font-size: 10pt;
+      color: #1f2937;
+      margin: 0;
+      padding: 0;
+    }
+    .letterhead-banner {
       width: 100%;
-      height: inherit;
+      text-align: center;
+      margin-bottom: 15px;
     }
-    .report_head1{
-      float:left;
+    .letterhead-banner img {
       width: 100%;
-      font-size: 17px;
-      color: #000;
-      text-align:center;
+      max-height: {% if letterhead %}{{ letterhead.header_height_cm|default:3.5 }}cm{% else %}3.5cm{% endif %};
     }
-    .report_subbanner1 pre{
-      font-size: 14px;
-      font-family: verdana;
+    .fallback-header {
+      text-align: center;
+      border-bottom: 2px solid #fa8005;
+      padding-bottom: 6px;
+      margin-bottom: 15px;
     }
-    table{
-      border: 1px solid #ddd;
-      padding: 0px;
-      margin:0px;
+    .fallback-header h1 {
+      margin: 0;
+      font-size: 17pt;
+      color: #11101D;
+      text-transform: uppercase;
     }
-    .table1 td{
-      text-align:left;
-      font-size: 14px;
-      padding: 2px;
+    .fallback-header p {
+      margin: 2px 0 0 0;
+      font-size: 9pt;
+      color: #64748b;
     }
-    .table2 td{
-      text-align:left;
-      font-size: 14px;
-      padding: 3px 2px 1.7px 5px;
+    .doc-title-box {
+      text-align: center;
+      margin: 8px 0 12px 0;
     }
-    .table2 th{
-      text-align:left;
-      font-size: 13px;
-    }
-    .td1{
+    .doc-title {
+      font-size: 13pt;
       font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #11101D;
+      border-bottom: 1.5px solid #11101D;
+      display: inline-block;
+      padding-bottom: 2px;
     }
-    .boldrow td{
+    .meta-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 15px;
+    }
+    .meta-table td {
+      padding: 4px 6px;
+      font-size: 9.5pt;
+      vertical-align: top;
+    }
+    .meta-label {
       font-weight: bold;
-      color: #505152 !important;
+      color: #475569;
+      width: 25%;
     }
-    .boldrow td .input-group{
-      width: 200px;
-      float:right;
-      height: 35px !important;
+    .meta-val {
+      width: 25%;
+      color: #0f172a;
     }
-    .boldrow td .input-group .input-group-text{
-      font-size: 14px !important;
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    .data-table th {
+      background-color: #1f7ba3;
+      color: #ffffff;
+      font-size: 9pt;
+      font-weight: bold;
+      text-align: left;
+      padding: 5px 6px;
+      border: 1px solid #1f7ba3;
+      text-transform: uppercase;
+    }
+    .data-table td {
+      font-size: 9pt;
+      padding: 4px 6px;
+      border: 1px solid #cbd5e1;
+      color: #1e293b;
+    }
+    .data-table tr:nth-child(even) td {
+      background-color: #f8fafc;
+    }
+    .text-center { text-align: center; }
+    .text-right { text-align: right; }
+    .footer-sign-table {
+      width: 100%;
+      margin-top: 40px;
+      border-collapse: collapse;
+    }
+    .footer-sign-table td {
+      font-size: 9pt;
+      text-align: center;
+      padding-top: 25px;
+      border-top: 1px dashed #94a3b8;
+      width: 33.33%;
     }
   </style>
 </head>
 <body>
-<div style="width: 100%; float:left;">
-  <div class="report_subbanner1">
-    <iframe class="report_head1" style="color: #000; font-size: 19px;">
-      Ashish Nirman Sewa
-    </iframe><br>
-    <iframe class="report_head1" style="font-size: 13px; color: rgba(0,0,0,.8);">
-      Kathmandu
-    </iframe>
-    <div class="report_head1">
-      Material Issue Details
-    </div>
 
+  <!-- Dynamic Letterhead Banner -->
+  {% if letterhead and letterhead.letterhead_image %}
+  <div class="letterhead-banner">
+    <img src="{{ letterhead.letterhead_image.url }}" alt="Company Letterhead">
   </div>
-  <br>
-  <table class="table1" style="width:50%; float:left;">
-    <tbody>
-      <tr>
-        <td class="td1">Issue Date</td>
-        <td>{{a.issue_date}}</td>
-      </tr>
-      <tr>
-        <td class="td1">Material Issue Number</td>
-        <td>{{a.mie_number}}</td>
-      </tr>
-      <tr>
-        <td class="td1">Issuing Location</td>
-        <td>{{a.issuing_location}}</td>
-      </tr>
-      <tr>
-        <td class="td1">Purchase Order Number</td>
-        <td>
-          {{a.purchase_order_number}}
-        </td>
-      </tr>
-      <tr>
-        <td class="td1">Issue For</td>
-        <td>
-          {% if a.issue_for %}
-          {{a.issue_for}}
-          {% else %}
-          none
-          {% endif %}
-        </td>
-      </tr>
-      <tr>
-        <td class="td1">Entry By</td>
-        <td>{{a.entry_by}}</td>
-      </tr>
-      <tr>
-        <td class="td1">Narration</td>
-        <td>
-          {% if a.narration %}
-          {{a.narration|linebreaks}}
-          {% else %}
-          none
-          {% endif %}
-        </td>
-      </tr>
-    </tbody>
+  {% else %}
+  <div class="fallback-header">
+    <h1>Ashish Nirman Sewa</h1>
+    <p>Corporate Office: Kathmandu, Nepal &bull; Store & Material Issue Department</p>
+  </div>
+  {% endif %}
+
+  <div class="doc-title-box">
+    <span class="doc-title">Material Issue Slip</span>
+  </div>
+
+  <table class="meta-table">
+    <tr>
+      <td class="meta-label">Issue Number:</td>
+      <td class="meta-val"><strong>{{ a.mie_number }}</strong></td>
+      <td class="meta-label">Issue Date:</td>
+      <td class="meta-val">{{ a.issue_date }}</td>
+    </tr>
+    <tr>
+      <td class="meta-label">PO Number:</td>
+      <td class="meta-val">{{ a.purchase_order_number|default:"-" }}</td>
+      <td class="meta-label">Issuing Site:</td>
+      <td class="meta-val">{{ a.issuing_location }}</td>
+    </tr>
+    <tr>
+      <td class="meta-label">Issue For:</td>
+      <td class="meta-val">{{ a.issue_for|default:"General Site Works" }}</td>
+      <td class="meta-label">Issued By:</td>
+      <td class="meta-val">{{ a.entry_by }}</td>
+    </tr>
+    {% if a.narration %}
+    <tr>
+      <td class="meta-label">Narration:</td>
+      <td class="meta-val" colspan="3">{{ a.narration|linebreaks }}</td>
+    </tr>
+    {% endif %}
   </table>
-  <br><br>
-  <font style="font-size: 14px; font-weight: bold;">Item List:</font>
-  <br>
-  <table class="table2">
+
+  <div style="font-weight: bold; font-size: 10pt; margin-bottom: 4px;">Issued Materials:</div>
+  <table class="data-table">
     <thead>
       <tr>
-      <th scope="col">Associate PO</th>
-      <th scope="col">Associate Invoice</th>
-      <th scope="col">Items</th>
-      <th scope="col">UOM</th>
-      <th scope="col">Quantity</th>
+        <th style="width: 5%;">#</th>
+        <th style="width: 20%;">Associate PO</th>
+        <th style="width: 20%;">Associate Invoice</th>
+        <th style="width: 35%;">Item Description</th>
+        <th style="width: 10%;" class="text-center">UOM</th>
+        <th style="width: 10%;" class="text-right">Quantity</th>
       </tr>
     </thead>
     <tbody>
       {% for t in igoods %}
-        <tr>
-          <td>{{t.po}}</td>
-          <td>{{t.pvn}}</td>
-          <td>{{t.item}}<br> ({{t.alias}})</td>
-          <td>{{t.uom}}</td>
-          <td>{{t.quantity}}</td>
-        </tr>
-        {% endfor %}
+      <tr>
+        <td class="text-center">{{ forloop.counter }}</td>
+        <td>{{ t.po|default:"-" }}</td>
+        <td>{{ t.pvn|default:"-" }}</td>
+        <td><strong>{{ t.item }}</strong> {% if t.alias %}({{ t.alias }}){% endif %}</td>
+        <td class="text-center">{{ t.uom }}</td>
+        <td class="text-right"><strong>{{ t.quantity }}</strong></td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="6" class="text-center">No materials listed.</td>
+      </tr>
+      {% endfor %}
     </tbody>
   </table>
 
-</div>
+  <table class="footer-sign-table">
+    <tr>
+      <td>Store Keeper: <strong>{{ a.entry_by }}</strong></td>
+      <td>Material Receiver Signature</td>
+      <td>Site Engineer Signature</td>
+    </tr>
+  </table>
+
 </body>
 </html>

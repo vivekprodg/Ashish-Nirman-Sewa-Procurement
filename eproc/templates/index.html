@@ -1,37 +1,937 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load humanize %}
 
 {% block css %}
-<link rel="stylesheet" href="{% static 'css/report.css' %}?v=1.3">
+<style>
+  /* ==========================================================================
+     ASHISH NIRMAN SEWA - ULTRA-PREMIUM DASHBOARD CORE STYLES
+     ========================================================================== */
+  :root {
+    --dash-orange: #fa8005;
+    --dash-orange-light: #fff4e8;
+    --dash-orange-grad: linear-gradient(135deg, #fa8005 0%, #ff9d3b 100%);
+    --dash-blue: #1f7ba3;
+    --dash-blue-grad: linear-gradient(135deg, #1f7ba3 0%, #008ECC 100%);
+    --dash-dark: #11101D;
+    --dash-surface: #ffffff;
+    --dash-border: #e5e7eb;
+    --dash-text-dark: #1f2937;
+    --dash-text-muted: #6b7280;
+    
+    --dash-green: #10b981;
+    --dash-green-bg: #dcfce7;
+    --dash-yellow: #f59e0b;
+    --dash-yellow-bg: #fef3c7;
+    --dash-red: #ef4444;
+    --dash-red-bg: #fee2e2;
+    --dash-purple: #8b5cf6;
+    --dash-purple-bg: #f3e8ff;
+  }
+
+  .dash-wrapper {
+    padding: 0 4px 40px 4px;
+    width: 100%;
+    color: var(--dash-text-dark);
+  }
+
+  /* --- 1. Top Executive Hero Banner --- */
+  .dash-hero {
+    background: linear-gradient(135deg, #11101D 0%, #1e293b 50%, #1f7ba3 100%);
+    border-radius: 14px;
+    padding: 24px 28px;
+    color: #ffffff;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 22px;
+    box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.08);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 18px;
+  }
+
+  .dash-hero::before {
+    content: "";
+    position: absolute;
+    top: -70px;
+    right: -50px;
+    width: 250px;
+    height: 250px;
+    background: radial-gradient(circle, rgba(250, 128, 5, 0.28) 0%, rgba(250, 128, 5, 0) 70%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  .dash-hero-title h2 {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0 0 6px 0;
+    color: #ffffff;
+    letter-spacing: -0.3px;
+  }
+
+  .dash-hero-title h2 span {
+    color: var(--dash-orange);
+  }
+
+  .dash-hero-title p {
+    margin: 0;
+    font-size: 13px;
+    color: #cbd5e1;
+  }
+
+  .dash-hero-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    z-index: 2;
+  }
+
+  .hero-pill {
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ffffff !important;
+    padding: 8px 16px;
+    border-radius: 30px;
+    font-size: 12.5px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    text-decoration: none !important;
+  }
+
+  .hero-pill:hover {
+    background: var(--dash-orange);
+    border-color: var(--dash-orange);
+    color: #ffffff !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(250, 128, 5, 0.4);
+  }
+
+  /* --- 2. Action Alerts Ribbon --- */
+  .alert-box-container {
+    margin-bottom: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .action-alert {
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 13px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    border: 1px solid var(--dash-border);
+    border-left: 4px solid var(--dash-orange);
+    transition: transform 0.2s ease;
+  }
+
+  .action-alert:hover { transform: translateX(3px); }
+  .action-alert.danger { border-left-color: var(--dash-red); }
+  .action-alert.info { border-left-color: var(--dash-blue); }
+
+  .alert-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .alert-left i {
+    font-size: 18px;
+    color: var(--dash-orange);
+  }
+
+  .action-alert.danger .alert-left i { color: var(--dash-red); }
+  .action-alert.info .alert-left i { color: var(--dash-blue); }
+
+  .alert-text {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--dash-text-dark);
+  }
+
+  .alert-btn {
+    padding: 5px 14px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    background: #f1f5f9;
+    color: var(--dash-text-dark) !important;
+    text-decoration: none !important;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .alert-btn:hover {
+    background: var(--dash-blue);
+    color: #ffffff !important;
+  }
+
+  /* --- 3. Executive KPI Metric Cards --- */
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 16px;
+    margin-bottom: 22px;
+  }
+
+  .metric-card {
+    background: var(--dash-surface);
+    border-radius: 14px;
+    padding: 20px 22px;
+    box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.06);
+    border: 1px solid var(--dash-border);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .metric-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 4px;
+    width: 100%;
+    background: var(--dash-border);
+  }
+
+  .metric-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 28px -4px rgba(0, 0, 0, 0.12);
+  }
+
+  .metric-card.accent-blue::before { background: var(--dash-blue-grad); }
+  .metric-card.accent-red::before { background: var(--dash-red); }
+  .metric-card.accent-orange::before { background: var(--dash-orange-grad); }
+  .metric-card.accent-green::before { background: var(--dash-green); }
+  .metric-card.accent-purple::before { background: var(--dash-purple); }
+
+  .metric-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+  }
+
+  .metric-label {
+    font-size: 11.5px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--dash-text-muted);
+  }
+
+  .metric-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+  }
+
+  .metric-icon.icon-blue { background: #e0f2fe; color: var(--dash-blue); }
+  .metric-icon.icon-red { background: var(--dash-red-bg); color: var(--dash-red); }
+  .metric-icon.icon-orange { background: var(--dash-orange-light); color: var(--dash-orange); }
+  .metric-icon.icon-green { background: var(--dash-green-bg); color: var(--dash-green); }
+  .metric-icon.icon-purple { background: var(--dash-purple-bg); color: var(--dash-purple); }
+
+  .metric-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--dash-text-dark);
+    line-height: 1.2;
+    margin-bottom: 4px;
+  }
+
+  .metric-subtext {
+    font-size: 11.5px;
+    color: var(--dash-text-muted);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  /* --- 4. Two-Column Dashboard Layout --- */
+  .dashboard-columns {
+    display: grid;
+    grid-template-columns: 1.75fr 1.25fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 1024px) {
+    .dashboard-columns {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .panel-card {
+    background: var(--dash-surface);
+    border-radius: 14px;
+    box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.06);
+    border: 1px solid var(--dash-border);
+    padding: 22px;
+    margin-bottom: 20px;
+  }
+
+  .panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--dash-border);
+  }
+
+  .panel-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--dash-text-dark);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .panel-title i {
+    color: var(--dash-orange);
+  }
+
+  .panel-viewall {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--dash-blue) !important;
+    text-decoration: none !important;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .panel-viewall:hover {
+    color: var(--dash-orange) !important;
+    text-decoration: underline !important;
+  }
+
+  /* --- 5. Clean Modern Data Tables --- */
+  .dash-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 12.5px;
+  }
+
+  .dash-table thead th {
+    background: #f8fafc;
+    color: var(--dash-text-muted);
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 10px 12px;
+    border-top: 1px solid var(--dash-border);
+    border-bottom: 1px solid var(--dash-border);
+  }
+
+  .dash-table tbody td {
+    padding: 11px 12px;
+    border-bottom: 1px solid #f1f5f9;
+    color: var(--dash-text-dark);
+    vertical-align: middle;
+  }
+
+  .dash-table tbody tr:hover {
+    background-color: #f8fafc;
+  }
+
+  /* Status Badges */
+  .badge-pill {
+    padding: 3px 9px;
+    border-radius: 14px;
+    font-size: 11px;
+    font-weight: 600;
+    display: inline-block;
+    text-transform: capitalize;
+  }
+
+  .badge-approved { background: var(--dash-green-bg); color: #15803d; }
+  .badge-pending { background: var(--dash-yellow-bg); color: #b45309; }
+  .badge-cancelled { background: var(--dash-red-bg); color: #b91c1c; }
+  .badge-transit { background: #e0f2fe; color: #0369a1; }
+  .badge-arrived { background: var(--dash-purple-bg); color: #6b21a8; }
+
+  /* --- 6. Fuel Reservoirs Live Health Grid --- */
+  .reservoir-scroll-container {
+    max-height: 380px;
+    overflow-y: auto;
+    padding-right: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .reservoir-scroll-container::-webkit-scrollbar {
+    width: 4px;
+  }
+  .reservoir-scroll-container::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+  }
+
+  .res-item {
+    background: #f8fafc;
+    border: 1px solid var(--dash-border);
+    border-radius: 10px;
+    padding: 12px 14px;
+  }
+
+  .res-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12.5px;
+    font-weight: 600;
+    margin-bottom: 5px;
+  }
+
+  .res-meta {
+    font-size: 11px;
+    color: var(--dash-text-muted);
+  }
+
+  .res-progress {
+    height: 8px;
+    background: #e2e8f0;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 5px 0;
+  }
+
+  .res-bar {
+    height: 100%;
+    background: var(--dash-orange-grad);
+    border-radius: 10px;
+    transition: width 1s ease-in-out;
+  }
+
+  /* --- 7. Shortcut Action Hub --- */
+  .action-hub-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .hub-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 16px 10px;
+    background: #f8fafc;
+    border: 1px solid var(--dash-border);
+    border-radius: 10px;
+    text-decoration: none !important;
+    color: var(--dash-text-dark) !important;
+    font-size: 12px;
+    font-weight: 600;
+    transition: all 0.25s ease;
+    text-align: center;
+    gap: 8px;
+  }
+
+  .hub-btn i {
+    font-size: 19px;
+    color: var(--dash-blue);
+    transition: transform 0.25s ease, color 0.25s ease;
+  }
+
+  .hub-btn:hover {
+    background: #ffffff;
+    border-color: var(--dash-orange);
+    color: var(--dash-orange) !important;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  }
+
+  .hub-btn:hover i {
+    color: var(--dash-orange);
+    transform: scale(1.15);
+  }
+</style>
 {% endblock %}
-{% block wave %}
-<img src="{% static 'img/back.png' %}" id="backimg">
-{% endblock %}
+
 {% block content %}
-<div class="col col-xl-2 col-lg-2 d-md-1 d-none d-lg-inline">
-	<span style="opacity: 0;">.</span>
-</div>
-<div class="col col-xl-8 col-lg-8 col-md-10">
-	<div class="predefine1">
-		<div class="head">
-			<span class="head1">Ashish Nirman Sewa </span>
-			<span class="head2">This page is under devleopment</span>
-		</div>
-		<div class="prebody" id="formbody">
-			Design of landing page in under progress. Please try testing all functions and modules from the menu in the side bar.
-			Use real test data for testing. <br>Thank You :)
-			<br><br>
-			Prodigy Technosys Pvt. Ltd
-		</div>
-	</div>
-</div>
-<div class="col col-xl-2 col-lg-2 d-md-1 d-none d-lg-inline">
-	<span style="opacity: 0;">.</span>
-</div>
+<div class="col-12">
+  <div class="dash-wrapper">
 
+    <!-- =========================================================================
+         1. EXECUTIVE HERO WELCOME BANNER
+         ========================================================================= -->
+    <div class="dash-hero">
+      <div class="dash-hero-title">
+        <h2>Welcome back, <span>{{ request.user.first_name|default:request.user.username }}</span></h2>
+        <p>
+          <i class="fas fa-map-marker-alt" style="color: var(--dash-orange);"></i> 
+          Operating Site: <strong>{{ u_site|default:"Head Office / Central" }}</strong> &nbsp;|&nbsp; Enterprise Overview & Executive Analytics
+        </p>
+      </div>
+      <div class="dash-hero-actions">
+        <a href="{% url 'purchase_order' %}" class="hero-pill">
+          <i class="fas fa-plus-circle"></i> Issue New PO
+        </a>
+        <a href="{% url 'ashish_goods_entry' %}" class="hero-pill">
+          <i class="fas fa-truck-loading"></i> Receive GRN
+        </a>
+        <a href="{% url 'reports' %}" class="hero-pill">
+          <i class="fas fa-chart-line"></i> Master Reports
+        </a>
+      </div>
+    </div>
 
+    <!-- =========================================================================
+         2. SYSTEM WARNINGS & ACTIONABLE ATTENTION ALERTS
+         ========================================================================= -->
+    {% if pending_grn_alerts or pending_credit_alerts or vehicles_in_transit > 0 %}
+    <div class="alert-box-container">
+      {% for alert in pending_grn_alerts %}
+      <div class="action-alert">
+        <div class="alert-left">
+          <i class="fas fa-exclamation-triangle"></i>
+          <span class="alert-text">
+            <strong>GRN Alert:</strong> Voucher <strong>#{{ alert.content_val }}</strong> (PO: {{ alert.content_val1 }}) has had no GRN entry for over 14 days.
+          </span>
+        </div>
+        <a href="{% url 'ashish_goods_entry' %}" class="alert-btn">Generate GRN</a>
+      </div>
+      {% endfor %}
+
+      {% for alert in pending_credit_alerts %}
+      <div class="action-alert danger">
+        <div class="alert-left">
+          <i class="fas fa-hand-holding-usd"></i>
+          <span class="alert-text">
+            <strong>Credit Payable Alert:</strong> Invoice <strong>#{{ alert.content_val }}</strong> credit window is maturing or overdue.
+          </span>
+        </div>
+        <a href="{% url 'display_supplier' %}" class="alert-btn">View Supplier Credit</a>
+      </div>
+      {% endfor %}
+
+      {% if vehicles_in_transit > 0 %}
+      <div class="action-alert info">
+        <div class="alert-left">
+          <i class="fas fa-shipping-fast"></i>
+          <span class="alert-text">
+            <strong>Active Logistics:</strong> <strong>{{ vehicles_in_transit }}</strong> vehicle(s) are currently in transit between operational sites.
+          </span>
+        </div>
+        <a href="{% url 'move_display' %}" class="alert-btn">Track Fleet</a>
+      </div>
+      {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- =========================================================================
+         3. TOP EXECUTIVE KPI METRIC CARDS
+         ========================================================================= -->
+    <div class="metrics-grid">
+      
+      <!-- Metric 1: Total Purchasing Invoiced -->
+      <div class="metric-card accent-blue">
+        <div class="metric-header">
+          <span class="metric-label">Total Invoiced Volume</span>
+          <div class="metric-icon icon-blue">
+            <i class="fas fa-file-invoice-dollar"></i>
+          </div>
+        </div>
+        <div>
+          <div class="metric-value">NPR {{ total_invoice_sum|floatformat:0|intcomma }}</div>
+          <div class="metric-subtext">
+            <i class="fas fa-check-circle" style="color:var(--dash-green);"></i> Total billed procurement
+          </div>
+        </div>
+      </div>
+
+      <!-- Metric 2: Active Vendor Credit Payables -->
+      <div class="metric-card accent-red">
+        <div class="metric-header">
+          <span class="metric-label">Outstanding Payables</span>
+          <div class="metric-icon icon-red">
+            <i class="fas fa-coins"></i>
+          </div>
+        </div>
+        <div>
+          <div class="metric-value" style="color: #dc2626;">NPR {{ total_credit_due|floatformat:0|intcomma }}</div>
+          <div class="metric-subtext">
+            <i class="fas fa-clock"></i> Active vendor credit balance
+          </div>
+        </div>
+      </div>
+
+      <!-- Metric 3: Active Stock Inventory Valuation -->
+      <div class="metric-card accent-orange">
+        <div class="metric-header">
+          <span class="metric-label">Stock Valuation</span>
+          <div class="metric-icon icon-orange">
+            <i class="fas fa-boxes"></i>
+          </div>
+        </div>
+        <div>
+          <div class="metric-value">NPR {{ total_inventory_val|floatformat:0|intcomma }}</div>
+          <div class="metric-subtext">
+            <i class="fas fa-layer-group"></i> {{ total_stock_count }} site stock items
+          </div>
+        </div>
+      </div>
+
+      <!-- Metric 4: Purchase Orders Status Pipeline -->
+      <div class="metric-card accent-green">
+        <div class="metric-header">
+          <span class="metric-label">Purchase Orders</span>
+          <div class="metric-icon icon-green">
+            <i class="fas fa-clipboard-check"></i>
+          </div>
+        </div>
+        <div>
+          <div class="metric-value">
+            <span style="color:var(--dash-green);">{{ approved_pos }}</span>
+            <span style="font-size:15px; color:var(--dash-text-muted); font-weight:400;">/ {{ pending_pos }} pending</span>
+          </div>
+          <div class="metric-subtext">
+            <i class="fas fa-check-double"></i> Approved vs Pending review
+          </div>
+        </div>
+      </div>
+
+      <!-- Metric 5: Fleet Strength & Active Move -->
+      <div class="metric-card accent-purple">
+        <div class="metric-header">
+          <span class="metric-label">Fleet Operations</span>
+          <div class="metric-icon icon-purple">
+            <i class="fas fa-truck-moving"></i>
+          </div>
+        </div>
+        <div>
+          <div class="metric-value">{{ total_vehicles }} <span style="font-size:13px; font-weight:500; color:var(--dash-text-muted);">Registered</span></div>
+          <div class="metric-subtext">
+            <i class="fas fa-route" style="color: #8b5cf6;"></i> {{ vehicles_in_transit }} actively in-transit
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- =========================================================================
+         4. CORE 2-COLUMN DASHBOARD GRID
+         ========================================================================= -->
+    <div class="dashboard-columns">
+      
+      <!-- LEFT COLUMN: Live Activity Feeds -->
+      <div>
+
+        <!-- Recent Purchase Orders Feed -->
+        <div class="panel-card">
+          <div class="panel-header">
+            <span class="panel-title"><i class="fas fa-file-signature"></i> Recent Purchase Orders</span>
+            <a href="{% url 'purchase_order_display' %}" class="panel-viewall">View All <i class="fas fa-arrow-right"></i></a>
+          </div>
+          <div class="table-responsive">
+            <table class="dash-table">
+              <thead>
+                <tr>
+                  <th>PO #</th>
+                  <th>Date</th>
+                  <th>Issuing Site</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for po in recent_pos %}
+                <tr>
+                  <td><strong>{{ po.purchase_number }}</strong></td>
+                  <td>{{ po.entry_date }}</td>
+                  <td>{{ po.issuing_site }}</td>
+                  <td>
+                    {% if po.status == 'approved' %}
+                      <span class="badge-pill badge-approved"><i class="fas fa-check-circle"></i> Approved</span>
+                    {% elif po.status == 'cancelled' %}
+                      <span class="badge-pill badge-cancelled"><i class="fas fa-times-circle"></i> Cancelled</span>
+                    {% else %}
+                      <span class="badge-pill badge-pending"><i class="fas fa-clock"></i> Pending</span>
+                    {% endif %}
+                  </td>
+                  <td>
+                    <a href="/purchase-order-detail/{{ po.id }}/" class="alert-btn" style="padding: 3px 8px;" title="View Details">
+                      <i class="fas fa-eye"></i>
+                    </a>
+                  </td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="5" class="text-center text-muted" style="padding: 18px;">No purchase orders found.</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Recent Purchase Invoices Billed -->
+        <div class="panel-card">
+          <div class="panel-header">
+            <span class="panel-title"><i class="fas fa-receipt"></i> Recent Purchase Invoices</span>
+            <a href="{% url 'ashish_invoice_display' %}" class="panel-viewall">View All <i class="fas fa-arrow-right"></i></a>
+          </div>
+          <div class="table-responsive">
+            <table class="dash-table">
+              <thead>
+                <tr>
+                  <th>Voucher #</th>
+                  <th>PO #</th>
+                  <th>Supplier</th>
+                  <th>Type</th>
+                  <th>Total Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for inv in recent_invoices %}
+                <tr>
+                  <td><strong>{{ inv.voucher_number }}</strong></td>
+                  <td>{{ inv.purchase_order_number }}</td>
+                  <td>{{ inv.supplier_name|truncatechars:20 }}</td>
+                  <td>
+                    {% if inv.transaction_type == 'credit' %}
+                      <span class="badge-pill badge-pending">Credit ({{ inv.day }}d)</span>
+                    {% else %}
+                      <span class="badge-pill badge-approved">Cash</span>
+                    {% endif %}
+                  </td>
+                  <td><strong>NPR {{ inv.total|intcomma }}</strong></td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="5" class="text-center text-muted" style="padding: 18px;">No recent invoices recorded.</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Recent Fleet Movement Tracking -->
+        <div class="panel-card">
+          <div class="panel-header">
+            <span class="panel-title"><i class="fas fa-truck-moving"></i> Recent Vehicle Movements</span>
+            <a href="{% url 'move_display' %}" class="panel-viewall">Movement Log <i class="fas fa-arrow-right"></i></a>
+          </div>
+          <div class="table-responsive">
+            <table class="dash-table">
+              <thead>
+                <tr>
+                  <th>Vehicle</th>
+                  <th>Origin</th>
+                  <th>Destination</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for mov in recent_movements %}
+                <tr>
+                  <td><strong>{{ mov.vehicle_number }}</strong> ({{ mov.vehicle_type }})</td>
+                  <td>{{ mov.from_site }}</td>
+                  <td>{{ mov.to_site }}</td>
+                  <td>
+                    {% if mov.status == 'travelling' %}
+                      <span class="badge-pill badge-transit"><i class="fas fa-spinner fa-spin"></i> In Transit</span>
+                    {% else %}
+                      <span class="badge-pill badge-arrived"><i class="fas fa-map-pin"></i> Arrived</span>
+                    {% endif %}
+                  </td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="4" class="text-center text-muted" style="padding: 18px;">No vehicle movements logged.</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT COLUMN: Fuel Reservoirs, Action Hub & Maintenance -->
+      <div>
+
+        <!-- Fuel Reservoirs Live Health Monitor -->
+        <div class="panel-card">
+          <div class="panel-header">
+            <span class="panel-title"><i class="fas fa-gas-pump"></i> Fuel Reservoirs Level</span>
+            <a href="{% url 'reserviour_report' %}" class="panel-viewall">Analytics <i class="fas fa-arrow-right"></i></a>
+          </div>
+          
+          <!-- Overall System Fuel Status -->
+          <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 10px; padding: 12px 14px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <div style="font-size: 11px; color: var(--dash-text-muted); font-weight: 600;">TOTAL FUEL STOCK</div>
+              <div style="font-size: 16px; font-weight: 700; color: var(--dash-blue);">{{ total_fuel_stock|floatformat:1|intcomma }} Ltr</div>
+            </div>
+            <div style="text-align: right;">
+              <div style="font-size: 11px; color: var(--dash-text-muted); font-weight: 600;">CAPACITY %</div>
+              <div style="font-size: 16px; font-weight: 700; color: var(--dash-orange);">{{ fuel_stock_percentage }}%</div>
+            </div>
+          </div>
+
+          <!-- Individual Reservoirs List (Scrollable Card) -->
+          <div class="reservoir-scroll-container">
+            {% for r in reservoirs %}
+            <div class="res-item">
+              <div class="res-header">
+                <span>{{ r.name }} ({{ r.site }})</span>
+                <span style="color: var(--dash-blue);">{{ r.stock|floatformat:1 }} L</span>
+              </div>
+              <div class="res-progress">
+                <div class="res-bar" data-stock="{{ r.stock }}" data-cap="{{ r.capacity }}" style="width: 0%;"></div>
+              </div>
+              <div class="res-meta d-flex justify-content-between">
+                <span>Capacity: {{ r.capacity|intcomma }} L</span>
+                <span class="res-pct-label">Calculating...</span>
+              </div>
+            </div>
+            {% empty %}
+            <p class="text-center text-muted" style="font-size: 12.5px; padding: 10px;">No fuel reservoirs configured.</p>
+            {% endfor %}
+          </div>
+        </div>
+
+        <!-- Quick Operations Shortcut Hub -->
+        <div class="panel-card">
+          <div class="panel-header">
+            <span class="panel-title"><i class="fas fa-bolt"></i> Quick Operations</span>
+          </div>
+          <div class="action-hub-grid">
+            <a href="{% url 'purchase_order' %}" class="hub-btn">
+              <i class="fas fa-file-signature"></i>
+              <span>Purchase Order</span>
+            </a>
+            <a href="{% url 'ashish_goods_entry' %}" class="hub-btn">
+              <i class="fas fa-boxes-stacked"></i>
+              <span>Receive GRN</span>
+            </a>
+            <a href="{% url 'ashish_purchase_invoice' %}" class="hub-btn">
+              <i class="fas fa-file-invoice"></i>
+              <span>Purchase Invoice</span>
+            </a>
+            <a href="{% url 'material_issue' %}" class="hub-btn">
+              <i class="fas fa-dolly"></i>
+              <span>Material Issue</span>
+            </a>
+            <a href="{% url 'fuel_manage' %}" class="hub-btn">
+              <i class="fas fa-gas-pump"></i>
+              <span>Fuel Log</span>
+            </a>
+            <a href="{% url 'manage_maintainance' %}" class="hub-btn">
+              <i class="fas fa-tools"></i>
+              <span>Maintenance</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Recent Vehicle Maintenance Log -->
+        <div class="panel-card">
+          <div class="panel-header">
+            <span class="panel-title"><i class="fas fa-wrench"></i> Recent Maintenance</span>
+            <a href="{% url 'maintainance_display' %}" class="panel-viewall">Log <i class="fas fa-arrow-right"></i></a>
+          </div>
+          <div class="reservoir-scroll-container" style="max-height: 250px;">
+            {% for m in recent_maintenance %}
+            <div class="res-item" style="border-left: 3px solid var(--dash-orange);">
+              <div class="d-flex justify-content-between align-items-center">
+                <span style="font-weight: 700; font-size: 13px;">{{ m.maintain_number }}</span>
+                <span style="font-size: 12px; font-weight: 600; color: #dc2626;">NPR {{ m.total|intcomma }}</span>
+              </div>
+              <div style="font-size: 11.5px; color: var(--dash-text-muted); margin-top: 4px;">
+                Vehicle: <strong>{{ m.vehicle_number }}</strong> &bull; {{ m.entry_date }}
+              </div>
+            </div>
+            {% empty %}
+            <p class="text-center text-muted" style="font-size: 12.5px; padding: 10px;">No maintenance entries found.</p>
+            {% endfor %}
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>
 {% endblock %}
 
 {% block js %}
+<script>
+  $(document).ready(function() {
+    // 1. Calculate and Animate Reservoir Fuel Progress Bars
+    $('.res-bar').each(function() {
+      var $bar = $(this);
+      var stock = parseFloat($bar.attr('data-stock')) || 0;
+      var capacity = parseFloat($bar.attr('data-cap')) || 1;
+      
+      // Calculate percentage clamped between 0% and 100%
+      var rawPct = (stock / capacity) * 100;
+      var visualPct = Math.min(100, Math.max(0, rawPct));
+      var displayPct = Math.round(rawPct * 10) / 10;
+      
+      var $label = $bar.closest('.res-item').find('.res-pct-label');
+      
+      // Apply dynamic threshold colors based on capacity levels
+      if (rawPct <= 20) {
+        $bar.css('background', 'linear-gradient(135deg, #ef4444 0%, #f87171 100%)');
+        $label.html('<span style="color: #ef4444; font-weight: 700;">' + displayPct + '% (Low Fuel)</span>');
+      } else if (rawPct <= 45) {
+        $bar.css('background', 'linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%)');
+        $label.html('<span style="color: #d97706; font-weight: 600;">' + displayPct + '% (Moderate)</span>');
+      } else {
+        $bar.css('background', 'linear-gradient(135deg, #fa8005 0%, #ff9d3b 100%)');
+        $label.html('<span style="color: #10b981; font-weight: 600;">' + displayPct + '% Full</span>');
+      }
+      
+      // Animate width expansion smoothly
+      setTimeout(function() {
+        $bar.css({
+          'width': visualPct + '%',
+          'transition': 'width 1.2s cubic-bezier(0.4, 0, 0.2, 1)'
+        });
+      }, 150);
+    });
 
+    // 2. Automated Flash Message Banner Dismissals
+    if ($('.msgon').length > 0) {
+      var msg = $('.msgon').first().val();
+      if (msg === 'done') {
+        $('.success_ban').fadeIn(400).delay(4000).fadeOut(400);
+      } else if (msg === 'error') {
+        $('.error_ban').fadeIn(400).delay(4000).fadeOut(400);
+      }
+    }
+
+    // 3. KPI Metric Cards Counter Effect
+    $('.metric-card').on('mouseenter', function() {
+      $(this).find('.metric-icon').css('transform', 'scale(1.1) rotate(5deg)');
+    }).on('mouseleave', function() {
+      $(this).find('.metric-icon').css('transform', 'scale(1) rotate(0deg)');
+    });
+  });
+</script>
 {% endblock %}

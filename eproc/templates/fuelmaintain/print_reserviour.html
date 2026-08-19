@@ -1,160 +1,141 @@
 {% load humanize %}
+<!DOCTYPE html>
 <html>
 <head>
-  <title>Report</title>
+  <meta charset="utf-8">
+  <title>Reservoir Report - {{ reserviour }}</title>
   <style>
-    *{
-  color:#000;
-  padding:5px 10px;
-  margin:0px;
-}
-body{
-    padding: 0px;
-    margin: 0px;
-    counter-reset: Serial;
-}
-@page {
-    size: letter landscape;
-    margin: 2cm;
-}
-    .report_banner{
-  float: left;
-  width: 100%;
-  height: inherit;
-  background: #fff;
-  box-shadow: 0px 0px 8px 0px #ddd;
-  padding: 20px 15px;
-}
-.report_subbanner1{
-  float: left;
-  width: 100%;
-  height: inherit;
-}
-.report_head1{
-  float:left;
-  width: 100%;
-  font-size: 17px;
-  color: #000;
-  text-align:center;
-}
-.report_head2{
-  float:left;
-  width: 100%;
-  font-size: 14px;
-  color: #000;
-  text-align:center;
-  text-transform: uppercase;
-}
-
-.report_subbanner2{
-  float: left;
-  width: 100%;
-  height: inherit;
-  margin-top: 20px;
-}
-.report_summary{
-  float: left;
-  width: 100%;
-  height: inherit;
-  margin-top: 20px;
-}
-.report_subbanner2 table{
-  border: 1px solid #ddd;
-  font-size: 12px;
-  text-align: center;
-}
-.report_summary table{
-  border: 1px solid #ddd;
-  font-size: 12px;
-  text-align: center;
-}
-.report_subbanner2 table th{
-  color: rgba(0,0,0,.8);
-}
-.report_summary table th{
-  color: rgba(0,0,0,.8);
-}
-.report_summary table tbody tr td:first-child:before{
-  counter-increment: Serial;
-  content: counter(Serial);
-}
-
-.no_report{
-  float:left;
-  width:100%;
-  font-size: 14px;
-  color: #008ECC;
-  padding: 30px 0px;
-  text-align:center;
-}
-.boldrow{
-  font-weight: bold;
-} 
+    @page {
+      size: letter landscape;
+      margin-top: {% if letterhead %}{{ letterhead.top_margin_cm|default:3.8 }}cm{% else %}2.2cm{% endif %};
+      margin-bottom: {% if letterhead %}{{ letterhead.bottom_margin_cm|default:1.5 }}cm{% else %}1.5cm{% endif %};
+      margin-left: {% if letterhead %}{{ letterhead.left_margin_cm|default:1.2 }}cm{% else %}1.2cm{% endif %};
+      margin-right: {% if letterhead %}{{ letterhead.right_margin_cm|default:1.2 }}cm{% else %}1.2cm{% endif %};
+    }
+    body {
+      font-family: Helvetica, Arial, sans-serif;
+      font-size: 9pt;
+      color: #1f2937;
+      margin: 0;
+      padding: 0;
+    }
+    .letterhead-banner { width: 100%; text-align: center; margin-bottom: 8px; }
+    .letterhead-banner img { width: 100%; max-height: {% if letterhead %}{{ letterhead.header_height_cm|default:3.5 }}cm{% else %}3.5cm{% endif %}; }
+    .fallback-header { text-align: center; border-bottom: 2px solid #fa8005; padding-bottom: 4px; margin-bottom: 8px; }
+    .fallback-header h1 { margin: 0; font-size: 16pt; color: #11101D; text-transform: uppercase; }
+    .doc-title-box { text-align: center; margin: 4px 0 8px 0; }
+    .doc-title {
+      font-size: 11pt;
+      font-weight: bold;
+      text-transform: uppercase;
+      color: #11101D;
+      border-bottom: 1.5px solid #11101D;
+      display: inline-block;
+      padding-bottom: 2px;
+    }
+    .meta-box {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      padding: 6px 10px;
+      font-size: 8.5pt;
+      margin-bottom: 10px;
+    }
+    .data-table { width: 100%; border-collapse: collapse; }
+    .data-table th {
+      background-color: #1f7ba3;
+      color: #ffffff;
+      font-size: 8pt;
+      font-weight: bold;
+      text-align: left;
+      padding: 4px 6px;
+      border: 1px solid #1f7ba3;
+      text-transform: uppercase;
+    }
+    .data-table td {
+      font-size: 8pt;
+      padding: 4px 6px;
+      border: 1px solid #cbd5e1;
+      color: #1e293b;
+    }
+    .data-table tr:nth-child(even) td { background-color: #f8fafc; }
+    .text-center { text-align: center; }
+    .text-right { text-align: right; }
+    .footer-sign-table { width: 100%; margin-top: 25px; border-collapse: collapse; }
+    .footer-sign-table td {
+      font-size: 8.5pt;
+      text-align: center;
+      padding-top: 15px;
+      border-top: 1px dashed #94a3b8;
+      width: 50%;
+    }
   </style>
 </head>
 <body>
-  <div class="report_container">
-    <div class="col-12">
-      <div class="report_banner">
-          {% if fuel_consump %}
-          <div class="report_subbanner1">
-            <iframe class="report_head1" style="color: #000; font-size: 19px;">
-              Ashish Nirman Sewa
-            </iframe><br>
-            <iframe class="report_head1" style="font-size: 13px; color: rgba(0,0,0,.8);">
-              Kathmandu
-            </iframe>
-            <div class="report_head1">
-              Fuel Cunsumption Report of {{reserviour}} 
-            </div>
-            <div class="report_head2">
-              {% if pbn %}
-              Last Entry Purchase Bill Number: {{pbn}}
-              {% endif %}
 
-            </div>
-
-          </div>
-          <div class="report_subbanner2">
-            <table>
-              <thead>
-                <tr>
-                  <th scope="col">Date</th>
-                  <th scope="col">Coupon Number</th>
-                  <th scope="col">Site</th>
-                  <th scope="col">Vehicle Type</th>
-                  <th scope="col">Vehicle Number</th>
-                  <th scope="col">Kilometers</th>
-                  <th scope="col">Quantity (ltrs)</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for c in fuel_consump %}
-                <tr>
-                  <td>{{c.date}}</td>
-                  <td>{{c.coupon_number}}</td>
-                  <td>{{c.user_site}}</td>
-                  <td>{{c.vehicle_type}}</td>
-                  <td>{{c.vehicle_number}} ({{c.number_type}})</td>
-                  <td>{{c.kilometer}} KM</td>
-                  <td>{{c.quantity}}</td>
-                </tr>
-                {% endfor %}
-                <tr class="boldrow">
-                  <td colspan="6">Total</td>
-                  <td>{{consump_total.quantity__sum|floatformat:2}}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          {% else %}
-          <span class="no_report">
-            No report found for your request
-          </span>
-          {% endif %}
-
-      </div>
-    </div>
+  {% if letterhead and letterhead.letterhead_image %}
+  <div class="letterhead-banner">
+    <img src="{{ letterhead.letterhead_image.url }}" alt="Company Letterhead">
   </div>
-  <body>
-  </html>
+  {% else %}
+  <div class="fallback-header">
+    <h1>Ashish Nirman Sewa</h1>
+    <p>Fuel Logistics & Storage Audit Division</p>
+  </div>
+  {% endif %}
+
+  <div class="doc-title-box">
+    <span class="doc-title">Reservoir Consumption Audit: {{ reserviour }}</span>
+  </div>
+
+  <div class="meta-box">
+    <strong>Reservoir:</strong> {{ reserviour }} &bull;
+    {% if pbn %}<strong>Latest Refill Bill #:</strong> {{ pbn }} &bull; {% endif %}
+    <strong>Total Consumption:</strong> {{ consump_total.quantity__sum|floatformat:2|default:"0.00" }} Liters
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th style="width: 5%;">#</th>
+        <th style="width: 12%;">Date</th>
+        <th style="width: 14%;">Coupon #</th>
+        <th style="width: 14%;">Site</th>
+        <th style="width: 15%;">Vehicle Type</th>
+        <th style="width: 18%;">Vehicle Number</th>
+        <th style="width: 10%;" class="text-right">Kilometers</th>
+        <th style="width: 12%;" class="text-right">Quantity (L)</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for c in fuel_consump %}
+      <tr>
+        <td class="text-center">{{ forloop.counter }}</td>
+        <td>{{ c.date }}</td>
+        <td>{{ c.coupon_number }}</td>
+        <td>{{ c.user_site }}</td>
+        <td>{{ c.vehicle_type }}</td>
+        <td><strong>{{ c.vehicle_number }}</strong> ({{ c.number_type }})</td>
+        <td class="text-right">{{ c.kilometer }} KM</td>
+        <td class="text-right"><strong>{{ c.quantity }}</strong></td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="8" class="text-center">No fuel consumptions logged for this reservoir.</td>
+      </tr>
+      {% endfor %}
+      <tr style="background: #e2e8f0; font-weight: bold;">
+        <td colspan="7" class="text-right">Total Dispensed Quantity:</td>
+        <td class="text-right">{{ consump_total.quantity__sum|floatformat:2|default:"0.00" }} L</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <table class="footer-sign-table">
+    <tr>
+      <td>Fuel Auditor: <strong>{{ request.user.username }}</strong></td>
+      <td>Site In-Charge / Project Manager</td>
+    </tr>
+  </table>
+
+</body>
+</html>

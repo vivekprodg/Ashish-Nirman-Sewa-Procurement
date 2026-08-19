@@ -2,6 +2,22 @@ from django.db import models
 import datetime
 from datetime import date, datetime as dt
 
+class CompanyLetterhead(models.Model):
+	title = models.CharField(max_length=255, default="Corporate Master Letterhead")
+	letterhead_image = models.ImageField(upload_to='letterheads/')
+	footer_image = models.ImageField(upload_to='letterheads/footers/', blank=True, null=True)
+	site = models.CharField(max_length=255, default='All Sites', blank=True, null=True)
+	header_height_cm = models.FloatField(default=3.5, help_text="Height reserved for the header banner in cm")
+	top_margin_cm = models.FloatField(default=3.8, help_text="Top page margin for report body content in cm")
+	bottom_margin_cm = models.FloatField(default=1.5, help_text="Bottom page margin in cm")
+	left_margin_cm = models.FloatField(default=1.2, help_text="Left page margin in cm")
+	right_margin_cm = models.FloatField(default=1.2, help_text="Right page margin in cm")
+	is_active = models.BooleanField(default=True)
+	uploaded_by = models.CharField(max_length=255, default='', blank=True, null=True)
+	created_at = models.DateTimeField(default=dt.now, blank=True, null=True)
+
+	def __str__(self):
+		return f"{self.title} ({'Active' if self.is_active else 'Inactive'})"
 
 class Location(models.Model):
 	location_name = models.CharField(max_length=255)
@@ -10,7 +26,6 @@ class Location(models.Model):
 	user_site = models.CharField(max_length=255, default='', blank=True, null=True)
 	datetime = models.DateTimeField(default=dt.now, blank=True, null=True)
 	date = models.DateField(default=date.today, blank=True, null=True)
-
 
 class Supplier(models.Model):
 	name = models.CharField(max_length=255)
@@ -30,7 +45,6 @@ class Supplier(models.Model):
 	datetime = models.DateTimeField(default=dt.now, blank=True, null=True)
 	date = models.DateField(default=date.today, blank=True, null=True)
 
-
 class CreditPay(models.Model):
 	entry_date = models.CharField(max_length=100)
 	supplier_id = models.CharField(max_length=255)
@@ -46,7 +60,6 @@ class CreditPay(models.Model):
 	entry_by = models.CharField(max_length=255, default='', blank=True, null=True)
 	user_site = models.CharField(max_length=255, default='', blank=True, null=True)
 
-
 class SupplierCategory(models.Model):
 	name = models.CharField(max_length=255)
 	url = models.CharField(max_length=255)
@@ -55,7 +68,6 @@ class SupplierCategory(models.Model):
 	datetime = models.DateTimeField(default=dt.now, blank=True, null=True)
 	date = models.DateField(default=date.today, blank=True, null=True)
 
-
 class StockCategory(models.Model):
 	name = models.CharField(max_length=255)
 	url = models.CharField(max_length=255)
@@ -63,7 +75,6 @@ class StockCategory(models.Model):
 	user_site = models.CharField(max_length=255, default='', blank=True, null=True)
 	datetime = models.DateTimeField(default=dt.now, blank=True, null=True)
 	date = models.DateField(default=date.today, blank=True, null=True)
-
 
 class StockSubCategory(models.Model):
 	cat_name = models.CharField(max_length=255)
@@ -75,7 +86,6 @@ class StockSubCategory(models.Model):
 	datetime = models.DateTimeField(default=dt.now, blank=True, null=True)
 	date = models.DateField(default=date.today, blank=True, null=True)
 
-
 class UOM(models.Model):
 	uom = models.CharField(max_length=255)
 	user_site = models.CharField(max_length=255, default='', blank=True, null=True)
@@ -83,11 +93,9 @@ class UOM(models.Model):
 	datetime = models.DateTimeField(default=dt.now, blank=True, null=True)
 	date = models.DateField(default=date.today, blank=True, null=True)
 
-
 class Vehicle(models.Model):
 	vehicle_number = models.CharField(max_length=255, default='')
 	entry_by = models.CharField(max_length=255, default='')
-
 
 class GoodsEntry(models.Model):
 	entry_by = models.CharField(max_length=255)
@@ -113,7 +121,6 @@ class GoodsEntry(models.Model):
 	def __str__(self):
 		return self.grn_number
 
-
 class Goods(models.Model):
 	goodsid = models.CharField(max_length=255)
 	grn = models.CharField(max_length=255, default='')
@@ -130,14 +137,12 @@ class Goods(models.Model):
 	def __str__(self):
 		return self.grn
 
-
 class GoodsExtra(models.Model):
 	grn_number = models.CharField(max_length=255)
 	goodsid = models.CharField(max_length=255)
 	purchase_order_number = models.CharField(max_length=255, default='')
 	voucher_number = models.CharField(max_length=255)
 	supplier = models.CharField(max_length=255)
-
 
 class PurchaseEntry(models.Model):
 	entry_by = models.CharField(max_length=255)
@@ -175,7 +180,6 @@ class PurchaseEntry(models.Model):
 	def __str__(self):
 		return self.voucher_number
 
-
 class InvoiceItem(models.Model):
 	purchaseid = models.CharField(max_length=255)
 	po = models.CharField(max_length=255, default='', blank=True, null=True)
@@ -203,7 +207,6 @@ class InvoiceItem(models.Model):
 	def __str__(self):
 		return self.pvn
 
-
 class StockEntry(models.Model):
 	item = models.CharField(max_length=255)
 	item_id = models.CharField(max_length=255, default='')
@@ -225,7 +228,6 @@ class StockEntry(models.Model):
 	datetime = models.DateTimeField(default=dt.now, blank=True, null=True)
 	date = models.DateField(default=date.today, blank=True, null=True)
 
-
 class StockItem(models.Model):
 	item = models.CharField(max_length=255)
 	url = models.CharField(max_length=255, default='')
@@ -242,7 +244,6 @@ class StockItem(models.Model):
 	datetime = models.DateTimeField(default=dt.now, blank=True, null=True)
 	date = models.DateField(default=date.today, blank=True, null=True)
 
-
 class QuotationEntry(models.Model):
 	supplier = models.CharField(max_length=255, default='')
 	supplier_name = models.CharField(max_length=255)
@@ -255,14 +256,12 @@ class QuotationEntry(models.Model):
 	datetime = models.DateTimeField(default=dt.now, blank=True, null=True)
 	date = models.DateField(default=date.today, blank=True, null=True)
 
-
 class QuotationItem(models.Model):
 	quotationid = models.CharField(max_length=255)
 	item_id = models.CharField(max_length=255, default='')
 	item = models.CharField(max_length=255)
 	uom = models.CharField(max_length=255)
 	rate = models.CharField(max_length=255)
-
 
 class MaterialIssueEntry(models.Model):
 	issuing_location = models.CharField(max_length=100)
@@ -282,7 +281,6 @@ class MaterialIssueEntry(models.Model):
 	def __str__(self):
 		return self.mie_number
 
-
 class MaterialItem(models.Model):
 	materialid = models.CharField(max_length=255)
 	po = models.CharField(max_length=255, default='', blank=True, null=True)
@@ -295,7 +293,6 @@ class MaterialItem(models.Model):
 	
 	def __str__(self):
 		return self.pvn
-
 
 class InternalTransfer(models.Model):
 	issuing_location = models.CharField(max_length=100)
@@ -314,7 +311,6 @@ class InternalTransfer(models.Model):
 	def __str__(self):
 		return self.itn_number
 
-
 class TransferItem(models.Model):
 	transferid = models.CharField(max_length=255)
 	pvn = models.CharField(max_length=255, default='')
@@ -328,7 +324,6 @@ class TransferItem(models.Model):
 	
 	def __str__(self):
 		return self.pvn
-
 
 class InternalGrn(models.Model):
 	entry_by = models.CharField(max_length=255)
@@ -346,7 +341,6 @@ class InternalGrn(models.Model):
 	
 	def __str__(self):
 		return self.grn_number
-
 
 class InternalGrnItems(models.Model):
 	goodsid = models.CharField(max_length=255)
@@ -367,7 +361,6 @@ class InternalGrnItems(models.Model):
 	def __str__(self):
 		return self.grn
 
-
 class OutSaleEntry(models.Model):
 	issuing_location = models.CharField(max_length=100)
 	sales_id = models.CharField(max_length=100)
@@ -385,7 +378,6 @@ class OutSaleEntry(models.Model):
 	datetime = models.DateTimeField(default=dt.now, blank=True, null=True)
 	date = models.DateField(default=date.today, blank=True, null=True)
 
-
 class SalesItem(models.Model):
 	saleid = models.CharField(max_length=255)
 	item_id = models.CharField(default='', max_length=255)
@@ -394,7 +386,6 @@ class SalesItem(models.Model):
 	quantity = models.CharField(max_length=255)
 	rate = models.CharField(max_length=255)
 	amount = models.CharField(max_length=255)
-
 
 class BudgetEstimateEntry(models.Model):
 	location = models.CharField(max_length=100)
@@ -408,7 +399,6 @@ class BudgetEstimateEntry(models.Model):
 	datetime = models.DateTimeField(default=dt.now, blank=True, null=True)
 	date = models.DateField(default=date.today, blank=True, null=True)
 
-
 class Site(models.Model):
 	name = models.CharField(max_length=255)
 	url = models.CharField(max_length=255)
@@ -421,7 +411,6 @@ class Site(models.Model):
 	active_status = models.CharField(max_length=255, default='yes', blank=True, null=True)
 	datetime = models.DateTimeField(default=dt.now, blank=True, null=True)
 	date = models.DateField(default=date.today, blank=True, null=True)
-
 
 class PurchaseOrder(models.Model):
 	entry_by = models.CharField(max_length=255)
@@ -450,7 +439,6 @@ class PurchaseOrder(models.Model):
 	def __str__(self):
 		return self.purchase_number
 
-
 class PurchaseItem(models.Model):
 	purchase_order_id = models.CharField(max_length=255)
 	pon = models.CharField(max_length=255, default='')
@@ -471,7 +459,6 @@ class PurchaseItem(models.Model):
 	def __str__(self):
 		return self.pon
 
-
 class Notification(models.Model):
 	notify_topic = models.CharField(max_length=255, default='', blank=True, null=True)
 	content_id = models.CharField(max_length=255, default='', blank=True, null=True)
@@ -487,7 +474,6 @@ class Notification(models.Model):
 	date_on = models.DateField(default=date.today, blank=True, null=True)
 	status = models.CharField(max_length=255, default='pending')
 	user_type = models.CharField(max_length=255, default='', blank=True, null=True)
-
 
 class MaintainanceBill(models.Model):
 	maintain_number = models.CharField(max_length=255)
@@ -533,7 +519,6 @@ class MaintainanceBill(models.Model):
 	def __str__(self):
 		return self.maintain_number
 
-
 class MaintainanceItem(models.Model):
 	bill_id = models.CharField(max_length=255)
 	pvn = models.CharField(default='', max_length=255, blank=True, null=True)
@@ -552,7 +537,6 @@ class MaintainanceItem(models.Model):
 	def __str__(self):
 		return self.pvn
 
-
 class MaintainInvoice(models.Model):
 	maintainid = models.CharField(max_length=255, default='', blank=True, null=True)
 	maintain_number = models.CharField(max_length=255, default='', blank=True, null=True)
@@ -570,18 +554,15 @@ class MaintainInvoice(models.Model):
 	def __str__(self):
 		return self.maintain_number
 
-
 class ProblemCategory(models.Model):
 	name = models.CharField(max_length=255)
 	problem_url = models.CharField(max_length=255)
-
 
 class ProblemSubCategory(models.Model):
 	name = models.CharField(max_length=255)
 	problem_suburl = models.CharField(max_length=255)
 	problem_url = models.CharField(max_length=255)
 	problem_name = models.CharField(max_length=255)
-
 
 class Fuel(models.Model):
 	date = models.CharField(max_length=255)
@@ -603,7 +584,6 @@ class Fuel(models.Model):
 	entry_date_on = models.DateField(default=datetime.date.today, blank=True)
 	entry_by = models.CharField(max_length=255, default='', blank=True, null=True)
 
-
 class Reserviour(models.Model):
 	name = models.CharField(max_length=255)
 	url = models.CharField(max_length=255, default='')
@@ -614,7 +594,6 @@ class Reserviour(models.Model):
 	stock = models.CharField(max_length=255, default='')
 	user_site = models.CharField(max_length=255, default='', blank=True, null=True)
 	entry_by = models.CharField(max_length=255, default='', blank=True, null=True)
-
 
 class FuelPurchase(models.Model):
 	issuing_site = models.CharField(max_length=255)
@@ -640,7 +619,6 @@ class FuelPurchase(models.Model):
 	
 	def __str__(self):
 		return self.purchase_number
-
 
 class FuelBill(models.Model):
 	user_site = models.CharField(max_length=255, default='', blank=True, null=True)
@@ -676,16 +654,13 @@ class FuelBill(models.Model):
 	def __str__(self):
 		return self.purchase_bill_number
 
-
 class VehicleType(models.Model):
 	type_name = models.CharField(max_length=255)
 	url = models.CharField(max_length=255)
 
-
 class FuelType(models.Model):
 	name = models.CharField(max_length=255)
 	url = models.CharField(max_length=255)
-
 
 class VehicleList(models.Model):
 	owner_name = models.CharField(max_length=255, default='', blank=True, null=True)
@@ -705,7 +680,6 @@ class VehicleList(models.Model):
 	current = models.CharField(max_length=255, default='Chitwan', blank=True, null=True)
 	active_status = models.CharField(max_length=255, default='yes', blank=True, null=True)
 
-
 class DamageEntry(models.Model):
 	entry_by = models.CharField(max_length=255)
 	purchase_order_number = models.CharField(max_length=255, default='', blank=True, null=True)
@@ -722,7 +696,6 @@ class DamageEntry(models.Model):
 	
 	def __str__(self):
 		return self.damage_number
-
 
 class DamageItem(models.Model):
 	damageid = models.CharField(max_length=255)
@@ -741,7 +714,6 @@ class DamageItem(models.Model):
 	def __str__(self):
 		return self.dn
 
-
 class DamageInvoice(models.Model):
 	damageid = models.CharField(max_length=255, default='', blank=True, null=True)
 	damage_number = models.CharField(max_length=255, default='', blank=True, null=True)
@@ -755,7 +727,6 @@ class DamageInvoice(models.Model):
 	discount_amt = models.CharField(max_length=255, default='', blank=True, null=True)
 	vat = models.CharField(max_length=255, default='', blank=True, null=True)
 	total = models.CharField(max_length=255, default='', blank=True, null=True)
-
 
 class ReturnEntry(models.Model):
 	entry_by = models.CharField(max_length=255)
@@ -773,7 +744,6 @@ class ReturnEntry(models.Model):
 	
 	def __str__(self):
 		return self.damage_number
-
 
 class ReturnItem(models.Model):
 	damageid = models.CharField(max_length=255)
@@ -796,7 +766,6 @@ class ReturnItem(models.Model):
 	def __str__(self):
 		return self.dn
 
-
 class ReturnInvoice(models.Model):
 	damageid = models.CharField(max_length=255, default='', blank=True, null=True)
 	damage_number = models.CharField(max_length=255, default='', blank=True, null=True)
@@ -810,7 +779,6 @@ class ReturnInvoice(models.Model):
 	discount_amt = models.CharField(max_length=255, default='', blank=True, null=True)
 	vat = models.CharField(max_length=255, default='', blank=True, null=True)
 	total = models.CharField(max_length=255, default='', blank=True, null=True)
-
 
 class VehicleTrack(models.Model):
 	move_number = models.CharField(max_length=255, default='', blank=True, null=True)
@@ -829,7 +797,6 @@ class VehicleTrack(models.Model):
 	datetime = models.DateTimeField(default=dt.now, blank=True, null=True)
 	date = models.DateField(default=date.today, blank=True, null=True)
 
-
 class FuelInternalTransfer(models.Model):
 	fuel_number = models.CharField(max_length=255)
 	from_reserviour = models.CharField(max_length=255)
@@ -845,7 +812,6 @@ class FuelInternalTransfer(models.Model):
 	
 	def __str__(self):
 		return self.fuel_number
-
 
 class InternalDamageEntry(models.Model):
 	entry_by = models.CharField(max_length=255)
@@ -863,7 +829,6 @@ class InternalDamageEntry(models.Model):
 	def __str__(self):
 		return self.damage_number
 
-
 class InternalDamageItem(models.Model):
 	damageid = models.CharField(max_length=255)
 	dn = models.CharField(max_length=255, default='', blank=True, null=True)
@@ -879,7 +844,6 @@ class InternalDamageItem(models.Model):
 	
 	def __str__(self):
 		return self.dn
-
 
 class FuelLeakage(models.Model):
 	entry_date = models.CharField(max_length=255)

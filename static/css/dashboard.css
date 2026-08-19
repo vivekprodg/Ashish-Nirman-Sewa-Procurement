@@ -1,0 +1,448 @@
+/* ==========================================================================
+   ASHISH NIRMAN SEWA - DEDICATED DASHBOARD STYLES
+   ========================================================================== */
+
+:root {
+  --dash-orange: #fa8005;
+  --dash-orange-light: #fff4e8;
+  --dash-orange-grad: linear-gradient(135deg, #fa8005 0%, #ff9d3b 100%);
+  --dash-blue: #1f7ba3;
+  --dash-blue-grad: linear-gradient(135deg, #1f7ba3 0%, #008ECC 100%);
+  --dash-dark: #11101D;
+  --dash-surface: #ffffff;
+  --dash-border: #e5e7eb;
+  --dash-text-dark: #1f2937;
+  --dash-text-muted: #6b7280;
+  
+  --dash-green: #10b981;
+  --dash-green-bg: #dcfce7;
+  --dash-yellow: #f59e0b;
+  --dash-yellow-bg: #fef3c7;
+  --dash-red: #ef4444;
+  --dash-red-bg: #fee2e2;
+  --dash-purple: #8b5cf6;
+  --dash-purple-bg: #f3e8ff;
+}
+
+.dash-wrapper {
+  padding: 0 4px 30px 4px;
+}
+
+/* --- Hero Banner --- */
+.dash-hero {
+  background: linear-gradient(135deg, #11101D 0%, #1e293b 50%, #1f7ba3 100%);
+  border-radius: 14px;
+  padding: 26px 30px;
+  color: #ffffff;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 22px;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.08);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 18px;
+}
+
+.dash-hero::before {
+  content: "";
+  position: absolute;
+  top: -70px;
+  right: -50px;
+  width: 250px;
+  height: 250px;
+  background: radial-gradient(circle, rgba(250, 128, 5, 0.28) 0%, rgba(250, 128, 5, 0) 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.dash-hero-title h2 {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0 0 6px 0;
+  color: #ffffff;
+}
+
+.dash-hero-title h2 span {
+  color: var(--dash-orange);
+}
+
+.dash-hero-title p {
+  margin: 0;
+  font-size: 13px;
+  color: #cbd5e1;
+}
+
+.dash-hero-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  z-index: 2;
+}
+
+.hero-pill {
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 30px;
+  font-size: 12.5px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.hero-pill:hover {
+  background: var(--dash-orange);
+  border-color: var(--dash-orange);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(250, 128, 5, 0.4);
+}
+
+/* --- Action Alerts Ribbon --- */
+.alert-box-container {
+  margin-bottom: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.action-alert {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  border: 1px solid var(--dash-border);
+  border-left: 4px solid var(--dash-orange);
+  transition: transform 0.2s ease;
+}
+
+.action-alert:hover { transform: translateX(3px); }
+.action-alert.danger { border-left-color: var(--dash-red); }
+.action-alert.info { border-left-color: var(--dash-blue); }
+
+.alert-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.alert-left i {
+  font-size: 18px;
+  color: var(--dash-orange);
+}
+
+.action-alert.danger .alert-left i { color: var(--dash-red); }
+.action-alert.info .alert-left i { color: var(--dash-blue); }
+
+.alert-text {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.alert-btn {
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  background: #f1f5f9;
+  color: var(--dash-text-dark);
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.alert-btn:hover {
+  background: var(--dash-blue);
+  color: #fff;
+}
+
+/* --- Executive KPI Metric Cards --- */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.metric-card {
+  background: var(--dash-surface);
+  border-radius: 14px;
+  padding: 20px 22px;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.06);
+  border: 1px solid var(--dash-border);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.metric-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 4px;
+  width: 100%;
+  background: var(--dash-border);
+}
+
+.metric-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px -4px rgba(0, 0, 0, 0.12);
+}
+
+.metric-card.accent-blue::before { background: var(--dash-blue-grad); }
+.metric-card.accent-red::before { background: var(--dash-red); }
+.metric-card.accent-orange::before { background: var(--dash-orange-grad); }
+.metric-card.accent-green::before { background: var(--dash-green); }
+.metric-card.accent-purple::before { background: var(--dash-purple); }
+
+.metric-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.metric-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--dash-text-muted);
+}
+
+.metric-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+}
+
+.metric-icon.icon-blue { background: #e0f2fe; color: var(--dash-blue); }
+.metric-icon.icon-red { background: var(--dash-red-bg); color: var(--dash-red); }
+.metric-icon.icon-orange { background: var(--dash-orange-light); color: var(--dash-orange); }
+.metric-icon.icon-green { background: var(--dash-green-bg); color: var(--dash-green); }
+.metric-icon.icon-purple { background: var(--dash-purple-bg); color: var(--dash-purple); }
+
+.metric-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--dash-text-dark);
+  line-height: 1.2;
+  margin-bottom: 4px;
+}
+
+.metric-subtext {
+  font-size: 12px;
+  color: var(--dash-text-muted);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* --- Core 2-Column Dashboard Grid --- */
+.dashboard-columns {
+  display: grid;
+  grid-template-columns: 2fr 1.15fr;
+  gap: 20px;
+}
+
+@media (max-width: 1024px) {
+  .dashboard-columns {
+    grid-template-columns: 1fr;
+  }
+}
+
+.panel-card {
+  background: var(--dash-surface);
+  border-radius: 14px;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.06);
+  border: 1px solid var(--dash-border);
+  padding: 22px;
+  margin-bottom: 20px;
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--dash-border);
+}
+
+.panel-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--dash-text-dark);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.panel-title i {
+  color: var(--dash-orange);
+}
+
+.panel-viewall {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--dash-blue);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.panel-viewall:hover {
+  color: var(--dash-orange);
+  text-decoration: underline;
+}
+
+/* --- Clean Data Tables --- */
+.dash-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 12.5px;
+}
+
+.dash-table thead th {
+  background: #f8fafc;
+  color: var(--dash-text-muted);
+  font-weight: 600;
+  font-size: 11.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 10px 12px;
+  border-top: 1px solid var(--dash-border);
+  border-bottom: 1px solid var(--dash-border);
+}
+
+.dash-table tbody td {
+  padding: 11px 12px;
+  border-bottom: 1px solid #f1f5f9;
+  color: var(--dash-text-dark);
+  vertical-align: middle;
+}
+
+.dash-table tbody tr:hover {
+  background-color: #f8fafc;
+}
+
+/* Badges */
+.badge-pill {
+  padding: 3px 9px;
+  border-radius: 14px;
+  font-size: 11px;
+  font-weight: 600;
+  display: inline-block;
+  text-transform: capitalize;
+}
+
+.badge-approved { background: var(--dash-green-bg); color: #15803d; }
+.badge-pending { background: var(--dash-yellow-bg); color: #b45309; }
+.badge-cancelled { background: var(--dash-red-bg); color: #b91c1c; }
+.badge-transit { background: #e0f2fe; color: #0369a1; }
+.badge-arrived { background: var(--dash-purple-bg); color: #6b21a8; }
+
+/* --- Fuel Reservoirs Live Health Grid --- */
+.reservoir-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.res-item {
+  background: #f8fafc;
+  border: 1px solid var(--dash-border);
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+
+.res-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.res-meta {
+  font-size: 11.5px;
+  color: var(--dash-text-muted);
+}
+
+.res-progress {
+  height: 8px;
+  background: #e2e8f0;
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 6px 0;
+}
+
+.res-bar {
+  height: 100%;
+  background: var(--dash-orange-grad);
+  border-radius: 10px;
+  transition: width 1s ease-in-out;
+}
+
+/* --- Shortcut Action Hub --- */
+.action-hub-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.hub-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 10px;
+  background: #f8fafc;
+  border: 1px solid var(--dash-border);
+  border-radius: 10px;
+  text-decoration: none;
+  color: var(--dash-text-dark);
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.25s ease;
+  text-align: center;
+  gap: 8px;
+}
+
+.hub-btn i {
+  font-size: 19px;
+  color: var(--dash-blue);
+  transition: transform 0.25s ease, color 0.25s ease;
+}
+
+.hub-btn:hover {
+  background: #ffffff;
+  border-color: var(--dash-orange);
+  color: var(--dash-orange);
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+
+.hub-btn:hover i {
+  color: var(--dash-orange);
+  transform: scale(1.15);
+}

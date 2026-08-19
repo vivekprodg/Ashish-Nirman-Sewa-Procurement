@@ -1,4 +1,3 @@
-procurement/
 account/migrations/
 account/__pycache__/
 account/__init__.py
@@ -12,5 +11,6 @@ tmp/
 db.sqlite3
 manage.py
 passenger_wsgi.py
-require.txt
+requirements.txt
 stderr.log
+venv/

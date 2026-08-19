@@ -19,10 +19,10 @@ $(function () {
   $('[data-toggle="tooltip"]').tooltip()
 })
 
-setInterval(
-function(){
-  $('#badge2').load('/noti-count/');
-}, 1000);
+// setInterval(
+// function(){
+//   $('#badge2').load('/noti-count/');
+// }, 1000);
 
 $('#notify-dropdown').on('click', function(){
   $('#notification_dropdown').load("/noti/");

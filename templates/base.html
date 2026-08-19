@@ -48,202 +48,176 @@
 {% url 'search_purchase_order' as search_purchase %}
 {% url 'purchase_order_detail' as purchase_detail %}
 {% url 'purchase_order_edit' as purchase_edit %}
+{% url 'manage_letterhead' as letterhead_url %}
 <!DOCTYPE html>
-
 <html lang="en" dir="ltr">
 <head>
-  <title>
-    Procurement Dashboard
-  </title>
+  <title>Ashish Nirman Sewa - Procurement & Operations ERP</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
   {% block meta %}
-
   {% endblock %}
+  
   <link rel="shortcut icon" type="image/png" href="{% static 'img/favicon/fav.png' %}"/>
   <link rel="stylesheet" href="{% static 'css/bootstrap/bootstrap.min.css' %}">
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css">
+  
+  <!-- Font Awesome 6 Free CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Nepali Datepicker & Bootstrap Select -->
   <link href="{% static '/css/nepali.datepicker.v3.4.min.css' %}" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'css/bootstrap-select.css' %}">
-  <link rel="stylesheet" href="{% static 'css/base.css' %}?v=1.3">
+  
+  <!-- Base Core Stylesheet -->
+  <link rel="stylesheet" href="{% static 'css/base.css' %}?v=1.5">
 
-  <script src="https://use.fontawesome.com/f0f0f6086b.js"></script>
   {% block css %}
   {% endblock %}
-	
 </head>
 <body id="body">
-  <div class="sidebar">
+  <div class="sidebar" id="sidebar">
     <div class="logo-details">
       <div class="logo_name">Ashish Nirman</div>
-      <!-- <i class='bx bx-menu' id="btn" ></i> -->
       <i class="fas fa-bars" id="btn"></i>
       <i class="fas fa-arrow-circle-left" id="collapse"></i>
     </div>
     <ul class="nav-list scrollable">
-      <!-- <li>
-         <i class="fas fa-search" id="search"></i>
-         <input type="text" placeholder="Search...">
-         <span class="tooltip">Search</span>
-      </li> -->
       <li>
-        <a href="{% url 'home' %}" {% if request.get_full_path == home %}class="shine"{% endif %}>
-          <!-- <i class='bx bx-grid-alt'></i> -->
+        <a href="{% url 'home' %}" {% if request.get_full_path == home or request.path == '/' %}class="shine"{% endif %}>
           <i class="fas fa-th-large"></i>
           <span class="links_name">Dashboard</span>
         </a>
-         <span class="tooltip">Dashboard</span>
+        <span class="tooltip">Dashboard</span>
       </li>
       <li>
-       <a href="{% url 'manage_user' %}" {% if request.get_full_path == users or request.get_full_path == user_display %}class="shine"{% endif %}>
-         <!-- <i class='bx bx-user' ></i> -->
-         <i class="fas fa-user-cog"></i>
-         <span class="links_name">User</span>
-       </a>
-       <span class="tooltip">User</span>
-     </li>
-     <li>
-        <a href="{% url 'predefined' %}" {% if request.get_full_path == predefine or request.get_full_path == supplier or request.get_full_path == dis_supplier or request.get_full_path == location or request.get_full_path == vehicle or request.get_full_path == category or request.get_full_path == uom or request.get_full_path == site or request.get_full_path == site_display %}class="shine"{% endif %} >
-          <!-- <i class='bx bx-grid-alt'></i> -->
+        <a href="{% url 'manage_user' %}" {% if request.get_full_path == users or request.get_full_path == user_display %}class="shine"{% endif %}>
+          <i class="fas fa-user-cog"></i>
+          <span class="links_name">User</span>
+        </a>
+        <span class="tooltip">User</span>
+      </li>
+      <li>
+        <a href="{% url 'predefined' %}" {% if request.get_full_path == predefine or request.get_full_path == supplier or request.get_full_path == dis_supplier or request.get_full_path == location or request.get_full_path == vehicle or request.get_full_path == category or request.get_full_path == uom or request.get_full_path == site or request.get_full_path == site_display %}class="shine"{% endif %}>
           <i class="fas fa-th-list"></i>
           <span class="links_name">Setup</span>
         </a>
-         <span class="tooltip">Setup</span>
+        <span class="tooltip">Setup</span>
       </li>
       <li>
-       <a href="{% url 'manage_stock' %}" {% if request.get_full_path == stock or request.get_full_path == stock_entry or request.get_full_path == stock_category or request.get_full_path == stock_display or request.get_full_path == search_item %}class="shine"{% endif %}>
-         <!-- <i class='bx bx-arrow-to-bottom' ></i> -->
-         <i class="fas fa-cubes"></i>
-         <span class="links_name">Stock Entry</span>
-       </a>
-       <span class="tooltip">Stock Entry</span>
-     </li>
-     <li>
-       <a href="{% url 'manage_purchase' %}" {% if request.get_full_path == purchase or request.get_full_path == goods or request.get_full_path == invoice or request.get_full_path == goods_display or request.get_full_path == search_goods or request.get_full_path == goods_detail or request.get_full_path == purchase_order or request.get_full_path == purchase_display or request.get_full_path == search_purchase or request.get_full_path == purchase_detail %}class="shine"{% endif %}>
-         <!-- <i class='bx bx-purchase-tag-alt' ></i> -->
-         <i class="fas fa-tag"></i>
-         <span class="links_name">Purchase Order</span>
-       </a>
-       <span class="tooltip">Purchase Order</span>
-     </li>
-     <li>
-       <a href="{% url 'material_issue' %}" {% if request.get_full_path == material or request.get_full_path == material_display or request.get_full_path == search_material or request.get_full_path == material_detail or request.get_full_path == material_edit %}class="shine"{% endif %}>
-         <!-- <i class='bx bx-arrow-to-top' ></i> -->
-         <i class="fas fa-layer-group"></i>
-         <span class="links_name">Material Issue</span>
-       </a>
-       <span class="tooltip">Material Issue</span>
-     </li>
-	 
-     <li>
-       <a href="{% url 'internal_dash' %}" {% if request.get_full_path == internal or request.get_full_path == internal_display or request.get_full_path == search_internal or request.get_full_path == internal_detail or request.get_full_path == internal_edit %}class="shine"{% endif %}>
-         <!-- <i class='bx bx-cart-alt' ></i> -->
-         <i class="fas fa-exchange-alt"></i>
-         <span class="links_name">Internal Transfer</span>
-       </a>
-       <span class="tooltip">Internal Transfer</span>
-     </li>
-     
-     <!-- <li>
-       <a href="{% url 'sale_dash' %}" {% if request.get_full_path == sale_dash or request.get_full_path == sales or request.get_full_path == sale_display or request.get_full_path == search_sales or request.get_full_path == sale_detail or request.get_full_path == sale_edit %}class="shine"{% endif %}>
-         
-         <i class="fas fa-coins"></i>
-         <span class="links_name">Sales and Estimation</span>
-		 
-       </a>
-       <span class="tooltip">Sales and Estimation</span>
-     </li> -->
-     <li>
-       <a href="{% url 'manage_reserviour' %}">
-         
-         <i class="fas fa-drum-steelpan"></i>
-         <span class="links_name">Reserviours</span>
-     
-       </a>
-       <span class="tooltip">Reserviours</span>
-     </li>
-     <li>
-       <a href="{% url 'maintainance_dashboard' %}">
-         
-         <i class="fas fa-tools"></i>
-         <span class="links_name">Maintainance</span>
-     
-       </a>
-       <span class="tooltip">Maintainance</span>
-     </li>
-     <li>
-       <a href="{% url 'reports' %}">
-         
-         <i class="fas fa-sticky-note"></i>
-         <span class="links_name">Reports</span>
-     
-       </a>
-       <span class="tooltip">Reports</span>
-     </li>
-     
+        <a href="{% url 'manage_stock' %}" {% if request.get_full_path == stock or request.get_full_path == stock_entry or request.get_full_path == stock_category or request.get_full_path == stock_display or request.get_full_path == search_item %}class="shine"{% endif %}>
+          <i class="fas fa-cubes"></i>
+          <span class="links_name">Stock Entry</span>
+        </a>
+        <span class="tooltip">Stock Entry</span>
+      </li>
+      <li>
+        <a href="{% url 'manage_purchase' %}" {% if request.get_full_path == purchase or request.get_full_path == goods or request.get_full_path == invoice or request.get_full_path == goods_display or request.get_full_path == search_goods or request.get_full_path == goods_detail or request.get_full_path == purchase_order or request.get_full_path == purchase_display or request.get_full_path == search_purchase or request.get_full_path == purchase_detail %}class="shine"{% endif %}>
+          <i class="fas fa-file-signature"></i>
+          <span class="links_name">Purchase Order</span>
+        </a>
+        <span class="tooltip">Purchase Order</span>
+      </li>
+      <li>
+        <a href="{% url 'material_issue' %}" {% if request.get_full_path == material or request.get_full_path == material_display or request.get_full_path == search_material or request.get_full_path == material_detail or request.get_full_path == material_edit %}class="shine"{% endif %}>
+          <i class="fas fa-layer-group"></i>
+          <span class="links_name">Material Issue</span>
+        </a>
+        <span class="tooltip">Material Issue</span>
+      </li>
+      <li>
+        <a href="{% url 'internal_dash' %}" {% if request.get_full_path == internal or request.get_full_path == internal_display or request.get_full_path == search_internal or request.get_full_path == internal_detail or request.get_full_path == internal_edit %}class="shine"{% endif %}>
+          <i class="fas fa-exchange-alt"></i>
+          <span class="links_name">Internal Transfer</span>
+        </a>
+        <span class="tooltip">Internal Transfer</span>
+      </li>
+      <li>
+        <a href="{% url 'manage_reserviour' %}">
+          <i class="fas fa-drum-steelpan"></i>
+          <span class="links_name">Reservoirs</span>
+        </a>
+        <span class="tooltip">Reservoirs</span>
+      </li>
+      <li>
+        <a href="{% url 'maintainance_dashboard' %}">
+          <i class="fas fa-tools"></i>
+          <span class="links_name">Maintenance</span>
+        </a>
+        <span class="tooltip">Maintenance</span>
+      </li>
+      <li>
+        <a href="{% url 'reports' %}">
+          <i class="fas fa-sticky-note"></i>
+          <span class="links_name">Reports</span>
+        </a>
+        <span class="tooltip">Reports</span>
+      </li>
+
+      {% if request.user.is_superuser %}
+      <li>
+        <a href="{% url 'manage_letterhead' %}" {% if request.get_full_path == letterhead_url %}class="shine"{% endif %}>
+          <i class="fas fa-stamp"></i>
+          <span class="links_name">Letterhead</span>
+        </a>
+        <span class="tooltip">Letterhead</span>
+      </li>
+      {% endif %}
     </ul>
   </div>
   
   <section class="home-section">
     <nav id="navbar">
-      <!-- <input type="checkbox" id="click"> -->
       <label for="click" class="menu-btn">
-       <i class="fas fa-bars"></i>
-     </label>
-     <ul>
-
-       <li><a href="#"><i class="fas fa-user mx-2"></i>Hi, {{request.user.username}}</a></li>
-       <!-- <li><a href="#"><i class="bx bx-cog"></i> Settings</a></li> <li><a class="active" href="#"><i class="fas fa-ellipsis-h"></i></a></li>-->
-       <li>
-         <div class="dropdown" id="d2">
+        <i class="fas fa-bars"></i>
+      </label>
+      <div class="nav-brand-text d-none d-md-inline" style="color:#fff; font-size:14px; font-weight:500;">
+        <i class="fas fa-building" style="color: #fa8005; margin-right: 6px;"></i> Ashish Nirman Sewa ERP
+      </div>
+      <ul>
+        <li><a href="#"><i class="fas fa-user mx-2"></i>Hi, {{ request.user.first_name|default:request.user.username }}</a></li>
+        <li>
+          <div class="dropdown" id="d2">
             {% include 'display/notify.html' %}
           </div>
-       </li>
-       <li>
-        <a  href="{% url 'logout_user' %}"><i class="fas fa-sign-out-alt"></i></a>
-        <!-- <span class="tooltip">Log out</span> -->
-      </li>
-     </ul>
-   </nav>
-   <div class="content">
-    <div class="row">
-      <div class="col-12">
-        <div class="main_container">
-          {% block wave %}
-
-          {% endblock %}
-          <div class="success_ban">
-            <i class="fa fa-check-circle"></i>Successfully updated in the system
+        </li>
+        <li>
+          <a href="{% url 'logout_user' %}" title="Log out"><i class="fas fa-sign-out-alt"></i></a>
+        </li>
+      </ul>
+    </nav>
+    <div class="content">
+      <div class="row">
+        <div class="col-12">
+          <div class="main_container">
+            {% block wave %}
+            {% endblock %}
+            <div class="success_ban">
+              <i class="fa fa-check-circle"></i> Successfully updated in the system
+            </div>
+            <div class="error_ban">
+              <i class="fa fa-times-circle"></i> System processing error
+            </div>
+            {% block content %}
+            {% endblock %}
           </div>
-          <div class="error_ban">
-            <i class="fa fa-times-circle"></i> System procecssing error
-          </div>
-          {% block content %}
-
-          {% endblock %}
         </div>
       </div>
-    </div>
-
     </div>  
-</section>
+  </section>
 
-
-<script src="{% static 'js/js_plug/jquery-3.6.0.min.js' %}"></script>
-<script src="{% static 'js/js_plug/jquery-ui.js' %}"></script>
-<script src="{% static 'css/bootstrap/bootstrap.bundle.min.js' %}"></script>
-<!-- <script src="{% static 'css/bootstrap/bootstrap.min.js' %}"></script> -->
-<script src="{% static '/js/nepali.datepicker.v3.4.min.js' %}"></script>
-<script src="{% static 'js/js_plug/bootstrap-select.js' %}"></script>
-{% block beginjs %}
-
-{% endblock %}
-<script src="{% static 'js/base.js' %}?v=1.1"></script>
-{% block js %}
-{% endblock %}  
-
+  <script src="{% static 'js/js_plug/jquery-3.6.0.min.js' %}"></script>
+  <script src="{% static 'js/js_plug/jquery-ui.js' %}"></script>
+  <script src="{% static 'css/bootstrap/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static '/js/nepali.datepicker.v3.4.min.js' %}"></script>
+  <script src="{% static 'js/js_plug/bootstrap-select.js' %}"></script>
+  
+  {% block beginjs %}
+  {% endblock %}
+  <script src="{% static 'js/base.js' %}?v=1.3"></script>
+  {% block js %}
+  {% endblock %}  
 </body>
 </html>

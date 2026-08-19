@@ -1,170 +1,173 @@
 {% load humanize %}
+<!DOCTYPE html>
 <html>
 <head>
-  <title>Report</title>
+  <meta charset="utf-8">
+  <title>Damage Stock - {{ a.damage_number }}</title>
   <style>
-    *{
-      color:#000;
-      padding:5px 10px;
-      margin:0px;
-    }
-    body{
-        padding: 0px;
-        margin: 0px;
-        counter-reset: Serial;
-    }
     @page {
-        size: A4;
-        margin: 2cm;
+      size: A4 portrait;
+      margin-top: {% if letterhead %}{{ letterhead.top_margin_cm|default:3.8 }}cm{% else %}2.2cm{% endif %};
+      margin-bottom: {% if letterhead %}{{ letterhead.bottom_margin_cm|default:1.5 }}cm{% else %}1.5cm{% endif %};
+      margin-left: {% if letterhead %}{{ letterhead.left_margin_cm|default:1.2 }}cm{% else %}1.2cm{% endif %};
+      margin-right: {% if letterhead %}{{ letterhead.right_margin_cm|default:1.2 }}cm{% else %}1.2cm{% endif %};
     }
-    .report_subbanner1{
-      float: left;
-      width: 100%;
-      height: inherit;
+    body {
+      font-family: Helvetica, Arial, sans-serif;
+      font-size: 10.5pt;
+      color: #1f2937;
+      margin: 0;
+      padding: 0;
     }
-    .report_head1{
-      float:left;
-      width: 100%;
-      font-size: 17px;
-      color: #000;
-      text-align:center;
-    }
-    .report_subbanner1 pre{
-      font-size: 14px;
-      font-family: verdana;
-    }
-    table{
-      border: 1px solid #ddd;
-      padding: 0px;
-      margin:0px;
-    }
-    .table1 td{
-      text-align:left;
-      font-size: 14px;
-      padding: 2px;
-    }
-    .table2 td{
-      text-align:left;
-      font-size: 14px;
-      padding: 3px 2px 1.7px 5px;
-    }
-    .table2 th{
-      text-align:left;
-      font-size: 13px;
-    }
-    .td1{
+    .letterhead-banner { width: 100%; text-align: center; margin-bottom: 12px; }
+    .letterhead-banner img { width: 100%; max-height: {% if letterhead %}{{ letterhead.header_height_cm|default:3.5 }}cm{% else %}3.5cm{% endif %}; }
+    .fallback-header { text-align: center; border-bottom: 2px solid #fa8005; padding-bottom: 6px; margin-bottom: 12px; }
+    .fallback-header h1 { margin: 0; font-size: 17pt; color: #11101D; text-transform: uppercase; }
+    .doc-title-box { text-align: center; margin: 8px 0 12px 0; }
+    .doc-title {
+      font-size: 12.5pt;
       font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #ef4444;
+      border-bottom: 1.5px solid #ef4444;
+      display: inline-block;
+      padding-bottom: 2px;
     }
-    .boldrow td{
+    .meta-table { width: 100%; border-collapse: collapse; margin-bottom: 12px; }
+    .meta-table td { padding: 4px 6px; font-size: 9.5pt; }
+    .meta-label { font-weight: bold; color: #475569; width: 25%; }
+    .meta-val { width: 25%; color: #0f172a; }
+    .data-table { width: 100%; border-collapse: collapse; margin-top: 8px; margin-bottom: 14px; }
+    .data-table th {
+      background-color: #ef4444;
+      color: #ffffff;
+      font-size: 9pt;
       font-weight: bold;
-      color: #505152 !important;
+      text-align: left;
+      padding: 5px 6px;
+      border: 1px solid #ef4444;
+      text-transform: uppercase;
     }
-    .boldrow td .input-group{
-      width: 200px;
-      float:right;
-      height: 35px !important;
+    .data-table td {
+      font-size: 9pt;
+      padding: 4px 6px;
+      border: 1px solid #cbd5e1;
+      color: #1e293b;
     }
-    .boldrow td .input-group .input-group-text{
-      font-size: 14px !important;
+    .data-table tr:nth-child(even) td { background-color: #f8fafc; }
+    .text-center { text-align: center; }
+    .text-right { text-align: right; }
+    .section-label { font-size: 10pt; font-weight: bold; color: #0f172a; margin: 10px 0 4px 0; }
+    .footer-sign-table { width: 100%; margin-top: 35px; border-collapse: collapse; }
+    .footer-sign-table td {
+      font-size: 9pt;
+      text-align: center;
+      padding-top: 25px;
+      border-top: 1px dashed #94a3b8;
+      width: 33.33%;
     }
   </style>
 </head>
 <body>
-<div style="width: 100%; float:left;">
-  <div class="report_subbanner1">
-    <iframe class="report_head1" style="color: #000; font-size: 19px;">
-      Ashish Nirman Sewa
-    </iframe><br>
-    <iframe class="report_head1" style="font-size: 13px; color: rgba(0,0,0,.8);">
-      Kathmandu
-    </iframe>
-    <div class="report_head1">
-      Damage Stock Details
-    </div>
 
+  {% if letterhead and letterhead.letterhead_image %}
+  <div class="letterhead-banner">
+    <img src="{{ letterhead.letterhead_image.url }}" alt="Company Letterhead">
   </div>
-  <br>
-  <table class="table1" style="width:50%; float:left;">
-    <tbody>
-      <tr>
-        <td class="td1">Entry Date</td>
-        <td>{{a.entry_date}}</td>
-      </tr>
-      <tr>
-        <td class="td1">Damage Number</td>
-        <td>{{a.damage_number}}</td>
-      </tr>
-      <tr>
-        <td class="td1">Purchase Order Number</td>
-        <td>{{a.purchase_order_number}}</td>
-      </tr>
-      <tr>
-        <td class="td1">Entry By</td>
-        <td>{{a.entry_by}}</td>
-      </tr>
-      <tr>
-        <td class="td1">Site</td>
-        <td>{{a.user_site}}</td>
-      </tr>
-    </tbody>
+  {% else %}
+  <div class="fallback-header">
+    <h1>Ashish Nirman Sewa</h1>
+    <p>Material Loss & Damage Stock Verification Report</p>
+  </div>
+  {% endif %}
+
+  <div class="doc-title-box">
+    <span class="doc-title">Damage Stock Report</span>
+  </div>
+
+  <table class="meta-table">
+    <tr>
+      <td class="meta-label">Damage Number:</td>
+      <td class="meta-val"><strong>{{ a.damage_number }}</strong></td>
+      <td class="meta-label">Entry Date:</td>
+      <td class="meta-val">{{ a.entry_date }}</td>
+    </tr>
+    <tr>
+      <td class="meta-label">PO Number:</td>
+      <td class="meta-val">{{ a.purchase_order_number|default:"-" }}</td>
+      <td class="meta-label">Site:</td>
+      <td class="meta-val">{{ a.user_site }}</td>
+    </tr>
+    <tr>
+      <td class="meta-label">Recorded By:</td>
+      <td class="meta-val">{{ a.entry_by }}</td>
+      <td class="meta-label">Narration:</td>
+      <td class="meta-val">{{ a.narration|default:"None" }}</td>
+    </tr>
   </table>
 
-  <br><br>
-  <font style="font-size: 14px; font-weight: bold;">Invoice Detail:</font>
-  <br>
-  <table class="table2">
+  {% if minvoice %}
+  <div class="section-label">Associated Purchase Invoices:</div>
+  <table class="data-table">
     <thead>
       <tr>
-      <th scope="col">Voucher Number</th>
-      <th scope="col">Invoice Number</th>
-      <th scope="col">Invoice Type</th>
-      <th scope="col">Supplier</th>
-      <th scope="col">Sub Total</th>
-      <th scope="col">Discount</th>
-      <th scope="col">VAT</th>
-      <th scope="col">Total</th>
+        <th style="width: 5%;">#</th>
+        <th style="width: 25%;">Voucher #</th>
+        <th style="width: 25%;">Invoice #</th>
+        <th style="width: 25%;">Supplier</th>
+        <th style="width: 20%;" class="text-right">Total (NPR)</th>
       </tr>
     </thead>
     <tbody>
       {% for t in minvoice %}
-        <tr>
-          <td>{{t.voucher_number}}</td>
-          <td>{{t.invoice_number}}</td>
-          <td>{{t.invoice_type}}</td>
-          <td>{{t.supplier}}</td>
-          <td>{{t.sub_total}}</td>
-          <td>{{t.discount_amt}} ({{t.discount_per}}%)</td>
-          <td>{{t.vat}}</td>
-          <td>{{t.total}}</td>
-        </tr>
-        {% endfor %}
+      <tr>
+        <td class="text-center">{{ forloop.counter }}</td>
+        <td>{{ t.voucher_number }}</td>
+        <td>{{ t.invoice_number }}</td>
+        <td>{{ t.supplier }}</td>
+        <td class="text-right"><strong>{{ t.total|intcomma }}</strong></td>
+      </tr>
+      {% endfor %}
     </tbody>
   </table>
+  {% endif %}
 
-  <br><br>
-  <font style="font-size: 14px; font-weight: bold;">Damage Items:</font>
-  <br>
-  <table class="table2">
+  <div class="section-label">Damaged Items Register:</div>
+  <table class="data-table">
     <thead>
       <tr>
-        <th scope="col">Associate Invoice</th>
-      <th scope="col">Item</th>
-      <th scope="col">UOM</th>
-      <th scope="col">Quantity</th>
+        <th style="width: 5%;">#</th>
+        <th style="width: 25%;">Associate Invoice</th>
+        <th style="width: 45%;">Item Description</th>
+        <th style="width: 12%;" class="text-center">UOM</th>
+        <th style="width: 13%;" class="text-right">Damage Qty</th>
       </tr>
     </thead>
     <tbody>
       {% for t in igoods %}
-        <tr>
-          <td>{{t.pvn}}</td>
-          <td>{{t.item}}<br>({{t.alias}})</td>
-          <td>{{t.uom}}</td>
-          <td>{{t.quantity}}</td>
-        </tr>
-        {% endfor %}
+      <tr>
+        <td class="text-center">{{ forloop.counter }}</td>
+        <td>{{ t.pvn }}</td>
+        <td><strong>{{ t.item }}</strong> {% if t.alias %}({{ t.alias }}){% endif %}</td>
+        <td class="text-center">{{ t.uom }}</td>
+        <td class="text-right" style="color: #ef4444;"><strong>{{ t.quantity }}</strong></td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="5" class="text-center">No damaged items found.</td>
+      </tr>
+      {% endfor %}
     </tbody>
   </table>
 
-</div>
+  <table class="footer-sign-table">
+    <tr>
+      <td>Inspection By: <strong>{{ a.entry_by }}</strong></td>
+      <td>Site Engineer Signature</td>
+      <td>Store Manager Signature</td>
+    </tr>
+  </table>
+
 </body>
 </html>

@@ -1,937 +1,761 @@
 {% load humanize %}
+<!DOCTYPE html>
 <html>
 <head>
-  <title>Report</title>
+  <meta charset="utf-8">
+  <title>{{ report_head }}</title>
   <style>
-    *{
-      color:#000;
-      padding:5px 10px;
-      margin:0px;
-    }
-    body{
-      padding: 0px;
-      margin: 0px;
-      counter-reset: Serial;
-    }
     @page {
       size: letter landscape;
-      margin: 2cm;
+      margin-top: 0.4cm;
+      margin-bottom: 0.4cm;
+      margin-left: 0.6cm;
+      margin-right: 0.6cm;
     }
-    .report_banner{
-      float: left;
-      width: 100%;
-      height: inherit;
-      background: #fff;
-      box-shadow: 0px 0px 8px 0px #ddd;
-      padding: 20px 15px;
+    body {
+      font-family: Helvetica, Arial, sans-serif;
+      font-size: 7.5pt;
+      color: #000000;
+      margin: 0;
+      padding: 0;
     }
-    .report_subbanner1{
-      float: left;
+    .letterhead-container {
       width: 100%;
-      height: inherit;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      height: 80px
     }
-    .report_head1{
-      float:left;
-      width: 100%;
-      font-size: 17px;
-      color: #000;
-      text-align:center;
+    .letterhead-container img {
+      max-height: 0px;
+      width: auto;
     }
-    .report_head2{
-      float:left;
+    .report-title {
+      font-size: 11pt;
+      font-weight: bold;
+      color: #11101D;
+      text-align: center;
+      text-transform: uppercase;
+      margin: 2px 0 4px 0;
+      margin-bottom: 4px;
+      padding: 0;
+    }
+    .param-box {
       width: 100%;
-      font-size: 14px;
-      color: #000;
-      text-align:center;
+      background-color: #f8fafc;
+      border: 1px solid #cbd5e1;
+      padding: 2.5px 5px;
+      font-size: 7pt;
+      color: #334155;
+      text-align: center;
+      margin: 0 0 5px 0;
+      line-height: 1.2;
+    }
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0;
+      padding: 0;
+    }
+    table.data-table th {
+      background-color: #1f7ba3;
+      color: #ffffff;
+      font-size: 7pt;
+      font-weight: bold;
+      text-align: left;
+      padding: 3.5px 4px;
+      border: 1px solid #1f7ba3;
       text-transform: uppercase;
     }
-
-    .report_subbanner2{
-      float: left;
-      width: 100%;
-      height: inherit;
-      margin-top: 20px;
+    table.data-table td {
+      font-size: 6.8pt;
+      padding: 3px 4px;
+      border: 1px solid #cbd5e1;
+      color: #1e293b;
+      vertical-align: middle;
     }
-    .report_summary{
-      float: left;
-      width: 100%;
-      height: inherit;
-      margin-top: 20px;
+    table.data-table tr.even td {
+      background-color: #f8fafc;
     }
-    .report_subbanner2 table{
-      border: 1px solid #ddd;
-      font-size: 12px;
+    .nested-th {
+      background-color: #475569 !important;
+      border-color: #475569 !important;
+      color: #ffffff !important;
+    }
+    .text-right { text-align: right; }
+    .text-center { text-align: center; }
+    .no_report {
       text-align: center;
+      font-size: 9pt;
+      color: #1f7ba3;
+      padding: 15px 0;
     }
-    .report_summary table{
-      border: 1px solid #ddd;
-      font-size: 12px;
-      text-align: center;
-    }
-    .report_subbanner2 table th{
-      color: rgba(0,0,0,.8);
-    }
-    .report_summary table th{
-      color: rgba(0,0,0,.8);
-    }
-    .report_summary table tbody tr td:first-child:before{
-      counter-increment: Serial;
-      content: counter(Serial);
-    }
-
-    .no_report{
-      float:left;
-      width:100%;
-      font-size: 14px;
-      color: #008ECC;
-      padding: 30px 0px;
-      text-align:center;
-    }
-    .boldrow{
-      font-weight: bold;
-    } 
   </style>
 </head>
 <body>
 
-  <div class="report_container">
-    <div class="col-12">
-      <div class="report_banner">
-
-        <div class="report_subbanner1">
-          <iframe class="report_head1" style="color: #000; font-size: 19px;">
-            Ashish Nirman Sewa
-          </iframe><br>
-          <iframe class="report_head1" style="font-size: 13px; color: rgba(0,0,0,.8);">
-            Kathmandu
-          </iframe>
-          <div class="report_head1">
-            {{report_head}}
-          </div>
-          <div class="report_head2">
-            {% if report_val != 'fuel_purchase' and report_val != 'vehicle_fuel' and report_val != 'maintain_log' and report_val != 'vehicle_maintain' and report_val != 'vendor_maintain' %}
-            {% if item_val %}
-            Item: {{item_val}}<br>
-            {% endif %}
-            {% if site_val %}
-            Site: {{site_val}}<br>
-            {% endif %}
-            {% endif %}
-
-            {% if report_val == 'fuel_purchase' %}
-            {% if site_val %}
-            Reserviour: {{site_val}}<br>
-            {% endif %}
-            {% if item_val %}
-            Fuel Type: {{item_val}}<br>
-            {% endif %}
-            {% endif %}
-
-            {% if report_val == 'vehicle_fuel' %}
-            {% if site_val %}
-            Reserviour: {{site_val}}<br>
-            {% endif %}
-            {% if item_val %}
-            Fuel Type: {{item_val}}<br>
-            {% endif %}
-            {% if vehicle_type_val %}
-            Vehicle Type: {{vehicle_type_val}}<br>
-            {% endif %}
-            {% if vehicle_val %}
-            Vehicle Number: {{vehicle_val}} ({{num_type}})<br>
-            {% endif %}
-            {% endif %}
-
-            {% if report_val == 'maintain_log' %}
-            {% if site_val %}
-            Site: {{site_val}}<br>
-            {% endif %}
-            {% endif %}
-
-            {% if report_val == 'vehicle_maintain' %}
-            {% if site_val %}
-            Site: {{site_val}}<br>
-            {% endif %}
-            {% if vehicle_type_val %}
-            Vehicle Type: {{vehicle_type_val}}<br>
-            {% endif %}
-            {% if vehicle_val %}
-            Vehicle Number: {{vehicle_val}} ({{num_type}})<br>
-            {% endif %}
-            {% endif %}
-
-            {% if report_val == 'vendor_maintain' %}
-            {% if item_val %}
-            Vendor/Supplier: {{item_val}}<br>
-            {% endif %}
-            {% endif %}
-
-            {% if credit %}
-            Total Credit: Rs {{credit.total__sum|floatformat:2|intcomma}}<br>
-            {% endif %}
-            {% if cash %}
-            Total Cash: Rs {{cash.total__sum|floatformat:2|intcomma}}
-            {% endif %}
-
-            {% if fromdate %}
-            {% if todate %} 
-            Date: {{fromdate}} <font style="text-transform: none;">to</font> {{todate}}<br>
-            {% else %}
-            Date: {{fromdate}}<br>
-            {% endif %}
-            {% else %}
-            {% endif %}
-
-            {% if report_val == 'vehicle_move' %}
-              {% if vehicle_type_val %}
-              <br>
-              Vehicle Type: {{vehicle_type_val}}<br>
-              {% endif %}
-              {% if vehicle_val %}
-              Vehicle Number: {{vehicle_val}} ({{num_type}})<br>
-              {% endif %}
-            {% endif %}
-
-            {% if report_val == 'vehicle_move' %}
-            {% if fsite %}
-            From Site: {{fsite}}
-            {% endif %}
-            {% if fsite %}
-            Arrival Site: {{tsite}}
-            {% endif %}
-            {% endif %}
-
-            {% if total_opening %}
-            Total Opening: {{total_opening.opening__sum|floatformat:2|intcomma}} {{report.0.uom}}<br>
-            {% endif %}
-            {% if total_qty %}
-            Total Quantity: {{total_qty.quantity__sum|floatformat:2|intcomma}} {{report.0.uom}}<br>
-            {% endif %}
-            {% if report_val != 'fuel_purchase' %}
-            {% if total_amt %}
-            Total Amount: Rs {{total_amt.total__sum|floatformat:2|intcomma}}<br>
-            {% endif %}
-            {% endif %}
-            
-            {% if report_val == 'fuel_purchase' %}
-            {% if total_amt %}
-            Total Amount: Rs {{total_amt.amount__sum|floatformat:2|intcomma}}<br>
-            {% endif %}
-            {% endif %}
-
-          </div>
-
-        </div>
-        {% if report_val == 'stock_report' %}
-        {% if report %}
-        <div class="report_subbanner2">
-          <table>
-            <thead>
-              <tr>
-                <th scope="col">Item Name</th>
-                <th scope="col">Alias</th>
-                <th scope="col">Stock Category</th>
-                <th scope="col">Site</th>
-                <th scope="col">Stock Type</th>
-                <th scope="col">Opening</th>
-                <th scope="col">Stock Quantity</th>
-                <th scope="col">UOM</th>
-                <th scope="col">Rate</th>
-                <th scope="col">Amount</th>
-                <th scope="col">Entry By</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for s in report %}
-              <tr>
-                <td>{{s.item}}</td>
-                <td>{{s.alias}}</td>
-                <td>{{s.stock_category}}</td>
-                <td>{{s.stock_site}}</td>
-                <td>{{s.stock_type}}</td>
-                <td>{{s.opening}}</td>
-                <td>{{s.quantity}}</td>
-                <td>{{s.uom}}</td>
-                <td>{{s.rate}}</td>
-                <td>{{s.amount|intcomma}}</td>
-                <td>{{s.entry_by}}</td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-        {% else %}
-        <span class="no_report">
-          No report found for your request
-        </span>
-        {% endif %}
-        {% endif %}
-
-        {% if report_val == 'grn_report' %}
-        {% if report %}
-        <div class="report_subbanner2">
-          {% for grrnn, goo in report %}
-          <table>
-            <thead>
-              <tr>
-                <th scope="col">Entry Date</th>
-                <th scope="col">GRN Number</th>
-                <th scope="col">Purchase Order Number</th>
-                <th scope="col">Challan Number</th>
-                <th scope="col">Bill Number</th>
-                <th scope="col">Site</th>
-                <th scope="col">Narration</th>
-                <th scope="col">Entry By</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>{{grrnn.entry_date}}</td>
-                <td>{{grrnn.grn_number}}</td>
-                <td>{{grrnn.purchase_order_number}}</td>
-                <td>{{grrnn.challan_number}}</td>
-                <td>{{grrnn.bill_number}}</td>
-                <td>{{grrnn.user_site}}</td>
-                <td>
-                  {% if grrnn.narration %}
-                  {{grrnn.narration|linebreaks}}
-                  {% else %}
-                  none
-                  {% endif %}
-                </td>
-                <td>{{grrnn.entry_by}}</td>
-              </tr>
-              <tr>
-                <th scope="col">Associate Invoice</th>
-                <th scope="col">Item Name</th>
-                <th scope="col">UOM</th>
-                <th scope="col">Quantity</th>
-              </tr>
-              {% for s in goo %}
-              <tr>
-                <td>{{s.pvn}}</td>
-                <td>{{s.item}}</td>
-                <td>{{s.uom}}</td>
-                <td>{{s.quantity}}</td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-          {% endfor %}
-        </div>
-        {% else %}
-        <span class="no_report">
-          No report found for your request
-        </span>
-        {% endif %}
-        {% endif %}
-
-        {% if report_val == 'invoice_report' %}
-        {% if report %}
-        <div class="report_subbanner2">
-          {% for grrnn, goo in report %}
-          <table>
-            <thead>
-              <tr>
-                <th scope="col">Entry Date</th>
-                <th scope="col">Invoice Date</th>
-                <th scope="col">Purchase<br> Voucher<br> Number</th>
-                <th scope="col">Purchase<br> Order<br> Number</th>
-                <th scope="col">Challan<br> Number</th>
-                <th scope="col">Invoice<br> Number</th>
-                <th scope="col">Invoice Type</th>
-                <th scope="col">Supplier Name</th>
-                <th scope="col">Transaction Type</th>
-                <th scope="col">Sub Total</th>
-                <th scope="col">Discount</th>
-                <th scope="col">VAT</th>
-                <th scope="col">Total</th>
-                <th scope="col">Narration</th>
-                <th scope="col">Site</th>
-                <th scope="col">Entry By</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>{{grrnn.entry_date}}</td>
-                <td>{{grrnn.invoice_date}}</td>
-                <td>{{grrnn.voucher_number}}</td>
-                <td>{{grrnn.purchase_order_number}}</td>
-                <td>{{grrnn.challan_number}}</td>
-                <td>{{grrnn.invoice_number}}</td>
-                <td>{{grrnn.invoice_type}}</td>
-                <td>{{grrnn.supplier_name}}</td>
-                <td>{{grrnn.transaction_type}}</td>
-                <td>{{grrnn.sub_total}}</td>
-                <td>{{grrnn.discount_amt|intcomma}} <br>({{grrnn.discount_per}} %)</td>
-                <td>{{grrnn.vat}}</td>
-                <td>{{grrnn.total}}</td>
-                <td>
-                  {% if grrnn.narration %}
-                  {{grrnn.narration|linebreaks}}
-                  {% else %}
-                  none
-                  {% endif %}
-                </td>
-                <td>{{grrnn.user_site}}</td>
-                <td>{{grrnn.entry_by}}</td>
-              </tr>
-              <tr>
-                <th scope="col">Associate PO</th>
-                <th scope="col">Associate Invoice</th>
-                <th scope="col">Item Name</th>
-                <th scope="col">UOM</th>
-                <th scope="col">Quantity</th>
-                <th scope="col">Rate</th>
-                <th scope="col">Amount</th>
-              </tr>
-              {% for s in goo %}
-              <tr>
-                <td>{{s.po}}</td>
-                <td>{{s.pvn}}</td>
-                <td>{{s.item}}</td>
-                <td>{{s.uom}}</td>
-                <td>{{s.quantity}}</td>
-                <td>{{s.rate}}</td>
-                <td>{{s.amount}}</td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-          {% endfor %}
-        </div>
-        {% else %}
-        <span class="no_report">
-          No report found for your request
-        </span>
-        {% endif %}
-        {% endif %}
-
-        {% if report_val == 'material_report' %}
-        {% if report %}
-        <div class="report_subbanner2">
-          {% for grrnn, goo in report %}
-          <table>
-            <thead>
-              <tr>
-                <th scope="col">Issue Date</th>
-                <th scope="col">Material<br> Issue<br> Number</th>
-                <th scope="col">Issuing Site</th>
-                <th scope="col">Purchase<br> Order<br> Number</th>
-                <th scope="col">Issue For</th>
-                <th scope="col">Narration</th>
-                <th scope="col">Entry By</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>{{grrnn.issue_date}}</td>
-                <td>{{grrnn.mie_number}}</td>
-                <td>{{grrnn.issuing_location}}</td>
-                <td>{{grrnn.purchase_order_number}}</td>
-                <td>
-                  {% if grrnn.issue_for %}
-                  {{grrnn.issue_for}}</td>
-                  {% else %}
-                  none
-                  {% endif %}
-                <td>
-                  {% if grrnn.narration %}
-                  {{grrnn.narration|linebreaks}}
-                  {% else %}
-                  none
-                  {% endif %}
-                </td>
-                <td>{{grrnn.entry_by}}</td>
-              </tr>
-              <tr>
-                <th scope="col">Item Name</th>
-                <th scope="col">UOM</th>
-                <th scope="col">Quantity</th>
-              </tr>
-              {% for s in goo %}
-              <tr>
-                <td>{{s.item}}</td>
-                <td>{{s.uom}}</td>
-                <td>{{s.quantity}}</td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-          {% endfor %}
-        </div>
-        {% else %}
-        <span class="no_report">
-          No report found for your request
-        </span>
-        {% endif %}
-        {% endif %}
-
-        {% if report_val == 'internal_report' %}
-        {% if report %}
-        <div class="report_subbanner2">
-          {% for grrnn, goo in report %}
-          <table>
-            <thead>
-              <tr>
-                <th scope="col">Issue Date</th>
-                <th scope="col">Internal<br> Transfer<br> Number</th>
-                <th scope="col">Issuing Site</th>
-                <th scope="col">Receiving Site</th>
-                <th scope="col">Narration</th>
-                <th scope="col">Entry By</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>{{grrnn.issue_date}}</td>
-                <td>{{grrnn.itn_number}}</td>
-                <td>{{grrnn.issuing_location}}</td>
-                <td>{{grrnn.receiving_location}}</td>
-                <td>{{grrnn.narration|linebreaks}}</td>
-                <td>{{grrnn.entry_by}}</td>
-              </tr>
-              <tr>
-                <th scope="col">Item Name</th>
-                <th scope="col">UOM</th>
-                <th scope="col">Quantity</th>
-              </tr>
-              {% for s in goo %}
-              <tr>
-                <td>{{s.item}}</td>
-                <td>{{s.uom}}</td>
-                <td>{{s.quantity}}</td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-          {% endfor %}
-        </div>
-        {% else %}
-        <span class="no_report">
-          No report found for your request
-        </span>
-        {% endif %}
-        {% endif %}
-
-        {% if report_val == 'transfer_grn' %}
-        {% if report %}
-        <div class="report_subbanner2">
-          {% for grrnn, goo in report %}
-          <table>
-            <thead>
-              <tr>
-                <th scope="col">Entry Date</th>
-                <th scope="col">Transfer<br> GRN<br> Number</th>
-                <th scope="col">Site</th>
-                <th scope="col">Narration</th>
-                <th scope="col">Entry By</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>{{grrnn.entry_date}}</td>
-                <td>{{grrnn.grn_number}}</td>
-                <td>{{grrnn.user_site}}</td>
-                <td>
-                  {% if grrnn.narration %}
-                  {{grrnn.narration|linebreaks}}</td>
-                  {% else %}
-                  none
-                  {% endif %}
-                <td>{{grrnn.entry_by}}</td>
-              </tr>
-              <tr>
-                <th scope="col">Item Name</th>
-                <th scope="col">UOM</th>
-                <th scope="col">Quantity</th>
-              </tr>
-              {% for s in goo %}
-              <tr>
-                <td>{{s.item}}</td>
-                <td>{{s.uom}}</td>
-                <td>{{s.quantity}}</td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-          {% endfor %}
-        </div>
-        {% else %}
-        <span class="no_report">
-          No report found for your request
-        </span>
-        {% endif %}
-        {% endif %}
-
-        {% if report_val == 'fuel_purchase' %}
-        {% if report %}
-        <div class="report_subbanner2">
-          <table>
-            <thead>
-              <tr>
-                <th scope="col">Entry Date</th>
-                <th scope="col">Purchase <br>Bill<br> Number</th>
-                <th scope="col">Purchase<br> Order<br> Number</th>
-                <th scope="col">Purchase<br> Order<br> Date</th>
-                <th scope="col">Invoice No.</th>
-                <th scope="col">Reserviour</th>
-                <th scope="col">Fuel Type</th>
-                <th scope="col">Purchase<br> Location</th>
-                <th scope="col">Quantity</th>
-                <th scope="col">Rate</th>
-                <th scope="col">VAT</th>
-                <th scope="col">Amount</th>
-                <th scope="col">Issuing Site</th>
-                <th scope="col">Entry By</th>
-                <th scope="col">Approved By</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for s in report %}
-              <tr>
-                <td>{{s.entry_date}}</td>
-                <td>{{s.purchase_bill_number}}</td>
-                <td>{{s.purchase_order_number}}</td>
-                <td>{{s.po_entry_date}}</td>
-                <td>{{s.invoice_number}}</td>
-                <td>{{s.reserviour}}</td>
-                <td>{{s.fuel_type}}</td>
-                <td>{{s.purchase_location}}</td>
-                <td>{{s.quantity|floatformat:2|intcomma}}</td>
-                <td>{{s.rate|floatformat:2|intcomma}}</td>
-                <td>{{s.vat|floatformat:2|intcomma}}</td>
-                <td>{{s.amount|floatformat:2|intcomma}}</td>
-                <td>{{s.issuing_site}}</td>
-                <td>{{s.entry_by}}</td>
-                <td>{{s.po_approved_by}}</td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-        {% else %}
-        <span class="no_report">
-          No report found for your request
-        </span>
-        {% endif %}
-        {% endif %}
-
-        {% if report_val == 'vehicle_fuel' %}
-        {% if report %}
-        <div class="report_subbanner2">
-          <table>
-            <thead>
-              <tr>
-                <th scope="col">Entry Date</th>
-                <th scope="col">Consumption<br> Number</th>
-                <th scope="col">Coupon<br> Number</th>
-                <th scope="col">Reserviour</th>
-                <th scope="col">Vehicle Type</th>
-                <th scope="col">Vehicle Number</th>
-                <th scope="col">KM Run</th>
-                <th scope="col">Fuel Type</th>
-                <th scope="col">Fuel (ltrs)</th>
-                <th scope="col">Site</th>
-                <th scope="col">Entry By</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for s in report %}
-              <tr>
-                <td>{{s.date}}</td>
-                <td>{{s.consump_number}}</td>
-                <td>{{s.coupon_number}}</td>
-                <td>{{s.reserviour}}</td>
-                <td>{{s.vehicle_type}}</td>
-                <td>{{s.vehicle_number}} ({{number_type}})</td>
-                <td>{{s.kilometer}}</td>
-                <td>{{s.fuel_type}}</td>
-                <td>{{s.quantity|floatformat:2|intcomma}}</td>
-                <td>{{e.user_site}}</td>
-                <td>{{e.entry_by}}</td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-        {% else %}
-        <span class="no_report">
-          No report found for your request
-        </span>
-        {% endif %}
-        {% endif %}
-
-        {% if report_val == 'maintain_log' %}
-        {% if report %}
-        <div class="report_subbanner2">
-          <table>
-            <thead>
-              <tr>
-                <th scope="col">Entry Date</th>
-                <th scope="col">Invoice Date</th>
-                <th scope="col">Maintainance<br> Number</th>
-                <th scope="col">Purchase<br> Order<br> Number</th>
-                <th scope="col">Purchase<br> Order<br> Date</th>
-                <th scope="col">Invoice<br> Number</th>
-                <th scope="col">Vehicle<br> Type</th>
-                <th scope="col">Vehicle<br> Number</th>
-                <th scope="col">KM Run</th>
-                <th scope="col">Problem<br> Category</th>
-                <th scope="col">Problem<br> Sub<br> Category</th>
-                <th scope="col">Sub Total</th>
-                <th scope="col">Labour Charge</th>
-                <th scope="col">Total</th>
-                <th scope="col">Site</th>
-                <th scope="col">PO<br> Approved By</th>
-                <th scope="col">Entry By</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for s in report %}
-              <tr>
-                <td>{{s.entry_date}}</td>
-                <td>{{s.bill_date}}</td>
-                <td>{{s.maintain_number}}</td>
-                <td>
-                  {% if s.purchase_order_number %}
-                  {{s.purchase_order_number}}
-                  {% else %}
-                  none
-                  {% endif %}
-                </td>
-                <td>
-                  {% if s.purchase_entry_date %}
-                  {{s.purchase_entry_date}}
-                  {% else %}
-                  none
-                  {% endif %} 
-                </td>
-                <td>{{s.bill_number}}</td>
-                <td>{{s.vehicle_type}}</td>
-                <td>{{s.vehicle_number}} ({{s.number_type}})</td>
-                <td>{{s.kilometer}}</td>
-                <td>
-                  {% if s.problem_category %}
-                  {{s.problem_category}}
-                  {% else %}
-                  none
-                  {% endif %}
-                </td>
-                <td>
-                  {% if s.problem_subcategory %}
-                  {{s.problem_subcategory}}
-                  {% else %}
-                  none
-                  {% endif %}
-                </td>
-                <td>{{s.sub_total|floatformat:2|intcomma}}</td>
-                <td>{{s.labour_charge|floatformat:2|intcomma}}</td>
-                <td>{{s.total|floatformat:2|intcomma}}</td>
-                <td>{{s.user_site}}</td>
-                <td>
-                  {% if s.purchase_approve_by %}
-                  {{s.purchase_approve_by}}
-                  {% else %}
-                  none
-                  {% endif %} 
-                </td>
-                <td>{{s.entry_by}}</td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-        {% else %}
-        <span class="no_report">
-          No report found for your request
-        </span>
-        {% endif %}
-        {% endif %}
-
-        {% if report_val == 'vehicle_maintain' %}
-        {% if report %}
-        <div class="report_subbanner2">
-          <table>
-            <thead>
-              <tr>
-                <th scope="col">Entry Date</th>
-                <th scope="col">Invoice Date</th>
-                <th scope="col">Maintainance<br> Number</th>
-                <th scope="col">Purchase<br> Order<br> Number</th>
-                <th scope="col">Purchase<br> Order<br> Date</th>
-                <th scope="col">Invoice<br> Number</th>
-                <th scope="col">Vehicle<br> Type</th>
-                <th scope="col">Vehicle<br> Number</th>
-                <th scope="col">KM Run</th>
-                <th scope="col">Problem<br> Category</th>
-                <th scope="col">Problem<br> Sub<br> Category</th>
-                <th scope="col">Sub Total</th>
-                <th scope="col">Labour Charge</th>
-                <th scope="col">Total</th>
-                <th scope="col">Site</th>
-                <th scope="col">PO<br> Approved By</th>
-                <th scope="col">Entry By</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for s in report %}
-              <tr>
-                <td>{{s.entry_date}}</td>
-                <td>{{s.bill_date}}</td>
-                <td>{{s.maintain_number}}</td>
-                <td>
-                  {% if s.purchase_order_number %}
-                  {{s.purchase_order_number}}
-                  {% else %}
-                  none
-                  {% endif %}
-                </td>
-                <td>
-                  {% if s.purchase_entry_date %}
-                  {{s.purchase_entry_date}}
-                  {% else %}
-                  none
-                  {% endif %} 
-                </td>
-                <td>{{s.bill_number}}</td>
-                <td>{{s.vehicle_type}}</td>
-                <td>{{s.vehicle_number}} ({{s.number_type}})</td>
-                <td>{{s.kilometer}}</td>
-                <td>
-                  {% if s.problem_category %}
-                  {{s.problem_category}}
-                  {% else %}
-                  none
-                  {% endif %}
-                </td>
-                <td>
-                  {% if s.problem_subcategory %}
-                  {{s.problem_subcategory}}
-                  {% else %}
-                  none
-                  {% endif %}
-                </td>
-                <td>{{s.sub_total|floatformat:2|intcomma}}</td>
-                <td>{{s.labour_charge|floatformat:2|intcomma}}</td>
-                <td>{{s.total|floatformat:2|intcomma}}</td>
-                <td>{{s.user_site}}</td>
-                <td>
-                  {% if s.purchase_approve_by %}
-                  {{s.purchase_approve_by}}
-                  {% else %}
-                  none
-                  {% endif %} 
-                </td>
-                <td>{{s.entry_by}}</td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-        {% else %}
-        <span class="no_report">
-          No report found for your request
-        </span>
-        {% endif %}
-        {% endif %}
-
-        {% if report_val == 'vendor_maintain' %}
-        {% if report %}
-        <div class="report_subbanner2">
-          <table>
-            <thead>
-              <tr>
-                <th scope="col">Entry Date</th>
-                <th scope="col">Invoice Date</th>
-                <th scope="col">Purchase<br> Voucher<br> Number</th>
-                <th scope="col">Purchase<br> Order<br> Number</th>
-                <th scope="col">Invoice Number</th>
-                <th scope="col">Invoice Type</th>
-                <th scope="col">Transaction<br> Type</th>
-                <th scope="col">Sub Total</th>
-                <th scope="col">Discount</th>
-                <th scope="col">VAT</th>
-                <th scope="col">Total</th>
-                <th scope="col">Site</th>
-                <th scope="col">Entry By</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for s in report %}
-              <tr>
-                <td>{{s.entry_date}}</td>
-                <td>{{s.invoice_date}}</td>
-                <td>{{s.voucher_number}}</td>
-                <td>
-                  {% if s.purchase_order_number %}
-                  {{s.purchase_order_number}}
-                  {% else %}
-                  none
-                  {% endif %}
-                </td>
-                <td>{{s.invoice_number}}</td>
-                <td>{{s.invoice_type}}</td>
-                <td>{{s.transaction_type}}</td>
-                <td>{{s.sub_total|floatformat:2|intcomma}}</td>
-                <td>{{s.discount_amt|floatformat:2|intcomma}} ({{s.discount_per}}%)</td>
-                <td>{{s.vat|floatformat:2|intcomma}}</td>
-                <td>{{s.total|floatformat:2|intcomma}}</td>
-                <td>{{s.user_site}}</td>
-                <td>{{s.entry_by}}</td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-        {% else %}
-        <span class="no_report">
-          No report found for your request
-        </span>
-        {% endif %}
-        {% endif %}
-
-      {% if report_val == 'vehicle_move' %}
-      {% if report %}
-      <div class="report_subbanner2">
-        <table>
-          <thead>
-            <tr>
-            <th scope="col">Entry Date</th>
-            <th scope="col">Move Number</th>
-            <th scope="col">Vehicle Type</th>
-            <th scope="col">Vehicle Number</th>
-            <th scope="col">From Site</th>
-            <th scope="col">Arrival Site</th>
-            <th scope="col">Status</th>
-            <th scope="col">Arrival</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for r in report %}
-            <tr>
-              <td>{{r.entry_date}}</td>
-              <td>{{r.move_number}}</td>
-              <td>{{r.vehicle_type}}</td>
-              <td>{{r.vehicle_number}}<br>({{r.num_type}})</td>
-              <td>{{r.from_site}}</td>
-              <td>{{r.to_site}}</td>
-              <td>{{r.status}}</td>
-              <td>{{r.arrival_datetime}}</td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+  <!-- 1. Header Banner (Natural Aspect Ratio - Undistorted) -->
+  <div class="letterhead-container">
+    {% if letterhead and letterhead.letterhead_image %}
+      <img src="{{ letterhead.letterhead_image.url }}" width="320" alt="Ashish Nirman Sewa Letterhead" />
+    {% else %}
+      <div style="border-bottom: 2px solid #fa8005; padding-bottom: 3px; margin-bottom: 4px;">
+        <h1 style="font-size: 13pt; color: #11101D; text-transform: uppercase; margin: 0;">Ashish Nirman Sewa</h1>
+        <p style="font-size: 7.5pt; color: #64748b; margin: 1px 0 0 0;">Corporate Office: Kathmandu, Nepal &bull; Central Procurement & Operations</p>
       </div>
-      {% else %}
-      <span class="no_content">
-        No report found
-      </span>
-      {% endif %}
-      {% endif %}
-
-      </div>
-    </div>
+    {% endif %}
   </div>
-  <body>
-    </html>
+
+  <!-- 2. Report Title (Positioned directly below letterhead) -->
+  <div class="report-title">{{ report_head }}</div>
+
+  <!-- 3. Parameter Summary Box -->
+  <div class="param-box">
+    {% if report_val != 'fuel_purchase' and report_val != 'vehicle_fuel' and report_val != 'maintain_log' and report_val != 'vehicle_maintain' and report_val != 'vendor_maintain' %}
+      {% if item_val %}<strong>Item:</strong> {{ item_val }} &bull; {% endif %}
+      {% if site_val %}<strong>Site:</strong> {{ site_val }} &bull; {% endif %}
+    {% endif %}
+
+    {% if report_val == 'fuel_purchase' %}
+      {% if site_val %}<strong>Reservoir:</strong> {{ site_val }} &bull; {% endif %}
+      {% if item_val %}<strong>Fuel Type:</strong> {{ item_val }} &bull; {% endif %}
+    {% endif %}
+
+    {% if report_val == 'vehicle_fuel' %}
+      {% if site_val %}<strong>Reservoir:</strong> {{ site_val }} &bull; {% endif %}
+      {% if item_val %}<strong>Fuel Type:</strong> {{ item_val }} &bull; {% endif %}
+      {% if vehicle_type_val %}<strong>Vehicle Type:</strong> {{ vehicle_type_val }} &bull; {% endif %}
+      {% if vehicle_val %}<strong>Vehicle Number:</strong> {{ vehicle_val }} ({{ num_type }}) &bull; {% endif %}
+    {% endif %}
+
+    {% if report_val == 'maintain_log' %}
+      {% if site_val %}<strong>Site:</strong> {{ site_val }} &bull; {% endif %}
+    {% endif %}
+
+    {% if report_val == 'vehicle_maintain' %}
+      {% if site_val %}<strong>Site:</strong> {{ site_val }} &bull; {% endif %}
+      {% if vehicle_type_val %}<strong>Vehicle Type:</strong> {{ vehicle_type_val }} &bull; {% endif %}
+      {% if vehicle_val %}<strong>Vehicle Number:</strong> {{ vehicle_val }} ({{ num_type }}) &bull; {% endif %}
+    {% endif %}
+
+    {% if report_val == 'vendor_maintain' %}
+      {% if item_val %}<strong>Vendor/Supplier:</strong> {{ item_val }} &bull; {% endif %}
+    {% endif %}
+
+    {% if fromdate %}
+      {% if todate %}
+        <strong>Date:</strong> {{ fromdate }} to {{ todate }} &bull;
+      {% else %}
+        <strong>Date:</strong> {{ fromdate }} &bull;
+      {% endif %}
+    {% endif %}
+
+    {% if report_val == 'vehicle_move' %}
+      {% if vehicle_type_val %}<strong>Vehicle Type:</strong> {{ vehicle_type_val }} &bull; {% endif %}
+      {% if vehicle_val %}<strong>Vehicle Number:</strong> {{ vehicle_val }} ({{ num_type }}) &bull; {% endif %}
+      {% if fsite %}<strong>From Site:</strong> {{ fsite }} &bull; {% endif %}
+      {% if tsite %}<strong>Arrival Site:</strong> {{ tsite }} &bull; {% endif %}
+    {% endif %}
+
+    {% if total_opening %}<strong>Total Opening:</strong> {{ total_opening.opening__sum|floatformat:2|intcomma }} {{ report.0.uom }} &bull; {% endif %}
+    {% if total_qty %}<strong>Total Quantity:</strong> {{ total_qty.quantity__sum|floatformat:2|intcomma }} {{ report.0.uom }} &bull; {% endif %}
+    {% if report_val != 'fuel_purchase' %}
+      {% if total_amt %}<strong>Total Amount:</strong> NPR {{ total_amt.total__sum|default:total_amt.amount__sum|floatformat:2|intcomma }} &bull; {% endif %}
+    {% endif %}
+    {% if report_val == 'fuel_purchase' %}
+      {% if total_amt %}<strong>Total Amount:</strong> NPR {{ total_amt.amount__sum|floatformat:2|intcomma }} &bull; {% endif %}
+    {% endif %}
+    {% if credit %}<strong>Total Credit:</strong> NPR {{ credit.total__sum|floatformat:2|intcomma }} &bull; {% endif %}
+    {% if cash %}<strong>Total Cash:</strong> NPR {{ cash.total__sum|floatformat:2|intcomma }}{% endif %}
+  </div>
+
+  <!-- 4. Data Tables Area -->
+
+  <!-- 1. Stock Report -->
+  {% if report_val == 'stock_report' %}
+    {% if report %}
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th style="width: 20%;">Item Name</th>
+          <th style="width: 12%;">Alias</th>
+          <th style="width: 14%;">Stock Category</th>
+          <th style="width: 12%;">Site</th>
+          <th style="width: 10%;">Stock Type</th>
+          <th style="width: 6%;" class="text-right">Opening</th>
+          <th style="width: 8%;" class="text-right">Stock Qty</th>
+          <th style="width: 5%;" class="text-center">UOM</th>
+          <th style="width: 6%;" class="text-right">Rate</th>
+          <th style="width: 7%;" class="text-right">Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for s in report %}
+        <tr {% if forloop.counter|divisibleby:2 %}class="even"{% endif %}>
+          <td><strong>{{ s.item }}</strong></td>
+          <td>{{ s.alias|default:"-" }}</td>
+          <td>{{ s.stock_category }}</td>
+          <td>{{ s.stock_site }}</td>
+          <td>{{ s.stock_type }}</td>
+          <td class="text-right">{{ s.opening }}</td>
+          <td class="text-right"><strong>{{ s.quantity }}</strong></td>
+          <td class="text-center">{{ s.uom }}</td>
+          <td class="text-right">{{ s.rate }}</td>
+          <td class="text-right"><strong>{{ s.amount|intcomma }}</strong></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="no_report">No stock report records found for your request</div>
+    {% endif %}
+  {% endif %}
+
+  <!-- 2. GRN Report -->
+  {% if report_val == 'grn_report' %}
+    {% if report %}
+      {% for grrnn, gex, goo in report %}
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Entry Date</th>
+            <th>GRN Number</th>
+            <th>PO Number</th>
+            <th>Challan Number</th>
+            <th>Bill Number</th>
+            <th>Site</th>
+            <th>Narration</th>
+            <th>Entry By</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{{ grrnn.entry_date }}</td>
+            <td><strong>{{ grrnn.grn_number }}</strong></td>
+            <td>{{ grrnn.purchase_order_number }}</td>
+            <td>{{ grrnn.challan_number }}</td>
+            <td>{{ grrnn.bill_number }}</td>
+            <td>{{ grrnn.user_site }}</td>
+            <td>{{ grrnn.narration|default:"none"|linebreaks }}</td>
+            <td>{{ grrnn.entry_by }}</td>
+          </tr>
+          <tr>
+            <th colspan="2" class="nested-th">Associate Invoice</th>
+            <th colspan="3" class="nested-th">Item Name</th>
+            <th class="nested-th text-center">UOM</th>
+            <th colspan="2" class="nested-th text-right">Quantity</th>
+          </tr>
+          {% for s in goo %}
+          <tr>
+            <td colspan="2">{{ s.pvn }}</td>
+            <td colspan="3"><strong>{{ s.item }}</strong></td>
+            <td class="text-center">{{ s.uom }}</td>
+            <td colspan="2" class="text-right"><strong>{{ s.quantity }}</strong></td>
+          </tr>
+          {% endfor %}
+          <tr>
+            <th colspan="4" class="nested-th">Associate Invoice</th>
+            <th colspan="4" class="nested-th">Supplier Name</th>
+          </tr>
+          {% for s in gex %}
+          <tr>
+            <td colspan="4">{{ s.voucher_number }}</td>
+            <td colspan="4"><strong>{{ s.supplier }}</strong></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% endfor %}
+    {% else %}
+    <div class="no_report">No GRN report records found for your request</div>
+    {% endif %}
+  {% endif %}
+
+  <!-- 3. Invoice Report -->
+  {% if report_val == 'invoice_report' %}
+    {% if report %}
+      {% for grrnn, goo in report %}
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Entry Date</th>
+            <th>Invoice Date</th>
+            <th>Voucher #</th>
+            <th>PO #</th>
+            <th>Challan #</th>
+            <th>Invoice #</th>
+            <th>Type</th>
+            <th>Supplier</th>
+            <th>Trans</th>
+            <th class="text-right">Sub Total</th>
+            <th class="text-right">Discount</th>
+            <th class="text-right">VAT</th>
+            <th class="text-right">Total</th>
+            <th>Narration</th>
+            <th>Site</th>
+            <th>Entry By</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{{ grrnn.entry_date }}</td>
+            <td>{{ grrnn.invoice_date }}</td>
+            <td><strong>{{ grrnn.voucher_number }}</strong></td>
+            <td>{{ grrnn.purchase_order_number }}</td>
+            <td>{{ grrnn.challan_number }}</td>
+            <td>{{ grrnn.invoice_number }}</td>
+            <td>{{ grrnn.invoice_type }}</td>
+            <td><strong>{{ grrnn.supplier_name }}</strong></td>
+            <td>{{ grrnn.transaction_type }}</td>
+            <td class="text-right">{{ grrnn.sub_total }}</td>
+            <td class="text-right">{{ grrnn.discount_amt|intcomma }} ({{ grrnn.discount_per }}%)</td>
+            <td class="text-right">{{ grrnn.vat }}</td>
+            <td class="text-right"><strong>{{ grrnn.total }}</strong></td>
+            <td>{{ grrnn.narration|default:"none"|linebreaks }}</td>
+            <td>{{ grrnn.user_site }}</td>
+            <td>{{ grrnn.entry_by }}</td>
+          </tr>
+          <tr>
+            <th class="nested-th">Associate PO</th>
+            <th colspan="2" class="nested-th">Associate Invoice</th>
+            <th colspan="4" class="nested-th">Item Name</th>
+            <th class="nested-th text-center">UOM</th>
+            <th class="nested-th text-right">Quantity</th>
+            <th class="nested-th text-right">Rate</th>
+            <th colspan="5" class="nested-th text-right">Amount (NPR)</th>
+          </tr>
+          {% for s in goo %}
+          <tr>
+            <td>{{ s.po }}</td>
+            <td colspan="2">{{ s.pvn }}</td>
+            <td colspan="4"><strong>{{ s.item }}</strong></td>
+            <td class="text-center">{{ s.uom }}</td>
+            <td class="text-right">{{ s.quantity }}</td>
+            <td class="text-right">{{ s.rate }}</td>
+            <td colspan="5" class="text-right"><strong>{{ s.amount }}</strong></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% endfor %}
+    {% else %}
+    <div class="no_report">No invoice report records found for your request</div>
+    {% endif %}
+  {% endif %}
+
+  <!-- 4. Material Issue Report -->
+  {% if report_val == 'material_report' %}
+    {% if report %}
+      {% for grrnn, goo in report %}
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Issue Date</th>
+            <th>Material Issue #</th>
+            <th>Issuing Site</th>
+            <th>PO Number</th>
+            <th>Issue For</th>
+            <th>Narration</th>
+            <th>Entry By</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{{ grrnn.issue_date }}</td>
+            <td><strong>{{ grrnn.mie_number }}</strong></td>
+            <td>{{ grrnn.issuing_location }}</td>
+            <td>{{ grrnn.purchase_order_number }}</td>
+            <td>{{ grrnn.issue_for|default:"none" }}</td>
+            <td>{{ grrnn.narration|default:"none"|linebreaks }}</td>
+            <td>{{ grrnn.entry_by }}</td>
+          </tr>
+          <tr>
+            <th colspan="4" class="nested-th">Item Name</th>
+            <th class="nested-th text-center">UOM</th>
+            <th colspan="2" class="nested-th text-right">Quantity</th>
+          </tr>
+          {% for s in goo %}
+          <tr>
+            <td colspan="4"><strong>{{ s.item }}</strong></td>
+            <td class="text-center">{{ s.uom }}</td>
+            <td colspan="2" class="text-right"><strong>{{ s.quantity }}</strong></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% endfor %}
+    {% else %}
+    <div class="no_report">No material issue report records found for your request</div>
+    {% endif %}
+  {% endif %}
+
+  <!-- 5. Internal Transfer Report -->
+  {% if report_val == 'internal_report' %}
+    {% if report %}
+      {% for grrnn, goo in report %}
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Issue Date</th>
+            <th>Transfer Number</th>
+            <th>Issuing Site</th>
+            <th>Receiving Site</th>
+            <th>Narration</th>
+            <th>Entry By</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{{ grrnn.issue_date }}</td>
+            <td><strong>{{ grrnn.itn_number }}</strong></td>
+            <td>{{ grrnn.issuing_location }}</td>
+            <td>{{ grrnn.receiving_location }}</td>
+            <td>{{ grrnn.narration|default:"none"|linebreaks }}</td>
+            <td>{{ grrnn.entry_by }}</td>
+          </tr>
+          <tr>
+            <th colspan="3" class="nested-th">Item Name</th>
+            <th class="nested-th text-center">UOM</th>
+            <th colspan="2" class="nested-th text-right">Quantity</th>
+          </tr>
+          {% for s in goo %}
+          <tr>
+            <td colspan="3"><strong>{{ s.item }}</strong></td>
+            <td class="text-center">{{ s.uom }}</td>
+            <td colspan="2" class="text-right"><strong>{{ s.quantity }}</strong></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% endfor %}
+    {% else %}
+    <div class="no_report">No internal transfer records found for your request</div>
+    {% endif %}
+  {% endif %}
+
+  <!-- 6. Transfer GRN Report -->
+  {% if report_val == 'transfer_grn' %}
+    {% if report %}
+      {% for grrnn, goo in report %}
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Entry Date</th>
+            <th>Transfer GRN #</th>
+            <th>Site</th>
+            <th>Narration</th>
+            <th>Entry By</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{{ grrnn.entry_date }}</td>
+            <td><strong>{{ grrnn.grn_number }}</strong></td>
+            <td>{{ grrnn.user_site }}</td>
+            <td>{{ grrnn.narration|default:"none"|linebreaks }}</td>
+            <td>{{ grrnn.entry_by }}</td>
+          </tr>
+          <tr>
+            <th colspan="3" class="nested-th">Item Name</th>
+            <th class="nested-th text-center">UOM</th>
+            <th class="nested-th text-right">Quantity</th>
+          </tr>
+          {% for s in goo %}
+          <tr>
+            <td colspan="3"><strong>{{ s.item }}</strong></td>
+            <td class="text-center">{{ s.uom }}</td>
+            <td class="text-right"><strong>{{ s.quantity }}</strong></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% endfor %}
+    {% else %}
+    <div class="no_report">No transfer GRN records found for your request</div>
+    {% endif %}
+  {% endif %}
+
+  <!-- 7. Fuel Purchase Report -->
+  {% if report_val == 'fuel_purchase' %}
+    {% if report %}
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Entry Date</th>
+          <th>Purchase Bill #</th>
+          <th>PO #</th>
+          <th>PO Date</th>
+          <th>Invoice No.</th>
+          <th>Reservoir</th>
+          <th>Fuel Type</th>
+          <th>Purchase Location</th>
+          <th class="text-right">Quantity (L)</th>
+          <th class="text-right">Rate</th>
+          <th class="text-right">VAT</th>
+          <th class="text-right">Amount (NPR)</th>
+          <th>Issuing Site</th>
+          <th>Entry By</th>
+          <th>Approved By</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for s in report %}
+        <tr {% if forloop.counter|divisibleby:2 %}class="even"{% endif %}>
+          <td>{{ s.entry_date }}</td>
+          <td><strong>{{ s.purchase_bill_number }}</strong></td>
+          <td>{{ s.purchase_order_number }}</td>
+          <td>{{ s.po_entry_date }}</td>
+          <td>{{ s.invoice_number|default:"-" }}</td>
+          <td>{{ s.reserviour }}</td>
+          <td>{{ s.fuel_type }}</td>
+          <td>{{ s.purchase_location }}</td>
+          <td class="text-right">{{ s.quantity|floatformat:2|intcomma }}</td>
+          <td class="text-right">{{ s.rate|floatformat:2|intcomma }}</td>
+          <td class="text-right">{{ s.vat|floatformat:2|intcomma }}</td>
+          <td class="text-right"><strong>{{ s.amount|floatformat:2|intcomma }}</strong></td>
+          <td>{{ s.issuing_site }}</td>
+          <td>{{ s.entry_by }}</td>
+          <td>{{ s.po_approved_by|default:"-" }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="no_report">No fuel purchase records found for your request</div>
+    {% endif %}
+  {% endif %}
+
+  <!-- 8. Vehicle Fuel Consumption Report -->
+  {% if report_val == 'vehicle_fuel' %}
+    {% if report %}
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Entry Date</th>
+          <th>Consumption #</th>
+          <th>Coupon #</th>
+          <th>Reservoir</th>
+          <th>Vehicle Type</th>
+          <th>Vehicle Number</th>
+          <th class="text-right">KM Run</th>
+          <th>Fuel Type</th>
+          <th class="text-right">Quantity (Ltr)</th>
+          <th>Site</th>
+          <th>Entry By</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for s in report %}
+        <tr {% if forloop.counter|divisibleby:2 %}class="even"{% endif %}>
+          <td>{{ s.date }}</td>
+          <td><strong>{{ s.consump_number }}</strong></td>
+          <td>{{ s.coupon_number }}</td>
+          <td>{{ s.reserviour }}</td>
+          <td>{{ s.vehicle_type }}</td>
+          <td><strong>{{ s.vehicle_number }}</strong> ({{ number_type }})</td>
+          <td class="text-right">{{ s.kilometer }}</td>
+          <td>{{ s.fuel_type }}</td>
+          <td class="text-right"><strong>{{ s.quantity|floatformat:2|intcomma }}</strong></td>
+          <td>{{ s.user_site }}</td>
+          <td>{{ s.entry_by }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="no_report">No vehicle fuel consumption records found for your request</div>
+    {% endif %}
+  {% endif %}
+
+  <!-- 9. All Maintenance Log -->
+  {% if report_val == 'maintain_log' %}
+    {% if report %}
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Entry Date</th>
+          <th>Invoice Date</th>
+          <th>Maintain #</th>
+          <th>PO #</th>
+          <th>PO Date</th>
+          <th>Invoice #</th>
+          <th>Vehicle Type</th>
+          <th>Vehicle Number</th>
+          <th class="text-right">KM</th>
+          <th>Problem Category</th>
+          <th>Problem Sub Category</th>
+          <th class="text-right">Sub Total</th>
+          <th class="text-right">Labour</th>
+          <th class="text-right">Total (NPR)</th>
+          <th>Site</th>
+          <th>PO Approved By</th>
+          <th>Entry By</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for s in report %}
+        <tr {% if forloop.counter|divisibleby:2 %}class="even"{% endif %}>
+          <td>{{ s.entry_date }}</td>
+          <td>{{ s.bill_date }}</td>
+          <td><strong>{{ s.maintain_number }}</strong></td>
+          <td>{{ s.purchase_order_number|default:"none" }}</td>
+          <td>{{ s.purchase_entry_date|default:"none" }}</td>
+          <td>{{ s.bill_number }}</td>
+          <td>{{ s.vehicle_type }}</td>
+          <td><strong>{{ s.vehicle_number }}</strong> ({{ s.number_type }})</td>
+          <td class="text-right">{{ s.kilometer }}</td>
+          <td>{{ s.problem_category|default:"none" }}</td>
+          <td>{{ s.problem_subcategory|default:"none" }}</td>
+          <td class="text-right">{{ s.sub_total|floatformat:2|intcomma }}</td>
+          <td class="text-right">{{ s.labour_charge|floatformat:2|intcomma }}</td>
+          <td class="text-right"><strong>{{ s.total|floatformat:2|intcomma }}</strong></td>
+          <td>{{ s.user_site }}</td>
+          <td>{{ s.purchase_approve_by|default:"none" }}</td>
+          <td>{{ s.entry_by }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="no_report">No maintenance logs found for your request</div>
+    {% endif %}
+  {% endif %}
+
+  <!-- 10. Vehicle-wise Maintenance Log -->
+  {% if report_val == 'vehicle_maintain' %}
+    {% if report %}
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Entry Date</th>
+          <th>Invoice Date</th>
+          <th>Maintain #</th>
+          <th>PO #</th>
+          <th>PO Date</th>
+          <th>Invoice #</th>
+          <th>Vehicle Type</th>
+          <th>Vehicle Number</th>
+          <th class="text-right">KM</th>
+          <th>Problem Category</th>
+          <th>Problem Sub Category</th>
+          <th class="text-right">Sub Total</th>
+          <th class="text-right">Labour</th>
+          <th class="text-right">Total (NPR)</th>
+          <th>Site</th>
+          <th>PO Approved By</th>
+          <th>Entry By</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for s in report %}
+        <tr {% if forloop.counter|divisibleby:2 %}class="even"{% endif %}>
+          <td>{{ s.entry_date }}</td>
+          <td>{{ s.bill_date }}</td>
+          <td><strong>{{ s.maintain_number }}</strong></td>
+          <td>{{ s.purchase_order_number|default:"none" }}</td>
+          <td>{{ s.purchase_entry_date|default:"none" }}</td>
+          <td>{{ s.bill_number }}</td>
+          <td>{{ s.vehicle_type }}</td>
+          <td><strong>{{ s.vehicle_number }}</strong> ({{ s.number_type }})</td>
+          <td class="text-right">{{ s.kilometer }}</td>
+          <td>{{ s.problem_category|default:"none" }}</td>
+          <td>{{ s.problem_subcategory|default:"none" }}</td>
+          <td class="text-right">{{ s.sub_total|floatformat:2|intcomma }}</td>
+          <td class="text-right">{{ s.labour_charge|floatformat:2|intcomma }}</td>
+          <td class="text-right"><strong>{{ s.total|floatformat:2|intcomma }}</strong></td>
+          <td>{{ s.user_site }}</td>
+          <td>{{ s.purchase_approve_by|default:"none" }}</td>
+          <td>{{ s.entry_by }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="no_report">No vehicle maintenance records found for your request</div>
+    {% endif %}
+  {% endif %}
+
+  <!-- 11. Vendor-wise Transaction Log -->
+  {% if report_val == 'vendor_maintain' %}
+    {% if report %}
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Entry Date</th>
+          <th>Invoice Date</th>
+          <th>Purchase Voucher #</th>
+          <th>PO #</th>
+          <th>Invoice #</th>
+          <th>Type</th>
+          <th>Transaction</th>
+          <th class="text-right">Sub Total</th>
+          <th class="text-right">Discount</th>
+          <th class="text-right">VAT</th>
+          <th class="text-right">Total (NPR)</th>
+          <th>Site</th>
+          <th>Entry By</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for s in report %}
+        <tr {% if forloop.counter|divisibleby:2 %}class="even"{% endif %}>
+          <td>{{ s.entry_date }}</td>
+          <td>{{ s.invoice_date }}</td>
+          <td><strong>{{ s.voucher_number }}</strong></td>
+          <td>{{ s.purchase_order_number|default:"none" }}</td>
+          <td>{{ s.invoice_number }}</td>
+          <td>{{ s.invoice_type }}</td>
+          <td>{{ s.transaction_type }}</td>
+          <td class="text-right">{{ s.sub_total|floatformat:2|intcomma }}</td>
+          <td class="text-right">{{ s.discount_amt|floatformat:2|intcomma }} ({{ s.discount_per }}%)</td>
+          <td class="text-right">{{ s.vat|floatformat:2|intcomma }}</td>
+          <td class="text-right"><strong>{{ s.total|floatformat:2|intcomma }}</strong></td>
+          <td>{{ s.user_site }}</td>
+          <td>{{ s.entry_by }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="no_report">No vendor transaction records found for your request</div>
+    {% endif %}
+  {% endif %}
+
+  <!-- 12. Vehicle Movement Tracking Report -->
+  {% if report_val == 'vehicle_move' %}
+    {% if report %}
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Entry Date</th>
+          <th>Move #</th>
+          <th>Vehicle Type</th>
+          <th>Vehicle Number</th>
+          <th>From Site</th>
+          <th>Arrival Site</th>
+          <th>Status</th>
+          <th>Arrival Datetime</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in report %}
+        <tr {% if forloop.counter|divisibleby:2 %}class="even"{% endif %}>
+          <td>{{ r.entry_date }}</td>
+          <td><strong>{{ r.move_number }}</strong></td>
+          <td>{{ r.vehicle_type }}</td>
+          <td><strong>{{ r.vehicle_number }}</strong> ({{ r.num_type }})</td>
+          <td>{{ r.from_site }}</td>
+          <td>{{ r.to_site }}</td>
+          <td><strong>{{ r.status|upper }}</strong></td>
+          <td>{{ r.arrival_datetime|default:"In Transit" }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="no_report">No vehicle movement records found for your request</div>
+    {% endif %}
+  {% endif %}
+
+</body>
+</html>
