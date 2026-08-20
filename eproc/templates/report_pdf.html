@@ -24,10 +24,10 @@
       text-align: center;
       margin: 0;
       padding: 0;
-      height: 80px
+      height: 80px;
     }
     .letterhead-container img {
-      max-height: 0px;
+      max-height: 75px;
       width: auto;
     }
     .report-title {
@@ -97,7 +97,7 @@
   <!-- 1. Header Banner (Natural Aspect Ratio - Undistorted) -->
   <div class="letterhead-container">
     {% if letterhead and letterhead.letterhead_image %}
-      <img src="{{ letterhead.letterhead_image.url }}" width="320" alt="Ashish Nirman Sewa Letterhead" />
+      <img src="{{ letterhead.letterhead_image.path }}" width="320" alt="Ashish Nirman Sewa Letterhead" />
     {% else %}
       <div style="border-bottom: 2px solid #fa8005; padding-bottom: 3px; margin-bottom: 4px;">
         <h1 style="font-size: 13pt; color: #11101D; text-transform: uppercase; margin: 0;">Ashish Nirman Sewa</h1>
