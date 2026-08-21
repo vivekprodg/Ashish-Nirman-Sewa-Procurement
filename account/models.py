@@ -1,6 +1,5 @@
 from django.db import models
-from datetime import date, datetime as dt
-
+from django.utils import timezone
 
 class UserDetail(models.Model):
 	user_id = models.IntegerField(default=0)
@@ -12,9 +11,8 @@ class UserDetail(models.Model):
 	role = models.CharField(max_length=255)
 	status = models.CharField(max_length=255, default='')
 	active_status = models.CharField(max_length=255, default='yes', blank=True, null=True)
-	datetime = models.DateTimeField(default=dt.now, blank=True, null=True)
-	date = models.DateField(default=date.today, blank=True, null=True)
-
+	datetime = models.DateTimeField(default=timezone.now, blank=True, null=True)
+	date = models.DateField(default=timezone.localdate, blank=True, null=True)
 
 class OperationPermission(models.Model):
 	main_admin = models.CharField(max_length=255, default='no')
@@ -46,7 +44,6 @@ class OperationPermission(models.Model):
 	url_name9 = models.CharField(max_length=255, default='', blank=True, null=True)
 	url_name10 = models.CharField(max_length=255, default='', blank=True, null=True)
 	url_name11 = models.CharField(max_length=255, default='', blank=True, null=True)
-
 
 class NotificationPermission(models.Model):
 	main_admin = models.CharField(max_length=255, default='no')

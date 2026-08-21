@@ -1,6 +1,5 @@
 from django.db import models
-import datetime
-from datetime import date, datetime as dt
+from django.utils import timezone
 
 class CompanyLetterhead(models.Model):
 	title = models.CharField(max_length=255, default="Corporate Master Letterhead")
@@ -8,13 +7,13 @@ class CompanyLetterhead(models.Model):
 	footer_image = models.ImageField(upload_to='letterheads/footers/', blank=True, null=True)
 	site = models.CharField(max_length=255, default='All Sites', blank=True, null=True)
 	header_height_cm = models.FloatField(default=3.5, help_text="Height reserved for the header banner in cm")
-	top_margin_cm = models.FloatField(default=3.8, help_text="Top page margin for report body content in cm")
-	bottom_margin_cm = models.FloatField(default=1.5, help_text="Bottom page margin in cm")
-	left_margin_cm = models.FloatField(default=1.2, help_text="Left page margin in cm")
-	right_margin_cm = models.FloatField(default=1.2, help_text="Right page margin in cm")
+	top_margin_cm = models.FloatField(default=0.6, help_text="Top page margin for report body content in cm")
+	bottom_margin_cm = models.FloatField(default=1.0, help_text="Bottom page margin in cm")
+	left_margin_cm = models.FloatField(default=1.0, help_text="Left page margin in cm")
+	right_margin_cm = models.FloatField(default=1.0, help_text="Right page margin in cm")
 	is_active = models.BooleanField(default=True)
 	uploaded_by = models.CharField(max_length=255, default='', blank=True, null=True)
-	created_at = models.DateTimeField(default=dt.now, blank=True, null=True)
+	created_at = models.DateTimeField(default=timezone.now, blank=True, null=True)
 
 	def __str__(self):
 		return f"{self.title} ({'Active' if self.is_active else 'Inactive'})"
@@ -24,8 +23,8 @@ class Location(models.Model):
 	location_url = models.CharField(max_length=255)
 	entry_by = models.CharField(max_length=255, default='')
 	user_site = models.CharField(max_length=255, default='', blank=True, null=True)
-	datetime = models.DateTimeField(default=dt.now, blank=True, null=True)
-	date = models.DateField(default=date.today, blank=True, null=True)
+	datetime = models.DateTimeField(default=timezone.now, blank=True, null=True)
+	date = models.DateField(default=timezone.localdate, blank=True, null=True)
 
 class Supplier(models.Model):
 	name = models.CharField(max_length=255)
@@ -42,8 +41,8 @@ class Supplier(models.Model):
 	entry_by = models.CharField(max_length=255, default='', blank=True, null=True)
 	user_site = models.CharField(max_length=255, default='', blank=True, null=True)
 	opening = models.CharField(max_length=255, default='0', blank=True, null=True)
-	datetime = models.DateTimeField(default=dt.now, blank=True, null=True)
-	date = models.DateField(default=date.today, blank=True, null=True)
+	datetime = models.DateTimeField(default=timezone.now, blank=True, null=True)
+	date = models.DateField(default=timezone.localdate, blank=True, null=True)
 
 class CreditPay(models.Model):
 	entry_date = models.CharField(max_length=100)
@@ -55,8 +54,8 @@ class CreditPay(models.Model):
 	remaining = models.CharField(max_length=255)
 	pay_method = models.CharField(max_length=255, blank=True, null=True)
 	bank = models.CharField(max_length=255, blank=True, null=True)
-	datetime = models.DateTimeField(default=dt.now, blank=True, null=True)
-	date = models.DateField(default=date.today, blank=True, null=True)
+	datetime = models.DateTimeField(default=timezone.now, blank=True, null=True)
+	date = models.DateField(default=timezone.localdate, blank=True, null=True)
 	entry_by = models.CharField(max_length=255, default='', blank=True, null=True)
 	user_site = models.CharField(max_length=255, default='', blank=True, null=True)
 
@@ -65,16 +64,16 @@ class SupplierCategory(models.Model):
 	url = models.CharField(max_length=255)
 	entry_by = models.CharField(max_length=255, default='')
 	user_site = models.CharField(max_length=255, default='', blank=True, null=True)
-	datetime = models.DateTimeField(default=dt.now, blank=True, null=True)
-	date = models.DateField(default=date.today, blank=True, null=True)
+	datetime = models.DateTimeField(default=timezone.now, blank=True, null=True)
+	date = models.DateField(default=timezone.localdate, blank=True, null=True)
 
 class StockCategory(models.Model):
 	name = models.CharField(max_length=255)
 	url = models.CharField(max_length=255)
 	entry_by = models.CharField(max_length=255, default='')
 	user_site = models.CharField(max_length=255, default='', blank=True, null=True)
-	datetime = models.DateTimeField(default=dt.now, blank=True, null=True)
-	date = models.DateField(default=date.today, blank=True, null=True)
+	datetime = models.DateTimeField(default=timezone.now, blank=True, null=True)
+	date = models.DateField(default=timezone.localdate, blank=True, null=True)
 
 class StockSubCategory(models.Model):
 	cat_name = models.CharField(max_length=255)
@@ -83,15 +82,15 @@ class StockSubCategory(models.Model):
 	url = models.CharField(max_length=255)
 	entry_by = models.CharField(max_length=255, default='')
 	user_site = models.CharField(max_length=255, default='', blank=True, null=True)
-	datetime = models.DateTimeField(default=dt.now, blank=True, null=True)
-	date = models.DateField(default=date.today, blank=True, null=True)
+	datetime = models.DateTimeField(default=timezone.now, blank=True, null=True)
+	date = models.DateField(default=timezone.localdate, blank=True, null=True)
 
 class UOM(models.Model):
 	uom = models.CharField(max_length=255)
 	user_site = models.CharField(max_length=255, default='', blank=True, null=True)
 	entry_by = models.CharField(max_length=255, default='')
-	datetime = models.DateTimeField(default=dt.now, blank=True, null=True)
-	date = models.DateField(default=date.today, blank=True, null=True)
+	datetime = models.DateTimeField(default=timezone.now, blank=True, null=True)
+	date = models.DateField(default=timezone.localdate, blank=True, null=True)
 
 class Vehicle(models.Model):
 	vehicle_number = models.CharField(max_length=255, default='')
@@ -111,8 +110,8 @@ class GoodsEntry(models.Model):
 	supplier_contact = models.CharField(max_length=255, default='', blank=True, null=True)
 	vehicle_number = models.CharField(max_length=255, default='', blank=True, null=True)
 	entry_date = models.CharField(max_length=100)
-	datetime = models.DateTimeField(default=dt.now, blank=True, null=True)
-	date = models.DateField(default=date.today, blank=True, null=True)
+	datetime = models.DateTimeField(default=timezone.now, blank=True, null=True)
+	date = models.DateField(default=timezone.localdate, blank=True, null=True)
 	user_site = models.CharField(max_length=255, default='', blank=True, null=True)
 	invoice_id = models.CharField(max_length=255, default='')
 	invoice_status = models.CharField(max_length=255, default='no')
@@ -165,8 +164,8 @@ class PurchaseEntry(models.Model):
 	discount_amt = models.CharField(default='', max_length=255)
 	vat = models.CharField(default='', max_length=255)
 	total = models.CharField(default='', max_length=255)
-	datetime = models.DateTimeField(default=dt.now, blank=True, null=True)
-	date = models.DateField(default=date.today, blank=True, null=True)
+	datetime = models.DateTimeField(default=timezone.now, blank=True, null=True)
+	date = models.DateField(default=timezone.localdate, blank=True, null=True)
 	user_site = models.CharField(max_length=255, default='', blank=True, null=True)
 	grn_id = models.CharField(max_length=255, default='', blank=True, null=True)
 	grn_status = models.CharField(max_length=255, default='no', blank=True, null=True)
@@ -225,8 +224,8 @@ class StockEntry(models.Model):
 	stock_site = models.CharField(max_length=255, default='')
 	entry_by = models.CharField(max_length=255, default='')
 	user_site = models.CharField(max_length=255, default='', blank=True, null=True)
-	datetime = models.DateTimeField(default=dt.now, blank=True, null=True)
-	date = models.DateField(default=date.today, blank=True, null=True)
+	datetime = models.DateTimeField(default=timezone.now, blank=True, null=True)
+	date = models.DateField(default=timezone.localdate, blank=True, null=True)
 
 class StockItem(models.Model):
 	item = models.CharField(max_length=255)
@@ -241,8 +240,8 @@ class StockItem(models.Model):
 	stock_type = models.CharField(max_length=255)
 	entry_by = models.CharField(max_length=255, default='')
 	user_site = models.CharField(max_length=255, default='', blank=True, null=True)
-	datetime = models.DateTimeField(default=dt.now, blank=True, null=True)
-	date = models.DateField(default=date.today, blank=True, null=True)
+	datetime = models.DateTimeField(default=timezone.now, blank=True, null=True)
+	date = models.DateField(default=timezone.localdate, blank=True, null=True)
 
 class QuotationEntry(models.Model):
 	supplier = models.CharField(max_length=255, default='')
@@ -253,8 +252,8 @@ class QuotationEntry(models.Model):
 	entry_date = models.CharField(max_length=100)
 	entry_by = models.CharField(max_length=100, default='')
 	user_site = models.CharField(max_length=255, default='', blank=True, null=True)
-	datetime = models.DateTimeField(default=dt.now, blank=True, null=True)
-	date = models.DateField(default=date.today, blank=True, null=True)
+	datetime = models.DateTimeField(default=timezone.now, blank=True, null=True)
+	date = models.DateField(default=timezone.localdate, blank=True, null=True)
 
 class QuotationItem(models.Model):
 	quotationid = models.CharField(max_length=255)
@@ -274,8 +273,8 @@ class MaterialIssueEntry(models.Model):
 	issue_date = models.CharField(max_length=100)
 	entry_by = models.CharField(max_length=255, default='')
 	user_site = models.CharField(max_length=255, default='', blank=True, null=True)
-	datetime = models.DateTimeField(default=dt.now, blank=True, null=True)
-	date = models.DateField(default=date.today, blank=True, null=True)
+	datetime = models.DateTimeField(default=timezone.now, blank=True, null=True)
+	date = models.DateField(default=timezone.localdate, blank=True, null=True)
 	narration = models.CharField(max_length=255, default='', blank=True, null=True)
 	
 	def __str__(self):
@@ -302,8 +301,8 @@ class InternalTransfer(models.Model):
 	issue_date = models.CharField(max_length=100)
 	entry_by = models.CharField(max_length=255, default='')
 	user_site = models.CharField(max_length=255, default='', blank=True, null=True)
-	datetime = models.DateTimeField(default=dt.now, blank=True, null=True)
-	date = models.DateField(default=date.today, blank=True, null=True)
+	datetime = models.DateTimeField(default=timezone.now, blank=True, null=True)
+	date = models.DateField(default=timezone.localdate, blank=True, null=True)
 	narration = models.CharField(max_length=255, default='', blank=True, null=True)
 	grn_id = models.CharField(max_length=255, default='', blank=True, null=True)
 	grn_status = models.CharField(max_length=255, default='no', blank=True, null=True)
@@ -331,8 +330,8 @@ class InternalGrn(models.Model):
 	grn_count = models.CharField(max_length=255, default='')
 	vehicle_number = models.CharField(max_length=255, default='', blank=True, null=True)
 	entry_date = models.CharField(max_length=100)
-	datetime = models.DateTimeField(default=dt.now, blank=True, null=True)
-	date = models.DateField(default=date.today, blank=True, null=True)
+	datetime = models.DateTimeField(default=timezone.now, blank=True, null=True)
+	date = models.DateField(default=timezone.localdate, blank=True, null=True)
 	user_site = models.CharField(max_length=255, default='', blank=True, null=True)
 	invoice_id = models.CharField(max_length=255, default='', blank=True, null=True)
 	invoice_status = models.CharField(max_length=255, default='no')
@@ -375,8 +374,8 @@ class OutSaleEntry(models.Model):
 	sales_date = models.CharField(max_length=100)
 	entry_by = models.CharField(default='', max_length=255)
 	user_site = models.CharField(max_length=255, default='', blank=True, null=True)
-	datetime = models.DateTimeField(default=dt.now, blank=True, null=True)
-	date = models.DateField(default=date.today, blank=True, null=True)
+	datetime = models.DateTimeField(default=timezone.now, blank=True, null=True)
+	date = models.DateField(default=timezone.localdate, blank=True, null=True)
 
 class SalesItem(models.Model):
 	saleid = models.CharField(max_length=255)
@@ -396,8 +395,8 @@ class BudgetEstimateEntry(models.Model):
 	amount = models.CharField(max_length=255)
 	entry_by = models.CharField(default='', max_length=255)
 	user_site = models.CharField(max_length=255, default='', blank=True, null=True)
-	datetime = models.DateTimeField(default=dt.now, blank=True, null=True)
-	date = models.DateField(default=date.today, blank=True, null=True)
+	datetime = models.DateTimeField(default=timezone.now, blank=True, null=True)
+	date = models.DateField(default=timezone.localdate, blank=True, null=True)
 
 class Site(models.Model):
 	name = models.CharField(max_length=255)
@@ -409,8 +408,8 @@ class Site(models.Model):
 	user_site = models.CharField(max_length=255, default='')
 	role = models.CharField(max_length=255, default='staff')
 	active_status = models.CharField(max_length=255, default='yes', blank=True, null=True)
-	datetime = models.DateTimeField(default=dt.now, blank=True, null=True)
-	date = models.DateField(default=date.today, blank=True, null=True)
+	datetime = models.DateTimeField(default=timezone.now, blank=True, null=True)
+	date = models.DateField(default=timezone.localdate, blank=True, null=True)
 
 class PurchaseOrder(models.Model):
 	entry_by = models.CharField(max_length=255)
@@ -418,8 +417,8 @@ class PurchaseOrder(models.Model):
 	pon_count = models.CharField(max_length=255, default='')
 	issuing_site = models.CharField(max_length=255)
 	entry_date = models.CharField(max_length=100)
-	datetime = models.DateTimeField(default=dt.now, blank=True, null=True)
-	date = models.DateField(default=date.today, blank=True, null=True)
+	datetime = models.DateTimeField(default=timezone.now, blank=True, null=True)
+	date = models.DateField(default=timezone.localdate, blank=True, null=True)
 	user_site = models.CharField(max_length=255, default='', blank=True, null=True)
 	invoice_id = models.CharField(max_length=255, default='', blank=True, null=True)
 	invoice_status = models.CharField(max_length=255, default='no')
@@ -470,8 +469,8 @@ class Notification(models.Model):
 	content_val2 = models.CharField(max_length=255, default='', blank=True, null=True)
 	content_val3 = models.CharField(max_length=255, default='', blank=True, null=True)
 	entry_date = models.CharField(max_length=255, default='', blank=True, null=True)
-	datetime = models.DateTimeField(default=datetime.datetime.now, blank=True, null=True)
-	date_on = models.DateField(default=date.today, blank=True, null=True)
+	datetime = models.DateTimeField(default=timezone.now, blank=True, null=True)
+	date_on = models.DateField(default=timezone.localdate, blank=True, null=True)
 	status = models.CharField(max_length=255, default='pending')
 	user_type = models.CharField(max_length=255, default='', blank=True, null=True)
 
@@ -580,8 +579,8 @@ class Fuel(models.Model):
 	reserviour = models.CharField(max_length=255, default='')
 	reserviour_id = models.CharField(max_length=255, default='')
 	location = models.CharField(max_length=255, default='', blank=True, null=True)
-	entry_datetime_on = models.DateTimeField(default=datetime.datetime.now, blank=True)
-	entry_date_on = models.DateField(default=datetime.date.today, blank=True)
+	entry_datetime_on = models.DateTimeField(default=timezone.now, blank=True)
+	entry_date_on = models.DateField(default=timezone.localdate, blank=True)
 	entry_by = models.CharField(max_length=255, default='', blank=True, null=True)
 
 class Reserviour(models.Model):
@@ -613,8 +612,8 @@ class FuelPurchase(models.Model):
 	fuel_type = models.CharField(default='', max_length=255)
 	location = models.CharField(default='', max_length=255, blank=True, null=True)
 	purchase_location = models.CharField(default='', max_length=255, blank=True, null=True)
-	approved_datetime_on = models.DateTimeField(default=datetime.datetime.now, blank=True, null=True)
-	approved_date_on = models.DateField(default=datetime.date.today, blank=True, null=True)
+	approved_datetime_on = models.DateTimeField(default=timezone.now, blank=True, null=True)
+	approved_date_on = models.DateField(default=timezone.localdate, blank=True, null=True)
 	narration = models.CharField(default='', max_length=255, blank=True, null=True)
 	
 	def __str__(self):
@@ -647,8 +646,8 @@ class FuelBill(models.Model):
 	day = models.CharField(default='', max_length=255, blank=True, null=True)
 	location = models.CharField(default='', max_length=255, blank=True, null=True)
 	purchase_location = models.CharField(default='', max_length=255, blank=True, null=True)
-	approved_datetime_on = models.DateTimeField(default=datetime.datetime.now, blank=True, null=True)
-	approved_date_on = models.DateField(default=datetime.date.today, blank=True, null=True)
+	approved_datetime_on = models.DateTimeField(default=timezone.now, blank=True, null=True)
+	approved_date_on = models.DateField(default=timezone.localdate, blank=True, null=True)
 	narration = models.CharField(default='', max_length=255, blank=True, null=True)
 	
 	def __str__(self):
@@ -686,8 +685,8 @@ class DamageEntry(models.Model):
 	damage_number = models.CharField(max_length=255)
 	pvn_count = models.CharField(max_length=255, default='')
 	entry_date = models.CharField(max_length=100)
-	datetime = models.DateTimeField(default=dt.now, blank=True, null=True)
-	date = models.DateField(default=date.today, blank=True, null=True)
+	datetime = models.DateTimeField(default=timezone.now, blank=True, null=True)
+	date = models.DateField(default=timezone.localdate, blank=True, null=True)
 	user_site = models.CharField(max_length=255, default='', blank=True, null=True)
 	pvn_id = models.CharField(max_length=255, default='', blank=True, null=True)
 	pvn_status = models.CharField(max_length=255, default='no', blank=True, null=True)
@@ -734,8 +733,8 @@ class ReturnEntry(models.Model):
 	damage_number = models.CharField(max_length=255)
 	pvn_count = models.CharField(max_length=255, default='')
 	entry_date = models.CharField(max_length=100)
-	datetime = models.DateTimeField(default=dt.now, blank=True, null=True)
-	date = models.DateField(default=date.today, blank=True, null=True)
+	datetime = models.DateTimeField(default=timezone.now, blank=True, null=True)
+	date = models.DateField(default=timezone.localdate, blank=True, null=True)
 	user_site = models.CharField(max_length=255, default='', blank=True, null=True)
 	pvn_id = models.CharField(max_length=255, default='', blank=True, null=True)
 	pvn_status = models.CharField(max_length=255, default='no', blank=True, null=True)
@@ -794,8 +793,8 @@ class VehicleTrack(models.Model):
 	entry_by = models.CharField(max_length=255, default='', blank=True, null=True)
 	status = models.CharField(max_length=255, default='travelling', blank=True, null=True)
 	arrival_datetime = models.CharField(max_length=255, default='', blank=True, null=True)
-	datetime = models.DateTimeField(default=dt.now, blank=True, null=True)
-	date = models.DateField(default=date.today, blank=True, null=True)
+	datetime = models.DateTimeField(default=timezone.now, blank=True, null=True)
+	date = models.DateField(default=timezone.localdate, blank=True, null=True)
 
 class FuelInternalTransfer(models.Model):
 	fuel_number = models.CharField(max_length=255)
@@ -818,8 +817,8 @@ class InternalDamageEntry(models.Model):
 	damage_number = models.CharField(max_length=255)
 	pvn_count = models.CharField(max_length=255, default='')
 	entry_date = models.CharField(max_length=100)
-	datetime = models.DateTimeField(default=dt.now, blank=True, null=True)
-	date = models.DateField(default=date.today, blank=True, null=True)
+	datetime = models.DateTimeField(default=timezone.now, blank=True, null=True)
+	date = models.DateField(default=timezone.localdate, blank=True, null=True)
 	user_site = models.CharField(max_length=255, default='', blank=True, null=True)
 	pvn_id = models.CharField(max_length=255, default='', blank=True, null=True)
 	pvn_status = models.CharField(max_length=255, default='no', blank=True, null=True)
@@ -854,6 +853,6 @@ class FuelLeakage(models.Model):
 	user_site = models.CharField(max_length=255, default='')
 	reserviour = models.CharField(max_length=255, default='')
 	reserviour_id = models.CharField(max_length=255, default='')
-	entry_datetime_on = models.DateTimeField(default=datetime.datetime.now, blank=True)
-	entry_date_on = models.DateField(default=datetime.date.today, blank=True)
+	entry_datetime_on = models.DateTimeField(default=timezone.now, blank=True)
+	entry_date_on = models.DateField(default=timezone.localdate, blank=True)
 	entry_by = models.CharField(max_length=255, default='', blank=True, null=True)
