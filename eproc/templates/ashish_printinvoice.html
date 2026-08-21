@@ -7,10 +7,10 @@
   <style>
     @page {
       size: A4 portrait;
-      margin-top: {% if letterhead %}{{ letterhead.top_margin_cm|default:3.8 }}cm{% else %}2.2cm{% endif %};
-      margin-bottom: {% if letterhead %}{{ letterhead.bottom_margin_cm|default:1.5 }}cm{% else %}1.5cm{% endif %};
-      margin-left: {% if letterhead %}{{ letterhead.left_margin_cm|default:1.2 }}cm{% else %}1.2cm{% endif %};
-      margin-right: {% if letterhead %}{{ letterhead.right_margin_cm|default:1.2 }}cm{% else %}1.2cm{% endif %};
+      margin-top: 0.5cm;
+      margin-bottom: 1.0cm;
+      margin-left: 1.0cm;
+      margin-right: 1.0cm;
     }
     body {
       font-family: Helvetica, Arial, sans-serif;
@@ -22,18 +22,18 @@
     .letterhead-container {
       width: 100%;
       text-align: center;
-      margin: 0 0 10px 0;
+      margin: 0 0 6px 0;
       padding: 0;
     }
     .letterhead-container img {
-      max-height: {% if letterhead %}{{ letterhead.header_height_cm|default:3.5 }}cm{% else %}3.5cm{% endif %};
+      max-height: 85px;
       width: auto;
     }
     .fallback-header {
       text-align: center;
       border-bottom: 2px solid #fa8005;
       padding-bottom: 6px;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
     .fallback-header h1 {
       margin: 0;
@@ -43,7 +43,7 @@
     }
     .doc-title-box {
       text-align: center;
-      margin: 6px 0 12px 0;
+      margin: 4px 0 10px 0;
     }
     .doc-title {
       font-size: 12pt;
@@ -63,6 +63,7 @@
     .meta-table td {
       padding: 3px 5px;
       font-size: 9pt;
+      vertical-align: top;
     }
     .meta-label {
       font-weight: bold;
@@ -76,7 +77,7 @@
     .data-table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 8px;
+      margin-top: 6px;
     }
     .data-table th {
       background-color: #1f7ba3;
@@ -104,11 +105,11 @@
       width: 48%;
       float: right;
       border-collapse: collapse;
-      margin-top: 10px;
+      margin-top: 8px;
     }
     .summary-table td {
       font-size: 9pt;
-      padding: 4px 8px;
+      padding: 3px 8px;
       border: 1px solid #cbd5e1;
     }
     .summary-label {
@@ -122,14 +123,14 @@
     }
     .footer-sign-table {
       width: 100%;
-      margin-top: 30px;
+      margin-top: 25px;
       border-collapse: collapse;
       clear: both;
     }
     .footer-sign-table td {
       font-size: 9pt;
       text-align: center;
-      padding-top: 25px;
+      padding-top: 20px;
       border-top: 1px dashed #94a3b8;
       width: 33.33%;
     }
@@ -137,7 +138,7 @@
 </head>
 <body>
 
-  <!-- Letterhead Header -->
+  <!-- Official Letterhead Header -->
   {% if letterhead and letterhead.letterhead_image %}
   <div class="letterhead-container">
     <img src="{{ letterhead.letterhead_image.path }}" alt="Company Letterhead" />
@@ -145,7 +146,7 @@
   {% else %}
   <div class="fallback-header">
     <h1>Ashish Nirman Sewa</h1>
-    <p>Procurement & Accounts Division &bull; Kathmandu, Nepal</p>
+    <p>Corporate Office: Kathmandu, Nepal &bull; Procurement & Accounts Division</p>
   </div>
   {% endif %}
 
