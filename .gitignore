@@ -1,7 +1,5 @@
-account/migrations/
 account/__pycache__/
 account/__init__.py
-eproc/migrations/
 eproc/__pycache__/
 eproc/__init__.py
 static/admin/
