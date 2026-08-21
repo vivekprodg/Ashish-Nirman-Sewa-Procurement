@@ -14,16 +14,42 @@
     }
     body {
       font-family: Helvetica, Arial, sans-serif;
-      font-size: 11pt;
+      font-size: 10pt;
       color: #1f2937;
       margin: 0;
       padding: 0;
     }
-    .letterhead-banner { width: 100%; text-align: center; margin-bottom: 15px; }
-    .letterhead-banner img { width: 100%; max-height: {% if letterhead %}{{ letterhead.header_height_cm|default:3.5 }}cm{% else %}3.5cm{% endif %}; }
-    .fallback-header { text-align: center; border-bottom: 2px solid #fa8005; padding-bottom: 6px; margin-bottom: 15px; }
-    .fallback-header h1 { margin: 0; font-size: 18pt; color: #11101D; text-transform: uppercase; }
-    .doc-title-box { text-align: center; margin: 10px 0 15px 0; }
+    .letterhead-container {
+      width: 100%;
+      text-align: center;
+      margin: 0 0 10px 0;
+      padding: 0;
+    }
+    .letterhead-container img {
+      max-height: {% if letterhead %}{{ letterhead.header_height_cm|default:3.5 }}cm{% else %}3.5cm{% endif %};
+      width: auto;
+    }
+    .fallback-header {
+      text-align: center;
+      border-bottom: 2px solid #fa8005;
+      padding-bottom: 6px;
+      margin-bottom: 12px;
+    }
+    .fallback-header h1 {
+      margin: 0;
+      font-size: 18pt;
+      color: #11101D;
+      text-transform: uppercase;
+    }
+    .fallback-header p {
+      margin: 2px 0 0 0;
+      font-size: 9.5pt;
+      color: #64748b;
+    }
+    .doc-title-box {
+      text-align: center;
+      margin: 6px 0 12px 0;
+    }
     .doc-title {
       font-size: 13pt;
       font-weight: bold;
@@ -34,15 +60,34 @@
       display: inline-block;
       padding-bottom: 3px;
     }
-    .meta-table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
-    .meta-table td { padding: 4px 6px; font-size: 10pt; }
-    .meta-label { font-weight: bold; color: #475569; width: 25%; }
-    .meta-val { width: 25%; color: #0f172a; }
-    .data-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    .meta-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 14px;
+    }
+    .meta-table td {
+      padding: 4px 6px;
+      font-size: 9.5pt;
+      vertical-align: top;
+    }
+    .meta-label {
+      font-weight: bold;
+      color: #475569;
+      width: 25%;
+    }
+    .meta-val {
+      width: 25%;
+      color: #0f172a;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+    }
     .data-table th {
       background-color: #1f7ba3;
       color: #ffffff;
-      font-size: 10pt;
+      font-size: 9.5pt;
       font-weight: bold;
       text-align: left;
       padding: 6px 8px;
@@ -50,19 +95,26 @@
       text-transform: uppercase;
     }
     .data-table td {
-      font-size: 9.5pt;
+      font-size: 9pt;
       padding: 5px 8px;
       border: 1px solid #cbd5e1;
       color: #1e293b;
+      vertical-align: middle;
     }
-    .data-table tr:nth-child(even) td { background-color: #f8fafc; }
+    .data-table tr:nth-child(even) td {
+      background-color: #f8fafc;
+    }
     .text-center { text-align: center; }
     .text-right { text-align: right; }
-    .footer-sign-table { width: 100%; margin-top: 40px; border-collapse: collapse; }
+    .footer-sign-table {
+      width: 100%;
+      margin-top: 35px;
+      border-collapse: collapse;
+    }
     .footer-sign-table td {
       font-size: 9.5pt;
       text-align: center;
-      padding-top: 30px;
+      padding-top: 25px;
       border-top: 1px dashed #94a3b8;
       width: 33.33%;
     }
@@ -70,14 +122,15 @@
 </head>
 <body>
 
+  <!-- Letterhead Header -->
   {% if letterhead and letterhead.letterhead_image %}
-  <div class="letterhead-banner">
-    <img src="{{ letterhead.letterhead_image.url }}" alt="Company Letterhead">
+  <div class="letterhead-container">
+    <img src="{{ letterhead.letterhead_image.path }}" alt="Company Letterhead" />
   </div>
   {% else %}
   <div class="fallback-header">
     <h1>Ashish Nirman Sewa</h1>
-    <p>Internal Goods Received Certificate</p>
+    <p>Corporate Office: Kathmandu, Nepal &bull; Internal Logistics & GRN Division</p>
   </div>
   {% endif %}
 
@@ -125,7 +178,7 @@
       </tr>
       {% empty %}
       <tr>
-        <td colspan="4" class="text-center">No items listed.</td>
+        <td colspan="4" class="text-center">No transfer items listed.</td>
       </tr>
       {% endfor %}
     </tbody>

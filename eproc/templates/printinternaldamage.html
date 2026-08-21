@@ -1,0 +1,201 @@
+{% load humanize %}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Transfer Damage - {{ a.damage_number }}</title>
+  <style>
+    @page {
+      size: A4 portrait;
+      margin-top: {% if letterhead %}{{ letterhead.top_margin_cm|default:3.8 }}cm{% else %}2.2cm{% endif %};
+      margin-bottom: {% if letterhead %}{{ letterhead.bottom_margin_cm|default:1.5 }}cm{% else %}1.5cm{% endif %};
+      margin-left: {% if letterhead %}{{ letterhead.left_margin_cm|default:1.2 }}cm{% else %}1.2cm{% endif %};
+      margin-right: {% if letterhead %}{{ letterhead.right_margin_cm|default:1.2 }}cm{% else %}1.2cm{% endif %};
+    }
+    body {
+      font-family: Helvetica, Arial, sans-serif;
+      font-size: 10.5pt;
+      color: #1f2937;
+      margin: 0;
+      padding: 0;
+    }
+    .letterhead-container {
+      width: 100%;
+      text-align: center;
+      margin: 0 0 10px 0;
+      padding: 0;
+    }
+    .letterhead-container img {
+      max-height: {% if letterhead %}{{ letterhead.header_height_cm|default:3.5 }}cm{% else %}3.5cm{% endif %};
+      width: auto;
+    }
+    .fallback-header {
+      text-align: center;
+      border-bottom: 2px solid #fa8005;
+      padding-bottom: 6px;
+      margin-bottom: 12px;
+    }
+    .fallback-header h1 {
+      margin: 0;
+      font-size: 17pt;
+      color: #11101D;
+      text-transform: uppercase;
+    }
+    .doc-title-box {
+      text-align: center;
+      margin: 6px 0 12px 0;
+    }
+    .doc-title {
+      font-size: 12.5pt;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #ef4444;
+      border-bottom: 1.5px solid #ef4444;
+      display: inline-block;
+      padding-bottom: 2px;
+    }
+    .meta-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 12px;
+    }
+    .meta-table td {
+      padding: 4px 6px;
+      font-size: 9.5pt;
+      vertical-align: top;
+    }
+    .meta-label {
+      font-weight: bold;
+      color: #475569;
+      width: 25%;
+    }
+    .meta-val {
+      width: 25%;
+      color: #0f172a;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+      margin-bottom: 14px;
+    }
+    .data-table th {
+      background-color: #ef4444;
+      color: #ffffff;
+      font-size: 9pt;
+      font-weight: bold;
+      text-align: left;
+      padding: 5px 6px;
+      border: 1px solid #ef4444;
+      text-transform: uppercase;
+    }
+    .data-table td {
+      font-size: 9pt;
+      padding: 4px 6px;
+      border: 1px solid #cbd5e1;
+      color: #1e293b;
+      vertical-align: middle;
+    }
+    .data-table tr:nth-child(even) td {
+      background-color: #f8fafc;
+    }
+    .text-center { text-align: center; }
+    .text-right { text-align: right; }
+    .section-label {
+      font-size: 10pt;
+      font-weight: bold;
+      color: #0f172a;
+      margin: 10px 0 4px 0;
+    }
+    .footer-sign-table {
+      width: 100%;
+      margin-top: 35px;
+      border-collapse: collapse;
+    }
+    .footer-sign-table td {
+      font-size: 9pt;
+      text-align: center;
+      padding-top: 25px;
+      border-top: 1px dashed #94a3b8;
+      width: 33.33%;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Letterhead Header -->
+  {% if letterhead and letterhead.letterhead_image %}
+  <div class="letterhead-container">
+    <img src="{{ letterhead.letterhead_image.path }}" alt="Company Letterhead" />
+  </div>
+  {% else %}
+  <div class="fallback-header">
+    <h1>Ashish Nirman Sewa</h1>
+    <p>Internal Transfer Material Loss & Damage Verification</p>
+  </div>
+  {% endif %}
+
+  <div class="doc-title-box">
+    <span class="doc-title">Internal Transfer Damage Stock Note</span>
+  </div>
+
+  <table class="meta-table">
+    <tr>
+      <td class="meta-label">Damage Number:</td>
+      <td class="meta-val"><strong>{{ a.damage_number }}</strong></td>
+      <td class="meta-label">Entry Date:</td>
+      <td class="meta-val">{{ a.entry_date }}</td>
+    </tr>
+    <tr>
+      <td class="meta-label">Site:</td>
+      <td class="meta-val">{{ a.user_site }}</td>
+      <td class="meta-label">Recorded By:</td>
+      <td class="meta-val">{{ a.entry_by }}</td>
+    </tr>
+    {% if a.narration %}
+    <tr>
+      <td class="meta-label">Narration:</td>
+      <td class="meta-val" colspan="3">{{ a.narration|linebreaks }}</td>
+    </tr>
+    {% endif %}
+  </table>
+
+  <div class="section-label">Damaged Transfer Items Register:</div>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th style="width: 6%;">#</th>
+        <th style="width: 24%;">Associate GRN #</th>
+        <th style="width: 44%;">Item Description</th>
+        <th style="width: 12%;" class="text-center">UOM</th>
+        <th style="width: 14%;" class="text-right">Damage Quantity</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for t in igoods %}
+      <tr>
+        <td class="text-center">{{ forloop.counter }}</td>
+        <td>{{ t.pvn }}</td>
+        <td><strong>{{ t.item }}</strong> {% if t.alias %}({{ t.alias }}){% endif %}</td>
+        <td class="text-center">{{ t.uom }}</td>
+        <td class="text-right" style="color: #ef4444;"><strong>{{ t.quantity }}</strong></td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="5" class="text-center">No damaged items listed.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <table class="footer-sign-table">
+    <tr>
+      <td>Inspection By: <strong>{{ a.entry_by }}</strong></td>
+      <td>Receiving Site In-Charge</td>
+      <td>Store Manager Signature</td>
+    </tr>
+  </table>
+
+</body>
+</html>

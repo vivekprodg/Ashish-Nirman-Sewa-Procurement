@@ -21,12 +21,16 @@ from .dashboard_views import user_site, user_role
 
 def get_active_letterhead(site_name=None):
     """
-    Helper to fetch site-specific active letterhead or fallback to the master corporate letterhead.
+    Fetches the site-specific active letterhead or falls back to the corporate master letterhead.
     """
     if site_name:
         lh = CompanyLetterhead.objects.filter(site=site_name, is_active=True).first()
         if lh:
             return lh
+    # Fallback to All Sites master letterhead or any active letterhead
+    master_lh = CompanyLetterhead.objects.filter(Q(site='All Sites') | Q(site='') | Q(site__isnull=True), is_active=True).first()
+    if master_lh:
+        return master_lh
     return CompanyLetterhead.objects.filter(is_active=True).first()
 
 @user_passes_test(check_staff, login_url='login_user')
@@ -872,7 +876,7 @@ def print_goods(request):
         jid = request.POST.get('jid')
         s_good = GoodsEntry.objects.filter(id=jid).first()
         igoods = Goods.objects.filter(goodsid=jid)
-        letterhead = get_active_letterhead(s_good.user_site if s_good else None)
+        letterhead = get_active_letterhead(s_good.user_site or s_good.location if s_good else None)
 
         context = {
             'a': s_good, 
@@ -1100,7 +1104,7 @@ def print_invoice(request):
         jid = request.POST.get('jid')
         s_good = PurchaseEntry.objects.filter(id=jid).first()
         igoods = InvoiceItem.objects.filter(purchaseid=jid)
-        letterhead = get_active_letterhead(s_good.user_site if s_good else None)
+        letterhead = get_active_letterhead(s_good.user_site or s_good.location if s_good else None)
 
         context = {
             'a': s_good, 
@@ -1430,7 +1434,7 @@ def print_purchase_order(request):
         jid = request.POST.get('jid')
         s_good = PurchaseOrder.objects.filter(id=jid).first()
         igoods = PurchaseItem.objects.filter(purchase_order_id=jid)
-        letterhead = get_active_letterhead(s_good.issuing_site if s_good else None)
+        letterhead = get_active_letterhead(s_good.issuing_site or s_good.user_site if s_good else None)
 
         context = {
             'a': s_good, 

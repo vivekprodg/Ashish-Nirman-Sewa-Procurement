@@ -18,12 +18,16 @@ from .dashboard_views import user_site, user_role
 
 def get_active_letterhead(site_name=None):
     """
-    Helper to fetch site-specific active letterhead or fallback to the master corporate letterhead.
+    Fetches the site-specific active letterhead or falls back to the corporate master letterhead.
     """
     if site_name:
         lh = CompanyLetterhead.objects.filter(site=site_name, is_active=True).first()
         if lh:
             return lh
+    # Fallback to All Sites master letterhead or any active letterhead
+    master_lh = CompanyLetterhead.objects.filter(Q(site='All Sites') | Q(site='') | Q(site__isnull=True), is_active=True).first()
+    if master_lh:
+        return master_lh
     return CompanyLetterhead.objects.filter(is_active=True).first()
 
 # ==================== DAMAGE STOCK (PURCHASE INVOICE) ====================

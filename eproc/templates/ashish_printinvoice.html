@@ -19,14 +19,15 @@
       margin: 0;
       padding: 0;
     }
-    .letterhead-banner {
+    .letterhead-container {
       width: 100%;
       text-align: center;
-      margin-bottom: 12px;
+      margin: 0 0 10px 0;
+      padding: 0;
     }
-    .letterhead-banner img {
-      width: 100%;
+    .letterhead-container img {
       max-height: {% if letterhead %}{{ letterhead.header_height_cm|default:3.5 }}cm{% else %}3.5cm{% endif %};
+      width: auto;
     }
     .fallback-header {
       text-align: center;
@@ -40,7 +41,10 @@
       color: #11101D;
       text-transform: uppercase;
     }
-    .doc-title-box { text-align: center; margin: 6px 0 12px 0; }
+    .doc-title-box {
+      text-align: center;
+      margin: 6px 0 12px 0;
+    }
     .doc-title {
       font-size: 12pt;
       font-weight: bold;
@@ -51,11 +55,29 @@
       display: inline-block;
       padding-bottom: 2px;
     }
-    .meta-table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
-    .meta-table td { padding: 3px 5px; font-size: 9pt; }
-    .meta-label { font-weight: bold; color: #475569; width: 22%; }
-    .meta-val { width: 28%; color: #0f172a; }
-    .data-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+    .meta-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 10px;
+    }
+    .meta-table td {
+      padding: 3px 5px;
+      font-size: 9pt;
+    }
+    .meta-label {
+      font-weight: bold;
+      color: #475569;
+      width: 22%;
+    }
+    .meta-val {
+      width: 28%;
+      color: #0f172a;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+    }
     .data-table th {
       background-color: #1f7ba3;
       color: #ffffff;
@@ -71,12 +93,15 @@
       padding: 4px 6px;
       border: 1px solid #cbd5e1;
       color: #1e293b;
+      vertical-align: middle;
     }
-    .data-table tr:nth-child(even) td { background-color: #f8fafc; }
+    .data-table tr:nth-child(even) td {
+      background-color: #f8fafc;
+    }
     .text-center { text-align: center; }
     .text-right { text-align: right; }
     .summary-table {
-      width: 45%;
+      width: 48%;
       float: right;
       border-collapse: collapse;
       margin-top: 10px;
@@ -86,9 +111,21 @@
       padding: 4px 8px;
       border: 1px solid #cbd5e1;
     }
-    .summary-label { font-weight: bold; background: #f8fafc; text-align: left; }
-    .summary-val { text-align: right; font-weight: bold; }
-    .footer-sign-table { width: 100%; margin-top: 30px; border-collapse: collapse; clear: both; }
+    .summary-label {
+      font-weight: bold;
+      background: #f8fafc;
+      text-align: left;
+    }
+    .summary-val {
+      text-align: right;
+      font-weight: bold;
+    }
+    .footer-sign-table {
+      width: 100%;
+      margin-top: 30px;
+      border-collapse: collapse;
+      clear: both;
+    }
     .footer-sign-table td {
       font-size: 9pt;
       text-align: center;
@@ -100,9 +137,10 @@
 </head>
 <body>
 
+  <!-- Letterhead Header -->
   {% if letterhead and letterhead.letterhead_image %}
-  <div class="letterhead-banner">
-    <img src="{{ letterhead.letterhead_image.url }}" alt="Company Letterhead">
+  <div class="letterhead-container">
+    <img src="{{ letterhead.letterhead_image.path }}" alt="Company Letterhead" />
   </div>
   {% else %}
   <div class="fallback-header">
@@ -174,6 +212,10 @@
         <td class="text-right">{{ t.useable_quantity }}</td>
         <td class="text-center">D:{{ t.damage_qty }}/R:{{ t.retur_qty }}</td>
         <td class="text-right"><strong>{{ t.amount|intcomma }}</strong></td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="8" class="text-center">No invoice items found.</td>
       </tr>
       {% endfor %}
     </tbody>
